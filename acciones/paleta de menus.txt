@@ -1,0 +1,31 @@
+envio_correo call/super
+borrar gestion todos
+reporte de campo super
+reporte de paleta super
+reporte de asignacion super
+eliminar pagos super
+actualizar campos datos super
+
+
+reportes
+  general
+  call
+    **mejor gestion
+    **telefonos
+    **telefonos_nuevos
+  campo
+    **mejor gestion
+    **direcciones
+  correos
+  paleta
+  asignacion
+  base cartera
+Procesos
+  Carga Gestiones
+  Borrar Gestiones
+    gestiones
+    pagos
+  actualizar campos datos
+  
+gestiones
+  envio correo

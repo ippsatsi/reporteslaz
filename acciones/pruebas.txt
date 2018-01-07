@@ -1,0 +1,4 @@
+1) ir a index.php --- con usuario correcto e incorrecto
+2) ir a inicio.php --con usuario logueado y deslogueado
+3) Ver excepciones sin base de datos
+4) probar excepciones
