@@ -282,6 +282,20 @@ function css_estilos() {
     counter-increment: rowacord;
     content: counter(rowacord) ".- ";
   }
+  table {
+    border: 1px solid rgba(23, 13, 13, 0.4);
+    border-radius: 0.25rem;
+    width: 800px;
+    #border-collapse: collapse;
+    border-spacing: 0;
+  }
+  table {
+    margin: 40px;
+  }
+  td, th {
+    border-left: 1px solid rgba(23, 13, 13, 0.4);
+    border-top: 1px solid rgba(23, 13, 13, 0.4);
+  }
 </style>
 <?php
 }
@@ -313,7 +327,7 @@ $mostrar_usuario = $rol_logo.$_SESSION['usuario_valido'];
       </li>
       <li><a href=#compromisos>Procesos</a>
         <ul id="drop">
-          <li><a href=#gestion1>Borrar Gestiones</a></li>
+          <li><a href=borrargestiones.php>Borrar Gestiones</a></li>
 <?php echo ($rol_agente ? '' : '          <li><a href=#gestion2>Actualizar Cajas/Datos</a></li>' )?>
         </ul>
       </li>
