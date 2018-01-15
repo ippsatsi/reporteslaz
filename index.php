@@ -7,8 +7,12 @@ if(!isset($_SESSION['usuario_valido'])) {
     $user= $_POST['username'];
     $pass= $_POST['password'];
     $error_message='';
+    $usuario = array();
     try {
-      $rol=login($user, $pass);
+      $usuario = login($user, $pass);
+      $rol = $usuario[0];
+      $_SESSION['usuario_codigo'] = $usuario[1];
+      //$rol=login($user, $pass);
       $_SESSION['usuario_valido']=$user;
       $_SESSION['rol']=$rol;
       header("Location:inicio.php");
