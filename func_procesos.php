@@ -5,15 +5,36 @@ function mostrar_gestiones () {
       <form action="borrargestiones.php" method="post">
         <fieldset>
           <legend>Borrado de Gestiones</legend>
-          <label for="dni"> Buscar DNI: </label>
-          <input id="dni" type="text" name="dni"> 
+          <div class="div_form only_form">
+            <div id="row_form">
+                          <div class="field_row_form">
+          <label for="dni"> documento: </label>
+          <input id="dni" type="text" name="dni">
+          </div>
+          </div>
+            <div id="row_form">
+            <label>Datos de la(s) cuenta(s):</label>
+            </div>
+              <div id="row_form">
+            <table>
+              <thead>
+              <tr>
+                    <th>CUENTA</th>
+      <th>SUBCARTERA</th>
+      <th>CAPITAL</th>
+      <th>TOTAL</th>
+      </tr>
+      </thead>
+      </table>
+            </div>
+            <div id="row_form">
 <table>
   <thead>
     <tr>
-      <th>Marcar</th>
-      <th>Cuenta</th>
-      <th>Observaciones</th>
-      <th>Respuesta</th>
+                    <th>marcar</th>
+      <th>cuenta</th>
+      <th>OBSERVACIONES</th>
+      <th>RESPUESTA</th>
       <th>Solucion</th>
       <th>Fecha Gestion</th>
       <th>Status</th>
@@ -41,6 +62,8 @@ function mostrar_gestiones () {
     </td>
   </tr>
 </table>
+</div>
+</div>
         </fieldset>
       </form>
 <?php

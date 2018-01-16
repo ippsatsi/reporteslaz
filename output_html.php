@@ -132,11 +132,11 @@ function css_estilos() {
     float: left;
   }
   input[type=text] {
-    margin:5px;
+    margin:0px;
     border: 1px solid black;
-    border-radius:3px;
-    width:150px;
-    height:28px;
+    border-radius:0.25rem;
+    height: 1.7rem;
+    width: 116px;
     cursor: pointer;
   }
   button#downl {
@@ -219,7 +219,7 @@ function css_estilos() {
     overflow: hidden;
     width: 8.7rem;
     border: 1px solid rgba(23, 13, 13, 0.4);
-    border-radius: 0.25rem;
+    border-radius: ;
   }
   #datepicker_desde:focus, #datepicker_hasta:focus {
     border-color: #7d1419;
@@ -286,15 +286,20 @@ function css_estilos() {
     border: 1px solid rgba(23, 13, 13, 0.4);
     border-radius: 0.25rem;
     width: 800px;
-    #border-collapse: collapse;
-    border-spacing: 0;
-  }
-  table {
+    border-collapse: collapse;
+    #border-spacing: 0;
     margin: 40px;
   }
   td, th {
+    padding: 6px;
     border-left: 1px solid rgba(23, 13, 13, 0.4);
     border-top: 1px solid rgba(23, 13, 13, 0.4);
+  }
+  .only_form {
+    height: auto;
+  }
+  .nofloat {
+    float:none;
   }
 </style>
 <?php
