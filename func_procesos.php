@@ -11,18 +11,21 @@ function mostrar_gestiones () {
           <label for="dni"> documento: </label>
           <input id="dni" type="text" name="dni">
           </div>
+                        <div class="field_row_form">
+                <button type="submit">buscar</button>
+              </div>
           </div>
             <div id="row_form">
-            <label>Datos de la(s) cuenta(s):</label>
+            <label class="thintop_margin">Datos de la(s) cuenta(s):</label>
             </div>
               <div id="row_form">
-            <table>
+            <table  class="thintop_margin">
               <thead>
               <tr>
-                    <th>CUENTA</th>
-      <th>SUBCARTERA</th>
-      <th>CAPITAL</th>
-      <th>TOTAL</th>
+                    <th>cuenta</th>
+      <th>subcartera</th>
+      <th>capital</th>
+      <th>total</th>
       </tr>
       </thead>
       </table>
@@ -33,11 +36,11 @@ function mostrar_gestiones () {
     <tr>
                     <th>marcar</th>
       <th>cuenta</th>
-      <th>OBSERVACIONES</th>
-      <th>RESPUESTA</th>
-      <th>Solucion</th>
-      <th>Fecha Gestion</th>
-      <th>Status</th>
+      <th>observaciones</th>
+      <th>respuesta</th>
+      <th>solucion</th>
+      <th>fecha festion</th>
+      <th>status</th>
     </tr>
   </thead>
   <tr>
@@ -63,6 +66,11 @@ function mostrar_gestiones () {
   </tr>
 </table>
 </div>
+<div id="row_form">
+              <div class="field_row_form">
+                <button id="downl" type="submit">borrar</button>
+              </div>
+              </div>
 </div>
         </fieldset>
       </form>

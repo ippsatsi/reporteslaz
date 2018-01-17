@@ -288,18 +288,31 @@ function css_estilos() {
     width: 800px;
     border-collapse: collapse;
     #border-spacing: 0;
-    margin: 40px;
+    margin: 20px;
   }
   td, th {
     padding: 6px;
     border-left: 1px solid rgba(23, 13, 13, 0.4);
     border-top: 1px solid rgba(23, 13, 13, 0.4);
+    font-size: 0.9rem;
+  }
+  th {
+    font-weight: 500;
+  }
+  tr {
+    font-weight: 300;
+  }
+  td {
+    text-align: center;
   }
   .only_form {
     height: auto;
   }
   .nofloat {
     float:none;
+  }
+  .thintop_margin {
+    margin-top: 10px;
   }
 </style>
 <?php
