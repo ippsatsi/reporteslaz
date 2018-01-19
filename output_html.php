@@ -139,7 +139,7 @@ function css_estilos() {
     width: 116px;
     cursor: pointer;
   }
-  button#downl {
+  button#downl, input#downl {
     border: 1px solid rgba(149, 19, 19, 0.98);
     font-size: 12px;
     background-color: #c0392e;
@@ -152,7 +152,7 @@ function css_estilos() {
     text-transform: uppercase;
     width: 100%;
   }
-  button#downl:hover {
+  button#downl:hover, input#downl:hover {
     background-color: rgba(149, 19, 19, 0.98);
     border: 1px solid #7a0b0b;
     # #e44133;

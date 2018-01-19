@@ -12,7 +12,7 @@ function mostrar_gestiones () {
           <input id="dni" type="text" name="dni">
           </div>
                         <div class="field_row_form">
-                <button type="submit">buscar</button>
+                <input type="submit" value="buscar" name="borrar">
               </div>
           </div>
             <div id="row_form">
@@ -68,7 +68,7 @@ function mostrar_gestiones () {
 </div>
 <div id="row_form">
               <div class="field_row_form">
-                <button id="downl" type="submit">borrar</button>
+                <input id="downl" type="submit" value="borrar" name="borrar">
               </div>
               </div>
 </div>
