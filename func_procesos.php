@@ -1,6 +1,6 @@
 <?php
 
-function mostrar_gestiones () {
+function mostrar_gestiones ($dni, $array_cuentas, $array_gestiones) {
 ?>
       <form action="borrargestiones.php" method="post">
         <fieldset>
@@ -9,13 +9,25 @@ function mostrar_gestiones () {
             <div id="row_form">
                           <div class="field_row_form">
           <label for="dni"> documento: </label>
-          <input id="dni" type="text" name="dni">
+<?php
+if ($dni)
+  {
+    echo "<input id=\"dni\" type=\"text\" name=\"dni\" value=\"$dni\" required>";
+  }
+else
+  {
+    echo '<input id="dni" type="text" name="dni" required>';
+  }
+?>
           </div>
                         <div class="field_row_form">
                 <input type="submit" value="buscar" name="borrar">
               </div>
           </div>
-            <div id="row_form">
+<?php
+if ($dni && $array_cuentas) {
+?>
+           <div id="row_form">
             <label class="thintop_margin">Datos de la(s) cuenta(s):</label>
             </div>
               <div id="row_form">
@@ -24,13 +36,21 @@ function mostrar_gestiones () {
               <tr>
                     <th>cuenta</th>
       <th>subcartera</th>
-      <th>capital</th>
       <th>total</th>
+      <th>capital</th>
       </tr>
       </thead>
+
+<?php
+llenar_tabla($array_cuentas);
+?>
       </table>
             </div>
-            <div id="row_form">
+<?php
+if ($array_gestiones)
+{
+  ?>
+              <div id="row_form">
 <table>
   <thead>
     <tr>
@@ -43,27 +63,10 @@ function mostrar_gestiones () {
       <th>status</th>
     </tr>
   </thead>
-  <tr>
-    <td><input type="checkbox" name="check_list[]" value="3025">
-    </td>
-    <td>
-      001101234567891231
-    </td>
-    <td>
-      NO CONTESTA
-    </td>
-    <td>
-      NO CONTESTA
-    </td>
-    <td>
-    </td>
-    <td>
-      05/01/2018 10:55:25.236
-    </td>
-    <td>
-      visible
-    </td>
-  </tr>
+<?php
+  llenar_tabla($array_gestiones);
+  ?>
+
 </table>
 </div>
 <div id="row_form">
@@ -72,6 +75,20 @@ function mostrar_gestiones () {
               </div>
               </div>
 </div>
+<?php
+  
+}
+            }elseif (isset($_POST['borrar'])) //prueba si ya se envio formulario antes
+            {
+                            echo '           <div id="row_form">'."\n";
+echo '            <label class="thintop_margin">No se encontraron cuentas</label>'."\n";
+echo '            </div>'."\n";
+            }
+
+          ?>
+
+
+
         </fieldset>
       </form>
 <?php

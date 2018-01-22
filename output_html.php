@@ -133,11 +133,13 @@ function css_estilos() {
   }
   input[type=text] {
     margin:0px;
+    #padding: 0.2rem;
     border: 1px solid black;
     border-radius:0.25rem;
     height: 1.7rem;
-    width: 116px;
-    cursor: pointer;
+    width: 90px;
+    #cursor: pointer;
+    padding: 0px 7px 0px 7px;
   }
   button#downl, input#downl {
     border: 1px solid rgba(149, 19, 19, 0.98);
@@ -282,7 +284,7 @@ function css_estilos() {
     counter-increment: rowacord;
     content: counter(rowacord) ".- ";
   }
-  table {
+  #row_form table {
     border: 1px solid rgba(23, 13, 13, 0.4);
     border-radius: 0.25rem;
     width: 800px;
@@ -290,19 +292,19 @@ function css_estilos() {
     #border-spacing: 0;
     margin: 20px;
   }
-  td, th {
+  #row_form td, #row_form th {
     padding: 6px;
     border-left: 1px solid rgba(23, 13, 13, 0.4);
     border-top: 1px solid rgba(23, 13, 13, 0.4);
     font-size: 0.9rem;
   }
-  th {
+  #row_form th {
     font-weight: 500;
   }
-  tr {
+  #row_form tr {
     font-weight: 300;
   }
-  td {
+  #row_form td {
     text-align: center;
   }
   .only_form {
@@ -365,7 +367,7 @@ $mostrar_usuario = $rol_logo.$_SESSION['usuario_valido'];
       </li>
     </ul>
   </nav>
-  <div style="padding-top:2.2rem;margin-top:0;background-color:#ecf0f5;height:1500px;">
+  <div style="padding-top:2.2rem;margin-top:0;background-color:#ecf0f5;min-height:600px;">
 <?php
 }
 
@@ -377,4 +379,14 @@ function footer_html() {
 <?php
 }
 
+function llenar_tabla($array_input) {
+  foreach ($array_input as $table_row)
+{
+  echo '      <tr>'."\n";
+echo '      <td>';
+  echo implode("</td>\n<td>",$table_row);
+  echo '</td>'."\n";
+    echo '      </tr>'."\n";
+}
+}
 ?>
