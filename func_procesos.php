@@ -28,7 +28,7 @@ else
 if ($dni && $array_cuentas) {
 ?>
            <div id="row_form">
-            <label class="thintop_margin">Datos de la(s) cuenta(s):</label>
+            <label class="thintop_margin">Datos de la(s) cuenta(s):<?php echo $_SERVER['REMOTE_ADDR']?></label>
             </div>
               <div id="row_form">
             <table  class="thintop_margin">
