@@ -296,7 +296,7 @@ function css_estilos() {
     padding: 6px;
     border-left: 1px solid rgba(23, 13, 13, 0.4);
     border-top: 1px solid rgba(23, 13, 13, 0.4);
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
   #row_form th {
     font-weight: 500;
