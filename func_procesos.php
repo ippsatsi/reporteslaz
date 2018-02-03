@@ -2,95 +2,85 @@
 
 function mostrar_gestiones ($dni, $array_cuentas, $array_gestiones) {
 ?>
-      <form action="borrargestiones.php" method="post">
-        <fieldset>
-          <legend>Borrado de Gestiones</legend>
-          <div class="div_form only_form">
-            <div id="row_form">
-                          <div class="field_row_form">
-          <label for="dni"> documento: </label>
+    <form action="borrargestiones.php" method="post">
+      <fieldset>
+        <legend>Borrado de Gestiones</legend>
+        <div class="div_form only_form">
+          <div id="row_form">
+            <div class="field_row_form">
+              <label for="dni"> documento: </label>
 <?php
-if ($dni)
-  {
-    echo "<input id=\"dni\" type=\"text\" name=\"dni\" value=\"$dni\" required>";
-  }
-else
-  {
-    echo '<input id="dni" type="text" name="dni" required>';
-  }
+if ($dni) {  //prueba si existe un dni ya ingresado para volver a mostrarlo
+  echo "              <input id=\"dni\" type=\"text\" name=\"dni\" value=\"$dni\" required>";
+}
+else {
+  echo '              <input id="dni" type="text" name="dni" required>';
+}
 ?>
-          </div>
-                        <div class="field_row_form">
-                <input type="submit" value="buscar" name="borrar">
-              </div>
-          </div>
-<?php
-if ($dni && $array_cuentas) {
-?>
-           <div id="row_form">
-            <label class="thintop_margin">Datos de la(s) cuenta(s):</label>
             </div>
-              <div id="row_form">
+            <div class="field_row_form">
+              <input type="submit" value="buscar" name="borrar">
+            </div>
+          </div>
+<?php
+if ($dni && $array_cuentas) { //prueba si existe un dni con cuentas
+?>
+          <div id="row_form">
+            <label class="thintop_margin">Datos de la(s) cuenta(s):</label>
+          </div>
+          <div id="row_form">
             <table  class="thintop_margin">
               <thead>
-              <tr>
-                    <th>cuenta</th>
-      <th>subcartera</th>
-      <th>total</th>
-      <th>capital</th>
-      </tr>
-      </thead>
-
+                <tr>
+                  <th>cuenta</th>
+                  <th>subcartera</th>
+                  <th>total</th>
+                  <th>capital</th>
+                </tr>
+              </thead>
 <?php
-llenar_tabla($array_cuentas);
+llenar_tabla($array_cuentas);  //si es asi muestra las cuentas
 ?>
-      </table>
-            </div>
+            </table>
+          </div>
 <?php
-if ($array_gestiones)
+if ($array_gestiones) //si tambien hay gestiones, las muestra
 {
-  ?>
-              <div id="row_form">
-<table>
-  <thead>
-    <tr>
-                    <th>marcar</th>
-      <th>cuenta</th>
-      <th>observaciones</th>
-      <th>respuesta</th>
-      <th>solucion</th>
-      <th>fecha festion</th>
-      <th>status</th>
-    </tr>
-  </thead>
+?>
+          <div id="row_form">
+            <table>
+              <thead>
+                <tr>
+                  <th>marcar</th>
+                  <th>cuenta</th>
+                  <th>observaciones</th>
+                  <th>respuesta</th>
+                  <th>solucion</th>
+                  <th>fecha festion</th>
+                  <th>status</th>
+                </tr>
+              </thead>
 <?php
-  llenar_tabla($array_gestiones);
-  ?>
-
-</table>
-</div>
-<div id="row_form">
-              <div class="field_row_form">
-                <input id="downl" type="submit" value="borrar" name="borrar">
-              </div>
-              </div>
-</div>
+llenar_tabla($array_gestiones);  //mostrar gestiones
+?>
+            </table>
+          </div>
+          <div id="row_form">
+            <div class="field_row_form">
+              <input id="downl" type="submit" value="borrar" name="borrar">
+            </div>
+          </div>
+        </div>
 <?php
-  
+  } //si no hay cuentas , confirma si se intento enviar un dni
+}elseif (isset($_POST['borrar'])) { //prueba si ya se envio formulario antes
+  echo '          <div id="row_form">'."\n";
+  echo '            <label class="thintop_margin">No se encontraron cuentas</label>'."\n";
+  echo '          </div>'."\n";
 }
-            }elseif (isset($_POST['borrar'])) //prueba si ya se envio formulario antes
-            {
-                            echo '           <div id="row_form">'."\n";
-echo '            <label class="thintop_margin">No se encontraron cuentas</label>'."\n";
-echo '            </div>'."\n";
-            }
-
-          ?>
-
-
-
-        </fieldset>
-      </form>
+?>
+      </fieldset>
+    </form>
 <?php
 }
 ?>
