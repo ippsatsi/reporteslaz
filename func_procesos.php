@@ -1,6 +1,6 @@
 <?php
 
-function mostrar_gestiones ($dni, $array_cuentas, $array_gestiones) {
+function mostrar_gestiones ($dni, $array_cuentas, $array_gestiones, $error) {
 ?>
     <form action="borrargestiones.php" method="post">
       <fieldset>
@@ -73,9 +73,11 @@ llenar_tabla($array_gestiones);  //mostrar gestiones
         </div>
 <?php
   } //si no hay cuentas , confirma si se intento enviar un dni
-}elseif (isset($_POST['borrar'])) { //prueba si ya se envio formulario antes
+}
+if ($error<>"")
+{
   echo '          <div id="row_form">'."\n";
-  echo '            <label class="thintop_margin">No se encontraron cuentas</label>'."\n";
+  echo "            <label class=\"thintop_margin\">$error</label>"."\n";
   echo '          </div>'."\n";
 }
 ?>
