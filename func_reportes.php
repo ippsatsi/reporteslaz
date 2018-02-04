@@ -83,6 +83,51 @@ function form_campo ($error, $num_formulario="0") {
 <?php
 }
 
+function call_telefonos_progresivo($error, $num_formulario="0") {
+?>
+    <div class="row_accordeon">
+      <input id="acor1" name="accordeon1" type="radio" checked />
+      <label for="acor1">Reporte de Telefonos para Predictivo</label>
+      <form action="campo.php" method="post">
+        <fieldset>
+          <legend>Reporte de Telefonos</legend>
+          <div class="div_form">
+            <div id="row_form">
+              <div class="field_row_form">
+                <label>Cartera:</label>
+                <div class="select_input">
+<?php
+$array = obtener_carteras();
+echo '<select name="cartera">';
+echo  "\n";
+echo '                    <option value="0">--seleccione--</option>';
+foreach ($array as $row)
+  {
+    echo "\n";
+    echo '                    <option value="'.$row['cartera'].'">'.$row['descripcion'].'</option>';
+  }
+?>  </select>
+                  <input id="consulta" name="id_formulario" type="hidden" value="1">
+                </div>
+              </div>
+            </div>
+            <div id="row_form">
+              <div class="field_row_form">
+                <button id="downl" type="submit"><i class="fa fa-arrow-circle-o-down fa-fw" aria-hidden="true"></i>descarga</button>
+              </div>
+              <div class="field_row_form" id="error"><?php if ( $error <> "" && $num_formulario=="1" )
+{
+  echo $error;
+}
+?>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+<?php
+}
+
 function lib_js_reportes() {
 //funcion para habilitar el datepucker
 ?>
