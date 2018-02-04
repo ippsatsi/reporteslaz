@@ -132,14 +132,16 @@ function css_estilos() {
     float: left;
   }
   input[type=text] {
-    margin:5px;
+    margin:0px;
+    #padding: 0.2rem;
     border: 1px solid black;
-    border-radius:3px;
-    width:150px;
-    height:28px;
-    cursor: pointer;
+    border-radius:0.25rem;
+    height: 1.7rem;
+    width: 90px;
+    #cursor: pointer;
+    padding: 0px 7px 0px 7px;
   }
-  button#downl {
+  button#downl, input#downl {
     border: 1px solid rgba(149, 19, 19, 0.98);
     font-size: 12px;
     background-color: #c0392e;
@@ -152,7 +154,7 @@ function css_estilos() {
     text-transform: uppercase;
     width: 100%;
   }
-  button#downl:hover {
+  button#downl:hover, input#downl:hover {
     background-color: rgba(149, 19, 19, 0.98);
     border: 1px solid #7a0b0b;
     # #e44133;
@@ -219,7 +221,7 @@ function css_estilos() {
     overflow: hidden;
     width: 8.7rem;
     border: 1px solid rgba(23, 13, 13, 0.4);
-    border-radius: 0.25rem;
+    border-radius: ;
   }
   #datepicker_desde:focus, #datepicker_hasta:focus {
     border-color: #7d1419;
@@ -282,6 +284,38 @@ function css_estilos() {
     counter-increment: rowacord;
     content: counter(rowacord) ".- ";
   }
+  #row_form table {
+    border: 1px solid rgba(23, 13, 13, 0.4);
+    border-radius: 0.25rem;
+    width: 800px;
+    border-collapse: collapse;
+    #border-spacing: 0;
+    margin: 20px;
+  }
+  #row_form td, #row_form th {
+    padding: 6px;
+    border-left: 1px solid rgba(23, 13, 13, 0.4);
+    border-top: 1px solid rgba(23, 13, 13, 0.4);
+    font-size: 0.8rem;
+  }
+  #row_form th {
+    font-weight: 500;
+  }
+  #row_form tr {
+    font-weight: 300;
+  }
+  #row_form td {
+    text-align: center;
+  }
+  .only_form {
+    height: auto;
+  }
+  .nofloat {
+    float:none;
+  }
+  .thintop_margin {
+    margin-top: 10px;
+  }
 </style>
 <?php
 }
@@ -313,7 +347,7 @@ $mostrar_usuario = $rol_logo.$_SESSION['usuario_valido'];
       </li>
       <li><a href=#compromisos>Procesos</a>
         <ul id="drop">
-          <li><a href=#gestion1>Borrar Gestiones</a></li>
+          <li><a href=borrargestiones.php>Borrar Gestiones</a></li>
 <?php echo ($rol_agente ? '' : '          <li><a href=#gestion2>Actualizar Cajas/Datos</a></li>' )?>
         </ul>
       </li>
@@ -333,7 +367,7 @@ $mostrar_usuario = $rol_logo.$_SESSION['usuario_valido'];
       </li>
     </ul>
   </nav>
-  <div style="padding-top:2.2rem;margin-top:0;background-color:#ecf0f5;height:1500px;">
+  <div style="padding-top:2.2rem;margin-top:0;background-color:#ecf0f5;min-height:600px;">
 <?php
 }
 
@@ -345,4 +379,13 @@ function footer_html() {
 <?php
 }
 
+function llenar_tabla($array_input) {
+  foreach ($array_input as $table_row) {
+    echo '                <tr>'."\n";
+    echo '                  <td>';
+    echo implode("</td>\n                  <td>",$table_row);
+    echo '</td>'."\n";
+    echo '                </tr>'."\n";
+  }
+}
 ?>
