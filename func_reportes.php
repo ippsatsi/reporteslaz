@@ -88,7 +88,7 @@ function call_telefonos_progresivo($error, $num_formulario="0") {
     <div class="row_accordeon">
       <input id="acor1" name="accordeon1" type="radio" checked />
       <label for="acor1">Reporte de Telefonos para Predictivo</label>
-      <form action="campo.php" method="post">
+      <form action="call.php" method="post">
         <fieldset>
           <legend>Reporte de Telefonos</legend>
           <div class="div_form">
