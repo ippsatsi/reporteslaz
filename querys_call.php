@@ -1,19 +1,20 @@
 <?php
 function reporte_1($cartera, $fecha_desde, $fecha_hasta) {
 //reporte telefonos progresivo
-  ini_set('sqlsrv.ClientBufferMaxKBSize','524288');
+  ini_set('sqlsrv.ClientBufferMaxKBSize','768288');
   $conn = conectar_mssql();
   $query = "
   SELECT
-REPLACE(TEL.TEL_NUMERO, CHAR(9), '') TELEFONO
-, CCUE.CUE_NROCUENTA
+REPLACE(TEL.TEL_NUMERO, CHAR(9), '') AS telefono
+, CCUE.CUE_NROCUENTA AS cuenta
+, REPLACE(TEL.TEL_NUMERO, CHAR(9), '') AS telefono
 , CCUE.CUE_CODIGO
 , TEL.TEL_CODIGO
-, CCUE.CLI_DOCUMENTO_IDENTIDAD
-, ORI.TOR_DESCRIPCION
-, TEL.TEL_ESTADO_VALIDEZ
-, TEL.TEL_OBSERVACIONES
-, SCA.SCA_DESCRIPCION
+, CCUE.CLI_DOCUMENTO_IDENTIDAD AS DOCUMENTO
+, ORI.TOR_DESCRIPCION AS ORIGEN
+, TEL.TEL_ESTADO_VALIDEZ AS ESTADO
+, TEL.TEL_OBSERVACIONES AS OBSERVACIONES
+, SCA.SCA_DESCRIPCION AS DESCRIPCION
 FROM
 COBRANZA.GCC_TELEFONOS TEL
 INNER JOIN (
@@ -37,7 +38,7 @@ WHERE
 TEL.TEL_ESTADO_REGISTRO='A'
 ORDER BY 5 ASC, 2 DESC";
   
-  $result_query = sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
+  $result_query = sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, array( "Scrollable" => 'static') );
 //  if (!$result_query) {
 //    throw new Exception('No se pudo completar la consulta11',11);
    // echo "6";
