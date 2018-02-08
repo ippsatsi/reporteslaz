@@ -13,7 +13,7 @@ function mostrar_gestiones ($dni, $array_cuentas, $array_gestiones, $error) {
 if ($dni) {  //prueba si existe un dni ya ingresado para volver a mostrarlo
   echo "              <input id=\"dni\" type=\"text\" name=\"dni\" value=\"$dni\" required>";
 }
-else {
+else {//prueba
   echo '              <input id="dni" type="text" name="dni" required>';
 }
 ?>
@@ -60,6 +60,7 @@ if ($array_gestiones) //si tambien hay gestiones, las muestra
                   <th>status</th>
                 </tr>
               </thead>
+
 <?php
 llenar_tabla($array_gestiones);  //mostrar gestiones
 ?>
