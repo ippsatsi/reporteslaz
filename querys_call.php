@@ -38,7 +38,8 @@ WHERE
 TEL.TEL_ESTADO_REGISTRO='A'
 ORDER BY 5 ASC, 2 DESC";
   
-  $result_query = sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, array( "Scrollable" => 'static') );
+  //$result_query = sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, array( "Scrollable" => 'static') );
+  $result_query = sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
 //  if (!$result_query) {
 //    throw new Exception('No se pudo completar la consulta11',11);
    // echo "6";

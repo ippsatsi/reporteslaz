@@ -28,7 +28,7 @@ function form_campo ($error, $num_formulario="0") {
 ?>
     <div class="row_accordeon">
       <input id="acor1" name="accordeon1" type="radio" checked />
-      <label for="acor1">Reporte de Campo</label>
+      <label for="acor1">Reporte de Campo - Mejor Gestion por Direccion</label>
       <form action="campo.php" method="post">
         <fieldset>
           <legend>Reporte de Campo</legend>
