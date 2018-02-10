@@ -4,7 +4,8 @@ function reporte_1($cartera, $fecha_desde, $fecha_hasta) {
   //conectarse al Sql Server
   //sqlsrv_configure("LogSubsystems", SQLSRV_LOG_SYSTEM_ALL);
   //sqlsrv_configure("LogSeverity", SQLSRV_LOG_SEVERITY_ALL);
-  ini_set('sqlsrv.ClientBufferMaxKBSize','524288');
+  ini_set('memory_limit','2048M'); 
+  ini_set('sqlsrv.ClientBufferMaxKBSize','2048288');
   $conn = conectar_mssql();
   $query = "
 DECLARE 

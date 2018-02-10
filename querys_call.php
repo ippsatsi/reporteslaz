@@ -1,7 +1,8 @@
 <?php
 function reporte_1($cartera, $fecha_desde, $fecha_hasta) {
 //reporte telefonos progresivo
-  ini_set('sqlsrv.ClientBufferMaxKBSize','768288');
+  ini_set('memory_limit','2048M'); 
+  ini_set('sqlsrv.ClientBufferMaxKBSize','2048288');
   $conn = conectar_mssql();
   $query = "
   SELECT
