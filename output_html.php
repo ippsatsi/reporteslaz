@@ -123,7 +123,7 @@ function css_estilos() {
     display: flex;
     margin: inherit;
     padding:0.5rem;
-    width: 15rem;
+    width: 18rem;
     justify-content: space-between;
     box-sizing: border-box;
     line-height: 1.8rem;

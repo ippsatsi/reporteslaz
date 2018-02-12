@@ -33,20 +33,7 @@ function form_campo ($error, $num_formulario="0") {
         <fieldset>
           <legend>Reporte de Campo</legend>
           <div class="div_form">
-            <div id="row_form">
-              <div class="field_row_form">
-                <label for="datepicker_desde">Desde:</label>
-                <div class="input_fecha">
-                  <input type="text" id="datepicker_desde" name="fecha_desde" value="<?php echo date('d/m/Y');?>"><i class="fa fa-calendar" aria-hidden="true"></i>
-                </div>
-              </div>
-              <div class="field_row_form">
-                <label for="datepicker_hasta">Hasta:</label>
-                <div class="input_fecha">
-                  <input type="text" id="datepicker_hasta" name="fecha_hasta" value="<?php echo date('d/m/Y');?>"><i class="fa fa-calendar" aria-hidden="true"></i>
-                </div>
-              </div>
-            </div>
+<?php form_rango_fecha()?>
             <div id="row_form">
               <div class="field_row_form">
                 <label>Cartera:</label>
@@ -98,7 +85,7 @@ function call_telefonos_progresivo($error, $num_formulario="0") {
                 <div class="select_input">
 <?php
 $array = obtener_carteras();
-echo '<select name="cartera">';
+echo '<select id="cartera_id" name="cartera">';
 echo  "\n";
 echo '                    <option value="0">--seleccione--</option>';
 foreach ($array as $row)
@@ -107,6 +94,15 @@ foreach ($array as $row)
     echo '                    <option value="'.$row['cartera'].'">'.$row['descripcion'].'</option>';
   }
 ?>  </select>
+
+                </div>
+              </div>
+              <div class="field_row_form">
+                <label>SubCartera:</label>
+                <div class="select_input">
+<select id="subcartera_id" name="subcartera">
+                    <option value="0">--seleccione--</option>
+ </select>
                   <input id="consulta" name="id_formulario" type="hidden" value="1">
                 </div>
               </div>
@@ -124,6 +120,32 @@ foreach ($array as $row)
           </div>
         </fieldset>
       </form>
+    <script>
+            var myRequest = new XMLHttpRequest();
+
+document.getElementById("cartera_id").addEventListener("change", sendTheAJAX);
+
+function prueba() {
+  document.getElementById("downl").innerHTML="prueba";
+}
+  function sendTheAJAX() {
+    var x = document.getElementById("cartera_id");
+         var num = x.value;
+      myRequest.open('GET', 'subcartera.php?cartera='+num,true);
+  myRequest.onreadystatechange = function () {
+    if (myRequest.readyState === 4) {
+      var selectSubCartera = document.getElementById("subcartera_id");
+      selectSubCartera.innerHTML = "<option value=\"0\">--seleccione--</option>";
+      selectSubCartera.innerHTML += myRequest.responseText;
+      console.log(myRequest.responseText);
+    }
+  };
+
+    myRequest.send();
+    
+  }
+
+</script>
     </div>
 <?php
 }
@@ -136,4 +158,24 @@ function lib_js_reportes() {
     <script src="js/datepicker_laz.js"></script>
 <?php
 }
+
+function form_rango_fecha() {
+?>
+            <div id="row_form">
+              <div class="field_row_form">
+                <label for="datepicker_desde">Desde:</label>
+                <div class="input_fecha">
+                  <input type="text" id="datepicker_desde" name="fecha_desde" value="<?php echo date('d/m/Y');?>"><i class="fa fa-calendar" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="field_row_form">
+                <label for="datepicker_hasta">Hasta:</label>
+                <div class="input_fecha">
+                  <input type="text" id="datepicker_hasta" name="fecha_hasta" value="<?php echo date('d/m/Y');?>"><i class="fa fa-calendar" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+<?php
+}
+
 ?>
