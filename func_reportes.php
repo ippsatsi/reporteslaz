@@ -121,30 +121,26 @@ foreach ($array as $row)
         </fieldset>
       </form>
     <script>
-            var myRequest = new XMLHttpRequest();
+      var myRequest = new XMLHttpRequest();
+      document.getElementById("cartera_id").addEventListener("change", sendTheAJAX);
 
-document.getElementById("cartera_id").addEventListener("change", sendTheAJAX);
-
-function prueba() {
-  document.getElementById("downl").innerHTML="prueba";
-}
-  function sendTheAJAX() {
-    var x = document.getElementById("cartera_id");
-         var num = x.value;
-      myRequest.open('GET', 'subcartera.php?cartera='+num,true);
-  myRequest.onreadystatechange = function () {
-    if (myRequest.readyState === 4) {
-      var selectSubCartera = document.getElementById("subcartera_id");
-      selectSubCartera.innerHTML = "<option value=\"0\">--seleccione--</option>";
-      selectSubCartera.innerHTML += myRequest.responseText;
-      console.log(myRequest.responseText);
-    }
-  };
-
-    myRequest.send();
-    
-  }
-
+      function prueba() {
+        document.getElementById("downl").innerHTML="prueba";
+      }
+      function sendTheAJAX() {
+        var x = document.getElementById("cartera_id");
+        var num = x.value;
+        myRequest.open('GET', 'subcartera.php?cartera='+num,true);
+        myRequest.onreadystatechange = function () {
+          if (myRequest.readyState === 4) {
+            var selectSubCartera = document.getElementById("subcartera_id");
+            selectSubCartera.innerHTML = "<option value=\"0\">--seleccione--</option>";
+            selectSubCartera.innerHTML += myRequest.responseText;
+            console.log(myRequest.responseText);
+          }
+        };
+        myRequest.send();
+      }
 </script>
     </div>
 <?php
