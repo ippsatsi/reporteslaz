@@ -349,6 +349,7 @@ $mostrar_usuario = $rol_logo.$_SESSION['usuario_valido'];
         <ul id="drop">
           <li><a href=borrargestiones.php>Borrar Gestiones</a></li>
 <?php echo ($rol_agente ? '' : '          <li><a href=#gestion2>Actualizar Cajas/Datos</a></li>' )?>
+<?php echo ($rol_agente ? '' : '          <li><a href=progresivo.php>Gestiones Progresivo</a></li>' )?>
         </ul>
       </li>
       <li><a href=#convenios>Gestiones</a>
