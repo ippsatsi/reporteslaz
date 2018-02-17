@@ -380,13 +380,24 @@ function footer_html() {
 <?php
 }
 
-function llenar_tabla($array_input) {
+function llenar_tabla($array_input, $array_headers, $css_class) {
+$expandir = 'implode';
+echo <<<Final
+            <table  $css_class>
+              <thead>
+                <tr>
+                  <th>{$expandir("</th>\n                  <th>", $array_headers)}</th>
+                </tr>
+              </thead>
+
+Final;
   foreach ($array_input as $table_row) {
     echo '                <tr>'."\n";
     echo '                  <td>';
     echo implode("</td>\n                  <td>",$table_row);
     echo '</td>'."\n";
     echo '                </tr>'."\n";
+    echo '            </table>';
   }
 }
 ?>

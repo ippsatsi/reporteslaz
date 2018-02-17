@@ -26,7 +26,7 @@ else {
 if ($dni && $array_cuentas) { //prueba si existe un dni con cuentas
 ?>
           <div id="row_form">
-            <label class="thintop_margin">Datos de la(s) cuenta(s):</label>
+<!--            <label class="thintop_margin">Datos de la(s) cuenta(s):</label>
           </div>
           <div id="row_form">
             <table  class="thintop_margin">
@@ -37,11 +37,14 @@ if ($dni && $array_cuentas) { //prueba si existe un dni con cuentas
                   <th>total</th>
                   <th>capital</th>
                 </tr>
-              </thead>
+              </thead>-->
 <?php
-llenar_tabla($array_cuentas);  //si es asi muestra las cuentas
+$headers = ["cuenta", "subcartera", "total", "capital"];
+$style = 'class="thintop_margin"';
+
+llenar_tabla($array_cuentas, $headers, $style);  //si es asi muestra las cuentas
 ?>
-            </table>
+<!--            </table>-->
           </div>
 <?php
 if ($array_gestiones) //si tambien hay gestiones, las muestra
@@ -81,6 +84,25 @@ if ($error<>"")
   echo '          </div>'."\n";
 }
 ?>
+      </fieldset>
+    </form>
+<?php
+}
+
+function mostrar_migracion_progresivo($array) {
+?>
+    <form action="progresivo.php" method="post">
+      <fieldset>
+        <legend>Borrado de Gestiones</legend>
+        <div class="div_form only_form">
+          <div id="row_form">
+          <table>
+          <?php
+          llenar_tabla($array);
+?>
+          </table>
+          </div>
+        </div>
       </fieldset>
     </form>
 <?php
