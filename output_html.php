@@ -392,12 +392,29 @@ echo <<<Final
 
 Final;
   foreach ($array_input as $table_row) {
-    echo '                <tr>'."\n";
-    echo '                  <td>';
+    echo "                <tr>\n                  <td>";
     echo implode("</td>\n                  <td>",$table_row);
-    echo '</td>'."\n";
-    echo '                </tr>'."\n";
-    echo '            </table>';
+    echo "</td>\n                </tr>\n";
   }
+  echo '            </table>';
+}
+
+function llenar_tabla_progresivo($array_input, $array_headers, $css_class) {
+$expandir = 'implode';
+echo <<<Final
+            <table  $css_class>
+              <thead>
+                <tr>
+                  <th>{$expandir("</th>\n                  <th>", $array_headers)}</th>
+                </tr>
+              </thead>
+
+Final;
+  foreach ($array_input as $table_row) {
+    echo "                <tr id=\"$table_row[0]\">\n                  <td>";  //extreamos la fecha del array para colocarlo como id
+    echo implode("</td>\n                  <td>",$table_row);
+    echo "</td>\n                </tr>\n";
+  }
+  echo '            </table>';
 }
 ?>
