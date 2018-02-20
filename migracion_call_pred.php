@@ -1,6 +1,6 @@
 <?php
 require_once 'func_inicio.php';
-
+echo ' ';
 if (isset($_GET['fecha']))
 {
   $fecha_procesar = $_GET['fecha'];
@@ -34,28 +34,12 @@ $result_query = $conn->query($query);
   }
 
   $numero_filas = $result_query->num_rows;
-  
+  //echo $numero_filas;
   $conn2 = conectar_mssql();
   $array = array();
   while ($row = $result_query->fetch_row()) {
-    $array[] = $row;
-}
-  $envio = <<<Final
-                  <td>2018-02-01</td>
-                  <td>5</td>
-                  <td>20</td>
-                  <td>15</td>
-                  <td><input type="button" value="procesar" onclick="procesar_fecha('2018-02-01')" ></td>
-Final;
-//if ($array[0][4]=='') {
-//  $array[0][4] ='NULL';
-//  }
-//if ($array[0][5]=='')
-//{
-//  $array[0][5] ='NULL';
-//  
-//}
-$query = "
+    //$array[] = $row;
+    $query = "
 INSERT INTO [COBRANZA].[GCC_LLAMADAS_FALLIDAS_PREDICTIVO]
            ([FECHA_MIGRACION]
            ,[ID_CALL]
@@ -67,30 +51,44 @@ INSERT INTO [COBRANZA].[GCC_LLAMADAS_FALLIDAS_PREDICTIVO]
            ,[HORA_LLAMADA])
      VALUES
            ('".$fecha_procesar."'
-           ,".$array[0][0]."
-           ,".$array[0][1]."
-           ,".$array[0][2]."
-           ,".$array[0][3]."
-           ,".$array[0][4]."
-           ,".$array[0][5]."
-           ,'".$array[0][6]."')";
+           ,".$row[0]."
+           ,".$row[1]."
+           ,".$row[2]."
+           ,".$row[3]."
+           ,".$row[4]."
+           ,".$row[5]."
+           ,'".$row[6]."')";
 
   $result_query2 = sqlsrv_query( $conn2, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
+  if (!$result_query2) {
+    throw new Exception('No se pudo completar la consulta',2);
+  }
+}
+  $envio = <<<Final
+                  <td>$fecha_procesar</td>
+                  <td>$numero_filas</td>
+                  <td></td>
+                  <td></td>
+                  <td><input type="button" value="fin" onclick="procesar_fecha('$fecha_procesar')" ></td>
+Final;
+
+
+//  $result_query2 = sqlsrv_query( $conn2, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
 //  if (!$result_query2) {
  //   throw new Exception('No se pudo completar la consulta',2);
 //  }
-    if( ($errors = sqlsrv_errors() ) != null) {
-        foreach( $errors as $error ) {
-            echo "SQLSTATE: ".$error[ 'SQLSTATE']."<br />";
-            echo "code: ".$error[ 'code']."<br />";
-            echo "message: ".$error[ 'message']."<br />";
-        }
-        echo $query;
+//    if( ($errors = sqlsrv_errors() ) != null) {
+//        foreach( $errors as $error ) {
+//            echo "SQLSTATE: ".$error[ 'SQLSTATE']."<br />";
+//            echo "code: ".$error[ 'code']."<br />";
+//            echo "message: ".$error[ 'message']."<br />";
+//        }
+//        echo $query;
        // print_r( $errors, false);
        // echo ini_get('sqlsrv.ClientBufferMaxKBSize');
-     exit;
-}
-}
+//     exit;
+//}
+//}
 echo $envio;
-
+}
 ?>
