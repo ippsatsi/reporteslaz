@@ -32,14 +32,6 @@ function obtener_array_fechas_progresivo() {
 // leer la tabla de Fechas_migradas
   $conn = conectar_mysql_ser();
 
-  $result_query = $conn->query("
-SELECT 
-`FECHA`
-, `FILAS_ENC`
-, `FILAS_VALI`
-, `FILAS_MIGR`
-, `ESTADO`
-FROM `MIGRA_PROG_FECHAS`");
 $query = <<<Final
 SELECT 
 `FECHA`
@@ -48,7 +40,7 @@ SELECT
 , `FILAS_MIGR`
 , CASE
 	WHEN `ESTADO`= "P" THEN "OK"
-    ELSE CONCAT('<input type="button" value="procesar" onclick="procesar_fecha(\'', `FECHA`, '\')" >') END AS ESTADO
+    ELSE CONCAT('<input type="button" value="por procesar" onclick="procesar_fecha(\'', `FECHA`, '\')" >') END AS ESTADO
 FROM `MIGRA_PROG_FECHAS`
 Final;
 

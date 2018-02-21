@@ -1,11 +1,25 @@
 <?php
 require_once 'func_inicio.php';
-echo ' ';
-if (isset($_GET['fecha']))
-{
+
+  if (!isset($_GET['fecha']))
+  {
+    exit;
+  }
   $fecha_procesar = $_GET['fecha'];
-  $conn = conectar_mysql_elastix();
-  $query = <<<Final
+  $conn_mysql = conectar_mysql_ser();
+  $query = "SELECT `ESTADO` FROM `MIGRA_PROG_FECHAS` WHERE `FECHA`='".$fecha_procesar."'";
+  $result_query = $conn_mysql->query($query);
+  if (!$result_query)
+  {
+    echo "error de conexion";
+  }
+  $row = $result_query->fetch_row();
+  $estado_migracion = $row[0];
+  switch ($estado_migracion)
+  {
+    case '':
+      $conn = conectar_mysql_elastix();
+      $query = <<<Final
 SELECT
 cpl.id AS ID_CALL
 , cpl.id_call_outgoing AS ID_CALL_OUT
@@ -26,20 +40,20 @@ AND cpl.new_status='Failure'
 AND attr.columna='cuenta'
 Final;
 
-$result_query = $conn->query($query);
+    $result_query = $conn->query($query);
   
-  if (!$result_query)
-  {
-    echo "error de conexion";
-  }
+    if (!$result_query)
+      {
+        echo "error de conexion";
+      }
 
-  $numero_filas = $result_query->num_rows;
-  //echo $numero_filas;
-  $conn2 = conectar_mssql();
-  $array = array();
-  while ($row = $result_query->fetch_row()) {
-    //$array[] = $row;
-    $query = "
+      $numero_filas = $result_query->num_rows;
+      //echo $numero_filas;
+      $conn2 = conectar_mssql();
+      $array = array();
+      while ($row = $result_query->fetch_row()) {
+        //$array[] = $row;
+      $query = "
 INSERT INTO [COBRANZA].[GCC_LLAMADAS_FALLIDAS_PREDICTIVO]
            ([FECHA_MIGRACION]
            ,[ID_CALL]
@@ -59,11 +73,29 @@ INSERT INTO [COBRANZA].[GCC_LLAMADAS_FALLIDAS_PREDICTIVO]
            ,".$row[5]."
            ,'".$row[6]."')";
 
-  $result_query2 = sqlsrv_query( $conn2, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
-  if (!$result_query2) {
-    throw new Exception('No se pudo completar la consulta',2);
+      $result_query2 = sqlsrv_query( $conn2, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
+      if (!$result_query2) {
+        throw new Exception('No se pudo completar la consulta',2);
+      }
+    }
+    $conn_mysql = conectar_mysql_ser();
+    $query = "
+    UPDATE `MIGRA_PROG_FECHAS`
+SET `ESTADO`='E'
+,`FILAS_ENC`=".$numero_filas."
+ WHERE
+ `FECHA`='".$fecha_procesar."'";
+ 
+ $result_query = $conn_mysql->query($query);
+        if (!$result_query) {
+        throw new Exception('No se pudo completar la consulta',2);
+      }
+      
+    default:
+      # code...
+    break;
   }
-}
+
   $envio = <<<Final
                   <td>$fecha_procesar</td>
                   <td>$numero_filas</td>
@@ -90,5 +122,5 @@ Final;
 //}
 //}
 echo $envio;
-}
+
 ?>

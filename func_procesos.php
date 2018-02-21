@@ -111,12 +111,11 @@ llenar_tabla_progresivo($array, $headers, $style);
         var filas_mig = field[3].innerHTML;
         for (i = 1; i < 4; i++) {
         
-
         if (field[i].innerHTML=='')
         {
-          selectRowFecha.innerHTML = '<td>'+str+'</td><td>'+'...'+'</td><td></td><td></td><td><input type="button" value="procesando.." onclick="procesar_fecha('+"'"+str+"'"+')" ></td>';
-          
+          field[i].innerHTML='...';
         }
+                  selectRowFecha.innerHTML = '<td>'+str+'</td><td>'+field[1].innerHTML+'</td><td>'+field[2].innerHTML+'</td><td>'+field[3].innerHTML+'</td><td><input type="button" value="procesando.." onclick="procesar_fecha('+"'"+str+"'"+')" ></td>';
         }
 //        selectRowFecha.innerHTML = '<td>'+str+'</td><td></td><td></td><td></td><td><input type="button" value="procesando.." onclick="procesar_fecha('+"'"+str+"'"+')" ></td>';
         myRequest.onreadystatechange = function () {
