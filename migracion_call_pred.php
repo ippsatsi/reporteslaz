@@ -1,13 +1,26 @@
 <?php
 require_once 'func_inicio.php';
+require_once 'querys_progresivo.php';
 
   if (!isset($_GET['fecha']))
   {
     exit;
   }
+  //INICIALIZANDO VARIABLES
   $fecha_procesar = $_GET['fecha'];
-  $conn_mysql = conectar_mysql_ser();
-  $query = "SELECT `ESTADO` FROM `MIGRA_PROG_FECHAS` WHERE `FECHA`='".$fecha_procesar."'";
+  $filas_encontradas = '';
+  $filas_validadas = '';
+  $filas_migradas = '';
+  $boton_procesar = "<input type=\"button\" value=\"fin\" onclick=\"procesar_fecha('$fecha_procesar')\" >";
+  $columna_encontradas = "`FILAS_ENC`";
+  $columna_validas = "`FILAS_VALI`";
+  $columna_migradas = "`FILAS_MIGR`";
+  // habilitando conexiones
+   $conn = conectar_mysql_elastix();
+   $conn_mysql = conectar_mysql_ser();
+   $conn2 = conectar_mssql();
+//tomamos los datos actuales de la tabla de migracion
+  $query = "SELECT `ESTADO`, `FILAS_ENC`, `FILAS_VALI`, `FILAS_MIGR` FROM `MIGRA_PROG_FECHAS` WHERE `FECHA`='".$fecha_procesar."'";
   $result_query = $conn_mysql->query($query);
   if (!$result_query)
   {
@@ -15,16 +28,20 @@ require_once 'func_inicio.php';
   }
   $row = $result_query->fetch_row();
   $estado_migracion = $row[0];
+  $filas_encontradas = $row[1];
+  $filas_validadas = $row[2];
+  $filas_migradas = $row[3];
+  
   switch ($estado_migracion)
   {
-    case '':
-      $conn = conectar_mysql_elastix();
+    case '':// en caso sea NULL significa empezar de cero
+//consultar a Elastix las llamadas fallidas
       $query = <<<Final
 SELECT
 cpl.id AS ID_CALL
 , cpl.id_call_outgoing AS ID_CALL_OUT
 , calls.phone AS TELEFONO
-, IFNULL(attr.`value`,0) AS CUENTA
+, IFNULL(attr.`value`,'NULL') AS CUENTA
 , IFNULL(attr_cue.`value`,0) AS CUE_CODIGO
 , IFNULL(attr_tel.`value`,0) AS TEL_CODIGO
 , cpl.datetime_entry AS HORA_LLAMADA
@@ -46,13 +63,10 @@ Final;
       {
         echo "error de conexion";
       }
-
-      $numero_filas = $result_query->num_rows;
-      //echo $numero_filas;
-      $conn2 = conectar_mssql();
+      $filas_encontradas = $result_query->num_rows;  //obtenemos la cantidad de fallidas
       $array = array();
       while ($row = $result_query->fetch_row()) {
-        //$array[] = $row;
+// y cada dato encontrado lo vamos insertando a la base del SISCOB para validarlo
       $query = "
 INSERT INTO [COBRANZA].[GCC_LLAMADAS_FALLIDAS_PREDICTIVO]
            ([FECHA_MIGRACION]
@@ -67,8 +81,8 @@ INSERT INTO [COBRANZA].[GCC_LLAMADAS_FALLIDAS_PREDICTIVO]
            ('".$fecha_procesar."'
            ,".$row[0]."
            ,".$row[1]."
-           ,".$row[2]."
-           ,".$row[3]."
+           ,'".$row[2]."'
+           ,'".$row[3]."'
            ,".$row[4]."
            ,".$row[5]."
            ,'".$row[6]."')";
@@ -78,19 +92,88 @@ INSERT INTO [COBRANZA].[GCC_LLAMADAS_FALLIDAS_PREDICTIVO]
         throw new Exception('No se pudo completar la consulta',2);
       }
     }
-    $conn_mysql = conectar_mysql_ser();
-    $query = "
-    UPDATE `MIGRA_PROG_FECHAS`
-SET `ESTADO`='E'
-,`FILAS_ENC`=".$numero_filas."
- WHERE
- `FECHA`='".$fecha_procesar."'";
- 
- $result_query = $conn_mysql->query($query);
-        if (!$result_query) {
-        throw new Exception('No se pudo completar la consulta',2);
+    $estado = "'E'"; // guardamos la fase de "Encontradas"
+    actualizar_tabla_migracion($estado, $fecha_procesar, $columna_encontradas, $filas_encontradas);
+
+    case 'E':
+//VALIDAR CUENTAS CON CUE_CODIGO Y GENERAR CAR_CODIGO Y SCA_CODIGO
+
+    $filas_validadas = validar_cuentas($fecha_procesar);
+// VALIDAR TELEFONOS Y MARCARLO EN LA COLUMNA TEL_CODIGO_VALIDO
+
+    $filas_validadas = validar_telefonos($fecha_procesar);
+    $estado = "'V'"; // guardamos la fase de "Validadas"
+    actualizar_tabla_migracion($estado, $fecha_procesar, $columna_validas, $filas_validadas);
+
+      case 'V':
+        // en caso ya esten validadas
+        $query = "
+        SELECT
+LLP.TEL_CODIGO
+, LLP.CUE_CODIGO
+, LLP.CAR_CODIGO
+, LLP.SCA_CODIGO
+, CONVERT(varchar, LLP.HORA_LLAMADA, 121) AS HORA_LLAMADA
+, LLP.ID_CALL
+FROM
+COBRANZA.GCC_LLAMADAS_FALLIDAS_PREDICTIVO LLP
+WHERE
+LLP.TEL_CODIGO_VALIDO=1
+AND LLP.FECHA_MIGRACION='".$fecha_procesar."'";
+
+        $result_query2 = sqlsrv_query( $conn2, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
+        if (!$result_query2) {
+          throw new Exception('No se pudo completar la consulta',2);
+        }
+        $filas_migradas = 0;
+        $filas_a_migrar = sqlsrv_num_rows($result_query2); //obtenemos la cantidad de llamadas validadas listas para migrar
+        if($filas_a_migrar>0){
+          $gestiones_validas = array();
+          while( $row = sqlsrv_fetch_array($result_query2, SQLSRV_FETCH_NUMERIC) ) {
+//ejecutamos el procedimiento de carga de gestiones
+        $query = "EXEC ucatel_db_gcc.COBRANZA.SP_REGISTRAR_GESTION_PROGRESIVO_NOCONTESTA
+433, 432, 0, ".$row[0].", 'NO CONTESTA (PR)', ".$row[1].", ".$row[2].", ".$row[3].", 0, 0, 13, 5, '', 
+0, 0, 0, 0, 0, 0, '', '', 0, '', '".$row[4]."'";
+
+        $result_query3 = sqlsrv_query( $conn2, $query);
+
+        if (!$result_query3) {
+          throw new Exception('No se pudo completar la consulta',2);
+        }
+//como es un procedimiento con varias querys, 
+//recorremos todos los resultados de cada query hasta encontrar el id de la gestion
+        $next_result = sqlsrv_next_result($result_query3);
+        while ($next_result)
+        {
+          if (is_null($next_result))
+          {
+            break;
+            
+          }
+          while ($gestion = sqlsrv_fetch_array($result_query3, SQLSRV_FETCH_NUMERIC)) {
+            $ges_codigo = $gestion[0]; // obtenemos el ges_codigo de la gestion
+          }
+          $next_result = sqlsrv_next_result($result_query3);
+        }
+        $query = "
+        UPDATE LLP
+SET LLP.GES_CODIGO=".$ges_codigo."
+FROM
+COBRANZA.GCC_LLAMADAS_FALLIDAS_PREDICTIVO LLP
+WHERE
+LLP.ID_CALL=".$row[5];
+        $result_query4 = sqlsrv_query( $conn2, $query);
+// y actualizamos la tabla de llamadas indicando el ges_codigo de la gestion ingresada
+        if (!$result_query4) {
+          throw new Exception('No se pudo completar la consulta',2);
+        }
+        $filas_migradas++;
+        }
       }
-      
+      $estado = "'M'";// guardamos la fase de "Migradas"
+      actualizar_tabla_migracion($estado, $fecha_procesar, $columna_migradas, $filas_migradas);
+
+      $boton_procesar = "OK";
     default:
       # code...
     break;
@@ -98,29 +181,10 @@ SET `ESTADO`='E'
 
   $envio = <<<Final
                   <td>$fecha_procesar</td>
-                  <td>$numero_filas</td>
-                  <td></td>
-                  <td></td>
-                  <td><input type="button" value="fin" onclick="procesar_fecha('$fecha_procesar')" ></td>
+                  <td>$filas_encontradas</td>
+                  <td>$filas_validadas</td>
+                  <td>$filas_migradas</td>
+                  <td>$boton_procesar</td>
 Final;
-
-
-//  $result_query2 = sqlsrv_query( $conn2, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
-//  if (!$result_query2) {
- //   throw new Exception('No se pudo completar la consulta',2);
-//  }
-//    if( ($errors = sqlsrv_errors() ) != null) {
-//        foreach( $errors as $error ) {
-//            echo "SQLSTATE: ".$error[ 'SQLSTATE']."<br />";
-//            echo "code: ".$error[ 'code']."<br />";
-//            echo "message: ".$error[ 'message']."<br />";
-//        }
-//        echo $query;
-       // print_r( $errors, false);
-       // echo ini_get('sqlsrv.ClientBufferMaxKBSize');
-//     exit;
-//}
-//}
 echo $envio;
-
 ?>

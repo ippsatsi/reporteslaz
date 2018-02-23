@@ -411,7 +411,7 @@ echo <<<Final
 
 Final;
   foreach ($array_input as $table_row) {
-    echo "                <tr id=\"$table_row[0]\">\n                  <td>";  //extreamos la fecha del array para colocarlo como id
+    echo "                <tr id=\"$table_row[0]\">\n                  <td>";  //extraemos la fecha del array para colocarlo como id
     echo implode("</td>\n                  <td>",$table_row);
     echo "</td>\n                </tr>\n";
   }
