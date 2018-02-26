@@ -31,4 +31,20 @@ function login($user,$pass) {
     throw new Exception('Usuario o Contraseña incorrectos',3);
   }
 }
+
+function si_es_excepcion($result_query, $query) {
+//excepciones para sql server
+  $error = 'error::';
+  if (!$result_query) {
+    if( ($errors = sqlsrv_errors() ) != null) {
+      foreach( $errors as $error_arr ) {
+        $error .= "  SQLSTATE: ".$error_arr[ 'SQLSTATE']."\n";
+        $error .= "  code: ".$error_arr[ 'code']."\n";
+        $error .= "  message: ".$error_arr[ 'message']."\n"."query::".$query;
+      }
+    }
+    throw new Exception($error,2);
+  }
+}
+
 ?>

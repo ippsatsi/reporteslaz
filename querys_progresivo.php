@@ -1,6 +1,15 @@
 <?php
 require_once 'func_inicio.php';
 
+function si_es_excepcion_mysql($conn, $result_query, $query) {
+  if (!$result_query)
+  {
+     $tipo_error = 'Error::'.$conn->error."\n";
+     $query_error = "query::".$query;
+     throw new Exception($tipo_error.$query_error);
+  }
+}
+
 function rellenar_fechas($dias_diferencia, $fecha_inicio) {
 //Añadir fechas faltantes hasta el dia anterior a la fecha actual
   $conn = conectar_mysql_ser();
@@ -9,22 +18,19 @@ function rellenar_fechas($dias_diferencia, $fecha_inicio) {
   {
     $fecha_inicio->modify('+1 day');  //añadimos un dia
     $fecha = $fecha_inicio->format('Y-m-d'); //formateamos
-    $result_query = $conn->query('INSERT INTO `MIGRA_PROG_FECHAS`(`FECHA`) VALUES ("'.$fecha.'")');
-    if (!$result_query)
-    {
-      echo "error de conexion";
-    }
+    $query = 'INSERT INTO `MIGRA_PROG_FECHAS`(`FECHA`) VALUES ("'.$fecha.'")';
+    $result_query = $conn->query($query);
+    si_es_excepcion_mysql($conn, $result_query, $query);
   }
 }
 
 function obtener_ultimo_dia_procesado() {
 //obtenemos el ultimo dia existente en la base de datos
   $conn = conectar_mysql_ser();
-  $result_query = $conn->query("SELECT `FECHA` FROM `MIGRA_PROG_FECHAS` ORDER BY 1 DESC LIMIT 1");
-  if (!$result_query)
-  {
-    echo "error de conexion";
-  }
+  $query = "SELECT `FECHA` FROM `MIGRA_PROG_FECHAS` ORDER BY 1 DESC LIMIT 1";
+  $result_query = $conn->query($query);
+  si_es_excepcion_mysql($conn, $result_query, $query);
+
   $result_fecha_query = $result_query->fetch_row();
   return $result_fecha_query[0];
 }
@@ -44,15 +50,11 @@ SELECT
     ELSE CONCAT('<input type="button" value="por procesar" onclick="procesar_fecha(\'', `FECHA`, '\')" >') END AS ESTADO
 FROM `MIGRA_PROG_FECHAS`
 ORDER BY 1 DESC
-LIMIT 6
+LIMIT 30
 Final;
 
   $result_query = $conn->query($query);
-  
-  if (!$result_query)
-  {
-    echo "error de conexion";
-  }
+  si_es_excepcion_mysql($conn, $result_query, $query);
   $array = array();
   while ($row = $result_query->fetch_row()) {
     $array[] = $row;
@@ -72,8 +74,11 @@ function actualizar_tabla_migracion($estado, $fecha_procesar, $columna_actualiza
     `FECHA`='".$fecha_procesar."'";
     
     $result_query = $conn_mysql->query($query);
-    if (!$result_query) {
-      throw new Exception('No se pudo completar la consulta',2);
+    if (!$result_query)
+    {
+      $error = "error::";
+      $error .= $conn_mysql->error."\n"."query::".$query;
+      throw new Exception($error);
     }
 }
 
@@ -95,9 +100,7 @@ CUE.CUE_NROCUENTA=LLP.CUENTA
 AND LLP.FECHA_MIGRACION='".$fecha_procesar."'";
 
   $result_query2 = sqlsrv_query( $conn2, $query);
-  if (!$result_query2) {
-    throw new Exception('No se pudo completar la consulta',2);
-  }
+  si_es_excepcion($result_query2, $query);
   $filas_validadas = sqlsrv_rows_affected( $result_query2);
   return $filas_validadas;
 }
@@ -120,9 +123,7 @@ AND TEL.TEL_NUMERO=LLP.TELEFONO
 AND LLP.FECHA_MIGRACION='".$fecha_procesar."'";
 
   $result_query2 = sqlsrv_query( $conn2, $query);
-  if (!$result_query2) {
-    throw new Exception('No se pudo completar la consulta',2);
-  }
+  si_es_excepcion($result_query2, $query);
   $filas_validadas = sqlsrv_rows_affected( $result_query2);
   return $filas_validadas;
 }

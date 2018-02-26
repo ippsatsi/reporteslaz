@@ -68,12 +68,20 @@ if ($error<>"")
 <?php
 }
 //funcion mostrar tabla progresivo
-function mostrar_migracion_progresivo($array) {
+function mostrar_migracion_progresivo($array, $error) {
 ?>
     <form action="progresivo.php" method="post">
       <fieldset>
         <legend>Migracion de llamadas predictivo</legend>
         <div class="div_form only_form">
+<?php
+if ($error)
+{
+  echo '          <div id="row_form">'."\n";
+  echo "            <label class=\"thintop_margin\">Error de consulta, revisar comentarios ocultos</label>"."\n";
+  echo '          </div>'."\n";
+}
+?>
           <div id="row_form">
 
 
@@ -96,7 +104,7 @@ llenar_tabla_progresivo($array, $headers, $style);
       
       var selectRowFecha= document.getElementById(str);
       var field = selectRowFecha.getElementsByTagName("td");
-      //console.log('field.0:'+field[1].innerHTML);
+      //extraemos los campos mostrados en la pagina hacia variables
       var filas_enc = field[1].innerHTML;
       var filas_val = field[2].innerHTML;
       var filas_mig = field[3].innerHTML;
@@ -104,23 +112,26 @@ llenar_tabla_progresivo($array, $headers, $style);
         if (field[i].innerHTML=='')
         {
           field[i].innerHTML='...';
-        }
+        } //y modificamos solo el boton procesar, mientras hacemos la consulta
         selectRowFecha.innerHTML = '<td>'+str+'</td><td>'+field[1].innerHTML+'</td><td>'+field[2].innerHTML+'</td><td>'+field[3].innerHTML+'</td><td><input type="button" value="procesando.." onclick="procesar_fecha('+"'"+str+"'"+')" ></td>';
       }
       myRequest.onreadystatechange = function () {
-        if (myRequest.readyState === 3 )
-        {
-          console.log('ready:'+myRequest.readyState);
-        }
         //Accion para respuesta correcta
         if (myRequest.readyState === 4 && myRequest.status == 200) {
-          selectRowFecha.innerHTML = myRequest.responseText;
-            //console.log(myRequest.responseText);
+          var respuesta = myRequest.responseText;
+          if ('error::' == respuesta.slice(0,7))
+          //verificamos si mandamos error, para mostrar datos del error por console
+          {
+            console.log(respuesta);
+            selectRowFecha.innerHTML = '<td>'+str+'</td><td>'+field[1].innerHTML+'</td><td>'+field[2].innerHTML+'</td><td>'+field[3].innerHTML+'</td><td>Error</td>';
+          } else //sino mostramos datos correctos
+          {
+            selectRowFecha.innerHTML = respuesta;
+          }
         }
         //accion para no respuesta
         if (myRequest.readyState === 4 && myRequest.status != 200) {
           selectRowFecha.innerHTML = '<td>'+str+'</td><td>'+field[1].innerHTML+'</td><td>'+field[2].innerHTML+'</td><td>'+field[3].innerHTML+'</td><td>Error</td>';
-         //console.log(myRequest.responseText);
         }
       };
       myRequest.send();

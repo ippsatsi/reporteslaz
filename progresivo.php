@@ -5,9 +5,13 @@ if (!isset($_SESSION['usuario_valido']))
 {
   header("Location:index.php");
 }
+
 require_once 'func_inicio.php';
 require_once 'querys_progresivo.php';
 
+try {
+$error = false;
+$fechas_progresivo = array();
 $ultimo_dia_query = obtener_ultimo_dia_procesado();
 
 $ayer = new DateTime("yesterday");
@@ -20,11 +24,16 @@ if ($dias_diferencia>0)
 }
 
 $fechas_progresivo = obtener_array_fechas_progresivo();
-
+}
+catch(Exception $e) {
+  $error_message = $e->getMessage();
+  echo "<!--".$error_message."-->";
+  $error = true;
+}
 require_once 'output_html.php';
 require_once 'func_procesos.php';
 css_estilos();
 header_html();
-mostrar_migracion_progresivo($fechas_progresivo);
+mostrar_migracion_progresivo($fechas_progresivo, $error);
 footer_html();
 ?>
