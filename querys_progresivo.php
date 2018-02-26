@@ -50,7 +50,7 @@ SELECT
     ELSE CONCAT('<input type="button" value="por procesar" onclick="procesar_fecha(\'', `FECHA`, '\')" >') END AS ESTADO
 FROM `MIGRA_PROG_FECHAS`
 ORDER BY 1 DESC
-LIMIT 30
+LIMIT 20
 Final;
 
   $result_query = $conn->query($query);
