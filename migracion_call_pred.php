@@ -125,6 +125,7 @@ Final;
         COBRANZA.GCC_LLAMADAS_FALLIDAS_PREDICTIVO LLP
         WHERE
         LLP.TEL_CODIGO_VALIDO=1
+        AND LLP.GES_CODIGO IS NULL
         AND LLP.FECHA_MIGRACION='".$fecha_procesar."'";
 
         $result_query2 = sqlsrv_query( $conn2, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
@@ -136,7 +137,7 @@ Final;
           while( $row = sqlsrv_fetch_array($result_query2, SQLSRV_FETCH_NUMERIC) ) {
           //ejecutamos el procedimiento de carga de gestiones
             $query = "EXEC ucatel_db_gcc.COBRANZA.SP_REGISTRAR_GESTION_PROGRESIVO_NOCONTESTA
-            433, 432, 0, ".$row[0].", 'NO CONTESTA (PR)', ".$row[1].", ".$row[2].", ".$row[3].", 0, 0, 13, 5, '', 
+            433, 432, 0, ".$row[0].", 'NO CONTESTA (PR)', ".$row[1].", ".$row[2].", ".$row[3].", 0, 0, ".USER_PREDICTIVO.", 5, '', 
             0, 0, 0, 0 , 0, 0, '', '', 0, '', '".$row[4]."'";
 
             $result_query3 = sqlsrv_query( $conn2, $query);

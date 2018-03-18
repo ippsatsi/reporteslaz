@@ -113,7 +113,7 @@ llenar_tabla_progresivo($array, $headers, $style);
         {
           field[i].innerHTML='...';
         } //y modificamos solo el boton procesar, mientras hacemos la consulta
-        selectRowFecha.innerHTML = '<td>'+str+'</td><td>'+field[1].innerHTML+'</td><td>'+field[2].innerHTML+'</td><td>'+field[3].innerHTML+'</td><td><input type="button" value="procesando.." onclick="procesar_fecha('+"'"+str+"'"+')" ></td>';
+        selectRowFecha.innerHTML = '<td>'+str+'</td><td>'+field[1].innerHTML+'</td><td>'+field[2].innerHTML+'</td><td>'+field[3].innerHTML+'</td><td><input type="button" value="procesando.." ></td>';
       }
       myRequest.onreadystatechange = function () {
         //Accion para respuesta correcta
