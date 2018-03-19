@@ -99,8 +99,10 @@ llenar_tabla_progresivo($array, $headers, $style);
     var myRequest = new XMLHttpRequest();
 
     function procesar_fecha(str) {
-
-      myRequest.open('GET', 'migracion_call_pred.php?fecha='+str, true);
+      
+      var usuario = document.querySelectorAll('a[href="#login"]')[0].innerText;
+      var peticion = str+'&'+'usuario='+usuario;
+      myRequest.open('GET', 'migracion_call_pred.php?fecha='+peticion, true);
       
       var selectRowFecha= document.getElementById(str);
       var field = selectRowFecha.getElementsByTagName("td");

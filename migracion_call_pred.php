@@ -11,6 +11,7 @@ require_once 'querys_progresivo.php';
   //INICIALIZANDO VARIABLES
   $error = 'error::';
   $fecha_procesar = $_GET['fecha'];
+  $usuario = "'".$_GET['usuario']."'";
   $filas_encontradas = '';
   $filas_validadas = '';
   $filas_migradas = '';
@@ -25,6 +26,8 @@ require_once 'querys_progresivo.php';
     $conn = conectar_mysql_elastix();
     $conn_mysql = conectar_mysql_ser();
     $conn2 = conectar_mssql();
+    //seteamos el usuario actualmente migrando la fecha indicada en la base para que nadie mas interiera en la migracion
+    setear_enuso($usuario, $fecha_procesar);
     //tomamos los datos actuales de la tabla de migracion
     $query = "SELECT `ESTADO`, `FILAS_ENC`, `FILAS_VALI`, `FILAS_MIGR` FROM `MIGRA_PROG_FECHAS` WHERE `FECHA`='".$fecha_procesar."'";
     $result_query = $conn_mysql->query($query);
@@ -171,7 +174,7 @@ Final;
         }//if
         $estado = "'M'";// guardamos la fase de "Migradas"
         actualizar_tabla_migracion($estado, $fecha_procesar, $columna_migradas, $filas_migradas);
-
+        setear_enuso('NULL',$fecha_procesar);
         $boton_procesar = "OK";
       default:
         # code...
@@ -187,6 +190,7 @@ Final;
     echo $envio;
     }//try
     catch(Exception $e) {
+      setear_enuso('NULL',$fecha_procesar);
       $error_message = $e->getMessage();
       echo $error_message;
     }

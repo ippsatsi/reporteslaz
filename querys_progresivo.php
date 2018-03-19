@@ -1,6 +1,25 @@
 <?php
 require_once 'func_inicio.php';
 
+function setear_enuso($estado, $fecha_procesar) {
+//funcion para controlar y monitorear cuando quien esta cactualizando determinada fecha y no permitir que otro migre esa fecha
+//cuando esta en uso colocamos el usuario y cuando finalizamos la migracion lo regresamos a NULL
+  $conn_mysql = conectar_mysql_ser();
+  $query = "
+    UPDATE `MIGRA_PROG_FECHAS`
+    SET `EN_USO`=".$estado."
+    WHERE
+    `FECHA`='".$fecha_procesar."'";
+    
+    $result_query = $conn_mysql->query($query);
+    if (!$result_query)
+    {
+      $error = "error::";
+      $error .= $conn_mysql->error."\n"."query::".$query;
+      throw new Exception($error);
+    }
+}
+
 function si_es_excepcion_mysql($conn, $result_query, $query) {
   if (!$result_query)
   {
@@ -46,6 +65,7 @@ SELECT
 , `FILAS_VALI`
 , `FILAS_MIGR`
 , CASE
+  WHEN `EN_USO` IS NOT NULL THEN `EN_USO`
 	WHEN `ESTADO`= "M" THEN "OK"
     ELSE CONCAT('<input type="button" value="por procesar" onclick="procesar_fecha(\'', `FECHA`, '\')" >') END AS ESTADO
 FROM `MIGRA_PROG_FECHAS`
