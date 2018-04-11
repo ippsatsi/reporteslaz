@@ -146,6 +146,82 @@ foreach ($array as $row)
 <?php
 }
 
+function asignacion1($error, $num_formulario="0") {
+?>
+    <div class="row_accordeon">
+      <input id="acor1" name="accordeon1" type="radio" checked />
+      <label for="acor1">Reporte de Asignacion</label>
+      <form action="asignacion.php" method="post">
+        <fieldset>
+          <legend>Reporte de Asignacion</legend>
+          <div class="div_form">
+            <div id="row_form">
+              <div class="field_row_form">
+                <label>Cartera:</label>
+                <div class="select_input">
+<?php
+$array = obtener_carteras();
+echo '<select id="cartera_id" name="cartera">';
+echo  "\n";
+echo '                    <option value="0">--seleccione--</option>';
+foreach ($array as $row)
+  {
+    echo "\n";
+    echo '                    <option value="'.$row['cartera'].'">'.$row['descripcion'].'</option>';
+  }
+?>  </select>
+
+                </div>
+              </div>
+              <div class="field_row_form">
+                <label>SubCartera:</label>
+                <div class="select_input">
+<select id="subcartera_id" name="subcartera">
+                    <option value="0">--seleccione--</option>
+ </select>
+                  <input id="consulta" name="id_formulario" type="hidden" value="1">
+                </div>
+              </div>
+            </div>
+            <div id="row_form">
+              <div class="field_row_form">
+                <button id="downl" type="submit"><i class="fa fa-arrow-circle-o-down fa-fw" aria-hidden="true"></i>descarga</button>
+              </div>
+              <div class="field_row_form" id="error"><?php if ( $error <> "" && $num_formulario=="1" )
+{
+  echo $error;
+}
+?>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    <script>
+      var myRequest = new XMLHttpRequest();
+      document.getElementById("cartera_id").addEventListener("change", sendTheAJAX);
+
+      function prueba() {
+        document.getElementById("downl").innerHTML="prueba";
+      }
+      function sendTheAJAX() {
+        var x = document.getElementById("cartera_id");
+        var num = x.value;
+        myRequest.open('GET', 'subcartera.php?cartera='+num,true);
+        myRequest.onreadystatechange = function () {
+          if (myRequest.readyState === 4) {
+            var selectSubCartera = document.getElementById("subcartera_id");
+            selectSubCartera.innerHTML = "<option value=\"0\">--seleccione--</option>";
+            selectSubCartera.innerHTML += myRequest.responseText;
+            console.log(myRequest.responseText);
+          }
+        };
+        myRequest.send();
+      }
+</script>
+    </div>
+<?php
+}
+
 function lib_js_reportes() {
 //funcion para habilitar el datepucker
 ?>

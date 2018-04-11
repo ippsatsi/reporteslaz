@@ -340,7 +340,7 @@ $mostrar_usuario = $rol_logo.$_SESSION['usuario_valido'];
 <?php echo ($rol_agente ? '' : '          <li><a href=call.php>Call</a></li>' )?>
 <?php echo ($rol_agente ? '' : '          <li><a href=campo.php>Campo</a></li>' )?>
 <?php echo ($rol_agente ? '' : '          <li><a href=#gestion1>Correos</a></li>' )?>
-<?php echo ($rol_agente ? '' : '          <li><a href=#gestion2>Asignacion</a></li>' )?>
+<?php echo ($rol_agente ? '' : '          <li><a href=asignacion.php>Asignacion</a></li>' )?>
 <?php echo ($rol_agente ? '' : '          <li><a href=#gestion3>Paleta</a></li>' )?>
 <?php echo ($rol_agente ? '' : '          <li><a href=#gestion3>Base Cartera</a></li>' )?>
         </ul>
