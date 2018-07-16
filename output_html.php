@@ -1,9 +1,13 @@
 <?php
+require_once 'branch.php';
 
 function css_estilos() {
 ?>
 <!DOCTYPE html>
 <html lang="es">
+<head>
+<title><?php echo TITULO_HTML; ?></title>
+</head>
 <meta charset="UTF-8" />
 <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 <!--    <script src="script.js" ></script>-->
@@ -332,11 +336,11 @@ $mostrar_usuario = $rol_logo.$_SESSION['usuario_valido'];
 <body>
         <!--#949DA8 #4F84C4 #578CA9 #AF9483 #91A8D0 #55B4B0 #7FCDCD #45B8AC-->
   <nav>
-    <p>Sistema de Reportes Ucatel</p>
+    <p><?php echo TITULO_HTML; ?></p>
     <ul id="menu">
       <li id="gestionm"><a href=#gestion>Reportes</a>
         <ul id="drop">
-<?php echo ($rol_agente ? '' : '          <li><a href=#gestion1>General</a></li>' )?>
+<?php echo ($rol_agente ? '' : '          <li><a href=general.php>General</a></li>' )?>
 <?php echo ($rol_agente ? '' : '          <li><a href=call.php>Call</a></li>' )?>
 <?php echo ($rol_agente ? '' : '          <li><a href=campo.php>Campo</a></li>' )?>
 <?php echo ($rol_agente ? '' : '          <li><a href=correo.php>Correos</a></li>' )?>

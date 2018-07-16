@@ -1,25 +1,28 @@
 <?php
-function reporte_1($cartera, $subcartera, $fecha_desde, $fecha_hasta) {
+function reporte_1() {
 //reporte telefonos progresivo
-  ini_set('memory_limit','2048M'); 
-  ini_set('sqlsrv.ClientBufferMaxKBSize','2048288');
-  $conn = conectar_mssql();
+  $cartera = $_POST['cartera'];
+  $subcartera = $_POST['subcartera'];
+  if ( $cartera == 0 ) {
+    throw new Exception('Seleccione una cartera', 1);
+  }
+
   $query = "
   DECLARE
   @SUBCARTERA INT;
   SET
   @SUBCARTERA=".$subcartera."
   SELECT
-  REPLACE(TEL.TEL_NUMERO, CHAR(9), '') AS telefono
-, CCUE.CUE_NROCUENTA AS cuenta
-, REPLACE(TEL.TEL_NUMERO, CHAR(9), '') AS telefono
-, CCUE.CUE_CODIGO
-, TEL.TEL_CODIGO
-, CCUE.CLI_DOCUMENTO_IDENTIDAD AS DOCUMENTO
-, ORI.TOR_DESCRIPCION AS ORIGEN
-, TEL.TEL_ESTADO_VALIDEZ AS ESTADO
-, TEL.TEL_OBSERVACIONES AS OBSERVACIONES
-, SCA.SCA_DESCRIPCION AS DESCRIPCION
+  REPLACE(TEL.TEL_NUMERO, CHAR(9), '') AS 'S10|telefono'
+, CCUE.CUE_NROCUENTA AS 'S22|cuenta'
+, REPLACE(TEL.TEL_NUMERO, CHAR(9), '') AS 'S10|numero'
+, CCUE.CUE_CODIGO as 'S10|CUE_CODIGO'
+, TEL.TEL_CODIGO as 'S10|TEL_CODIGO'
+, CCUE.CLI_DOCUMENTO_IDENTIDAD AS 'S15|DOCUMENTO'
+, ORI.TOR_DESCRIPCION AS 'S15|ORIGEN'
+, TEL.TEL_ESTADO_VALIDEZ AS 'S10|ESTADO'
+, TEL.TEL_OBSERVACIONES AS 'S20|OBSERVACIONES'
+, SCA.SCA_DESCRIPCION AS 'S15|DESCRIPCION'
 FROM
 COBRANZA.GCC_TELEFONOS TEL
 INNER JOIN (
@@ -42,36 +45,9 @@ LEFT JOIN COBRANZA.GCC_TIPO_ORIGEN ORI ON ORI.TOR_CODIGO=TEL.TOR_CODIGO
 WHERE
 TEL.TEL_ESTADO_REGISTRO='A'
 ORDER BY 5 ASC, 2 DESC";
-  
-  //$result_query = sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, array( "Scrollable" => 'static') );
-  $result_query = sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
-//  if (!$result_query) {
-//    throw new Exception('No se pudo completar la consulta11',11);
-   // echo "6";
-  //}
-  if( ($errors = sqlsrv_errors() ) != null) {
-    foreach( $errors as $error ) {
-      echo "SQLSTATE: ".$error[ 'SQLSTATE']."<br />";
-      echo "code: ".$error[ 'code']."<br />";
-      echo "message: ".$error[ 'message']."<br />";
-    }
-    echo $query;
-    print_r( $errors, false);
-    exit;
-  }
 
-  $array_query_result = array();
-  $header = array();
-  foreach(sqlsrv_field_metadata($result_query) as $meta) {
-    $header[] = $meta['Name'];
-  }
-  $array_query_result[] = $header;
-  //print_r($header);
-  while( $row = sqlsrv_fetch_array($result_query, SQLSRV_FETCH_NUMERIC) ) {
-    $array_query_result[] = $row;
-  }
- // print_r($array_query_result);
-  sqlsrv_free_stmt($result_query);
+  $array_query_result = run_select_query_sqlser($query);
   return $array_query_result;
+
 }
 ?>

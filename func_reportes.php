@@ -17,54 +17,59 @@ function obtener_carteras () {
   $array_return = array();
   //for ($count = 1; $)
   while( $row = sqlsrv_fetch_array($result_query) ) {
-    $array_return[] = array('cartera'=>$row['CAR_CODIGO'], 'descripcion'=>$row['CAR_DESCRIPCION']);
+    $array_return[] = array('ID'=>$row['CAR_CODIGO'], 'NOMBRE'=>$row['CAR_DESCRIPCION']);
 //    $array_return['cartera'][] = $row['CAR_CODIGO'];
 //    $array_return['descripcion'][] = $row['CAR_DESCRIPCION'];
   }
   return $array_return;
 }
 
-//####################################################################
+//################################################################################
 
-function form_campo ($error, $num_formulario="0") {
-//parametros: mensaje de error, formulario al cual corresponde el mensaje d error
+function form_plantilla4($error, $num_formulario="0", $label, $archivo_action, $legend, $array, $form_number) {
+// formulario basico (cartera, subcartera y boton de descarga, control de fecha opcional)
+// $error: mensaje de error
+// $num_formulario: es el numero de formulario al cual pertenece el error, y el que comparamos despues con $form_number para saber en que formulario
+// mostrar el error
+// $label: es el nombre que aparecera en el acordeon
+// $archivo_action: es el nombre de la pagina al cual se dirigira el formulario
+// $legend: es el texto que aparecera en el fieldset
+// $form_number: es el numero de formulario dentro de la pagina
+// establecemos las cabeceras de los acordeones y los numeramos para identificarlos
 ?>
     <div class="row_accordeon">
-      <input id="acor1" name="accordeon1" type="radio" checked />
-      <label for="acor1">Reporte de Campo - Mejor Gestion por Direccion</label>
-      <form action="campo.php" method="post">
+     <?php echo <<<Final
+      <input id="acor$form_number" name="accordeon1" type="radio" checked />
+      <label for="acor$form_number">$label</label> <!-- variable label-->
+      <form action="$archivo_action" method="post"> <!-- variable archivo_action-->
         <fieldset>
-          <legend>Reporte de Campo</legend>
+          <legend>$legend</legend> <!-- variable legend-->
           <div class="div_form">
-<?php form_rango_fecha()?>
-            <div id="row_form">
-              <div class="field_row_form">
-                <label>Cartera:</label>
-                <div class="select_input">
-                  <?php
-    $array = obtener_carteras();
-    echo '<select name="cartera">';
-    echo  "\n";
-    echo '                    <option value="0">--seleccione--</option>';
-    foreach ($array as $row)
-    {
-      echo "\n";
-      echo '                    <option value="'.$row['cartera'].'">'.$row['descripcion'].'</option>';
-    }
-  ?>  </select>
-                  <input id="consulta" name="id_formulario" type="hidden" value="1">
-                </div>
-              </div>
-            </div>
+            <input id="consulta" name="id_formulario" type="hidden" value="$form_number">
+            
+
+Final;
+
+foreach ($array as $key => $row_value) {
+  echo '            <div id="row_form">';
+  foreach ($row_value as $key => $field_value) {
+    $field_value($form_number);
+  }
+  echo '            </div>';
+}
+
+?>
+
+
             <div id="row_form">
               <div class="field_row_form">
                 <button id="downl" type="submit"><i class="fa fa-arrow-circle-o-down fa-fw" aria-hidden="true"></i>descarga</button>
               </div>
-              <div class="field_row_form" id="error"><?php if ( $error <> "" && $num_formulario=="1" )
+              <div class="field_row_form" id="error"><?php if ( $error && $num_formulario==$form_number )// variable $form_number
 {
   echo $error;
 }
-?></div>
+?>
             </div>
           </div>
         </fieldset>
@@ -74,237 +79,46 @@ function form_campo ($error, $num_formulario="0") {
 }
 
 //################################################################################
-function call_telefonos_progresivo($error, $num_formulario="0") {
-?>
-    <div class="row_accordeon">
-      <input id="acor1" name="accordeon1" type="radio" checked />
-      <label for="acor1">Reporte de Telefonos para Predictivo</label>
-      <form action="call.php" method="post">
-        <fieldset>
-          <legend>Reporte de Telefonos</legend>
-          <div class="div_form">
-            <div id="row_form">
+
+function ctrl_lista_desplegable($label, $array, $control, $form_number, $js_function ='', $default_option_label='--seleccione--', $default_option_value=0) {
+  ?>
+  <?php
+  echo <<<Final
+
               <div class="field_row_form">
-                <label>Cartera:</label>
+                <label>$label</label>
                 <div class="select_input">
-<?php
-$array = obtener_carteras();
-echo '<select id="cartera_id" name="cartera">';
-echo  "\n";
-echo '                    <option value="0">--seleccione--</option>';
+                  <select id="$control$form_number" name="$control" $js_function>
+                    <option value="$default_option_value">$default_option_label</option>
+Final;
 foreach ($array as $row)
   {
     echo "\n";
-    echo '                    <option value="'.$row['cartera'].'">'.$row['descripcion'].'</option>';
+    echo '                    <option value="'.$row['ID'].'">'.$row['NOMBRE'].'</option>';
   }
-?>  </select>
-
-                </div>
-              </div>
-              <div class="field_row_form">
-                <label>SubCartera:</label>
-                <div class="select_input">
-<select id="subcartera_id" name="subcartera">
-                    <option value="0">--seleccione--</option>
- </select>
-                  <input id="consulta" name="id_formulario" type="hidden" value="1">
-                </div>
-              </div>
-            </div>
-            <div id="row_form">
-              <div class="field_row_form">
-                <button id="downl" type="submit"><i class="fa fa-arrow-circle-o-down fa-fw" aria-hidden="true"></i>descarga</button>
-              </div>
-              <div class="field_row_form" id="error"><?php if ( $error <> "" && $num_formulario=="1" )
-{
-  echo $error;
-}
 ?>
-            </div>
-          </div>
-        </fieldset>
-      </form>
-    <script>
-      var myRequest = new XMLHttpRequest();
-      document.getElementById("cartera_id").addEventListener("change", sendTheAJAX);
 
-      function prueba() {
-        document.getElementById("downl").innerHTML="prueba";
-      }
-      function sendTheAJAX() {
-        var x = document.getElementById("cartera_id");
-        var num = x.value;
-        myRequest.open('GET', 'subcartera.php?cartera='+num,true);
-        myRequest.onreadystatechange = function () {
-          if (myRequest.readyState === 4) {
-            var selectSubCartera = document.getElementById("subcartera_id");
-            selectSubCartera.innerHTML = "<option value=\"0\">--seleccione--</option>";
-            selectSubCartera.innerHTML += myRequest.responseText;
-            console.log(myRequest.responseText);
-          }
-        };
-        myRequest.send();
-      }
-</script>
-    </div>
+                  </select>
+                </div>
+              </div>
 <?php
 }
 
-//#############################################################################
-function asignacion1($error, $num_formulario="0") {
-?>
-    <div class="row_accordeon">
-      <input id="acor1" name="accordeon1" type="radio" checked />
-      <label for="acor1">Reporte de Asignacion</label>
-      <form action="asignacion.php" method="post">
-        <fieldset>
-          <legend>Reporte de Asignacion</legend>
-          <div class="div_form">
-            <div id="row_form">
-              <div class="field_row_form">
-                <label>Cartera:</label>
-                <div class="select_input">
-<?php
-$array = obtener_carteras();
-echo '<select id="cartera_id" name="cartera">';
-echo  "\n";
-echo '                    <option value="0">--seleccione--</option>';
-foreach ($array as $row)
-  {
-    echo "\n";
-    echo '                    <option value="'.$row['cartera'].'">'.$row['descripcion'].'</option>';
-  }
-?>  </select>
+//############################################################################
 
-                </div>
-              </div>
-              <div class="field_row_form">
-                <label>SubCartera:</label>
-                <div class="select_input">
-<select id="subcartera_id" name="subcartera">
-                    <option value="0">--seleccione--</option>
- </select>
-                  <input id="consulta" name="id_formulario" type="hidden" value="1">
-                </div>
-              </div>
-            </div>
-            <div id="row_form">
-              <div class="field_row_form">
-                <button id="downl" type="submit"><i class="fa fa-arrow-circle-o-down fa-fw" aria-hidden="true"></i>descarga</button>
-              </div>
-              <div class="field_row_form" id="error"><?php if ( $error <> "" && $num_formulario=="1" )
-{
-  echo $error;
-}
-?>
-            </div>
-          </div>
-        </fieldset>
-      </form>
-    <script>
-      var myRequest = new XMLHttpRequest();
-      document.getElementById("cartera_id").addEventListener("change", sendTheAJAX);
-
-      function prueba() {
-        document.getElementById("downl").innerHTML="prueba";
-      }
-      function sendTheAJAX() {
-        var x = document.getElementById("cartera_id");
-        var num = x.value;
-        myRequest.open('GET', 'subcartera.php?cartera='+num,true);
-        myRequest.onreadystatechange = function () {
-          if (myRequest.readyState === 4) {
-            var selectSubCartera = document.getElementById("subcartera_id");
-            selectSubCartera.innerHTML = "<option value=\"0\">--seleccione--</option>";
-            selectSubCartera.innerHTML += myRequest.responseText;
-            console.log(myRequest.responseText);
-          }
-        };
-        myRequest.send();
-      }
-</script>
-    </div>
-<?php
+function ctrl_select_cartera($form_number) {
+  
+  $array = obtener_carteras();
+  ctrl_lista_desplegable("Cartera:", $array, "cartera", $form_number, ' onchange="getCarteras('.$form_number.')"');
+  
 }
 
-//################################################################################
-function form_plantilla1($error, $num_formulario="0", $label, $archivo_action, $legend, $form_number) {
-// formulario basico (cartera, subcartera y boton de descarga)
-?>
-    <div class="row_accordeon">
-      <input id="acor1" name="accordeon1" type="radio" checked />
-      <label for="acor1"><?php echo $label; ?></label> <!-- variable $label-->
-      <form action="<?php echo $archivo_action; ?>" method="post"> <!-- variable $archivo_action-->
-        <fieldset>
-          <legend><?php echo $legend; ?></legend> <!-- variable $legend-->
-          <div class="div_form">
-            <div id="row_form">
-              <div class="field_row_form">
-                <label>Cartera:</label>
-                <div class="select_input">
-<?php
-$array = obtener_carteras();
-echo '<select id="cartera_id" name="cartera">';
-echo  "\n";
-echo '                    <option value="0">--seleccione--</option>';
-foreach ($array as $row)
-  {
-    echo "\n";
-    echo '                    <option value="'.$row['cartera'].'">'.$row['descripcion'].'</option>';
-  }
-?>  </select>
-
-                </div>
-              </div>
-              <div class="field_row_form">
-                <label>SubCartera:</label>
-                <div class="select_input">
-<select id="subcartera_id" name="subcartera">
-                    <option value="0">--seleccione--</option>
- </select>
-                  <input id="consulta" name="id_formulario" type="hidden" value="1">
-                </div>
-              </div>
-            </div>
-            <div id="row_form">
-              <div class="field_row_form">
-                <button id="downl" type="submit"><i class="fa fa-arrow-circle-o-down fa-fw" aria-hidden="true"></i>descarga</button>
-              </div>
-              <div class="field_row_form" id="error"><?php if ( $error <> "" && $num_formulario==$form_number )// variable $form_number
-{
-  echo $error;
+function ctrl_select_subcartera($form_number) {
+  
+  $array = array();
+  ctrl_lista_desplegable("SubCartera:", $array, "subcartera", $form_number );
+  
 }
-?>
-            </div>
-          </div>
-        </fieldset>
-      </form>
-    <script>
-      var myRequest = new XMLHttpRequest();
-      document.getElementById("cartera_id").addEventListener("change", sendTheAJAX);
-
-      function prueba() {
-        document.getElementById("downl").innerHTML="prueba";
-      }
-      function sendTheAJAX() {
-        var x = document.getElementById("cartera_id");
-        var num = x.value;
-        myRequest.open('GET', 'subcartera.php?cartera='+num,true);
-        myRequest.onreadystatechange = function () {
-          if (myRequest.readyState === 4) {
-            var selectSubCartera = document.getElementById("subcartera_id");
-            selectSubCartera.innerHTML = "<option value=\"0\">--seleccione--</option>";
-            selectSubCartera.innerHTML += myRequest.responseText;
-            console.log(myRequest.responseText);
-          }
-        };
-        myRequest.send();
-      }
-</script>
-    </div>
-<?php
-}
-
 //################################################################################
 
 function lib_js_reportes() {
@@ -313,6 +127,7 @@ function lib_js_reportes() {
     <script src="js/moment.min.js"></script>
     <script src="js/pikaday.js"></script>
     <script src="js/datepicker_laz.js"></script>
+    <script src="js/subcartera_updater_laz.js"></script>
 <?php
 }
 

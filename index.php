@@ -1,5 +1,6 @@
 <?php
 require_once 'func_inicio.php';
+require_once 'branch.php';
 session_start();
 if(!isset($_SESSION['usuario_valido'])) {
   if (isset($_POST['username']) && isset($_POST['password'])) {
@@ -29,7 +30,7 @@ if(!isset($_SESSION['usuario_valido'])) {
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Login</title>
+  <title><?php echo TITULO_HTML; ?></title>
 <!--  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">-->
     <link href=css/font.css rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">

@@ -1,6 +1,42 @@
 <?php
 require_once 'conectar.php';
-//11.02.2018
+
+const EXCEL_STYLE_HEADER_GENERAL = array('font'=>'Arial','font-size'=>10,'fill'=>'#06f', 'color'=>'#fff',
+                                        'halign'=>'center', 'valign'=>'center','border'=>'left,right,top,bottom', 'border-style'=>'thin');
+const EXCEL_STYLE_ROW_GENERAL = array('font'=>'Arial','font-size'=>10, 'color'=>'#000',
+                                        'halign'=>'center', 'valign'=>'center','border'=>'left,right,top,bottom', 'border-style'=>'thin');
+const WHITE_FILL = array('fill'=>'#fff');
+const GRAY_FILL = array('fill'=>'#ddd');
+const WRAP_TRUE = array('wrap_text'=>true);
+const WRAP_FALSE = array('wrap_text'=>false);
+const HIGH_ROW = array('height'=>30);
+const LOW_ROW = array();
+
+define('EXCEL_STYLE_ROW_HEADER',  array( 'font'=>'Arial','font-size'=>10, 'fill'=>'#06f', 
+                        'color'=>'#fff', 'halign'=>'center', 'valign'=>'center',
+                        'border'=>'left,right,top,bottom', 'border-style'=>'thin', 'height'=>36,'wrap_text'=>true));
+define('EXCEL_STYLE_ROW_ODD', array( 'font'=>'Arial','font-size'=>10, 'fill'=>'#fff',
+                         'color'=>'#000', 'halign'=>'center', 'valign'=>'center', 
+                         'border'=>'left,right,top,bottom', 'height'=>30));
+define('EXCEL_STYLE_ROW_EVEN', array( 'font'=>'Arial','font-size'=>10, 'fill'=>'#ddd', 
+                          'color'=>'#000', 'halign'=>'center', 'valign'=>'center', 'border'=>'left,right,top,bottom','height'=>30));
+
+define('EXCEL_STYLE_ROW_ODD_WRAP', array( 'font'=>'Arial','font-size'=>10, 'fill'=>'#fff',
+                         'color'=>'#000', 'halign'=>'center', 'valign'=>'center', 
+                         'border'=>'left,right,top,bottom', 'wrap_text'=>true));
+define('EXCEL_STYLE_ROW_EVEN_WRAP', array( 'font'=>'Arial','font-size'=>10, 'fill'=>'#ddd', 
+                          'color'=>'#000', 'halign'=>'center', 'valign'=>'center', 'border'=>'left,right,top,bottom', 'wrap_text'=>true));
+define('EXCEL_SHEET_NAME', 'Hoja1');
+
+// excel formato simbolos
+// 'N' = 'number';
+// 'S' = 'string';
+// 'M' = 'money';
+// 'H' = 'time';
+// 'F' = 'date';
+// 'D' = 'datetime';
+// 'P' = 'price';
+
 function login($user,$pass) {
 //  conectarse al Sql Server
   $conn = conectar_mssql();
@@ -47,4 +83,54 @@ function si_es_excepcion($result_query, $query) {
   }
 }
 
+function si_es_excepcion_mysql11($conn, $result_query, $query) {
+  if (!$result_query)
+  {
+     $tipo_error = 'Error::'.$conn->error."\n";
+     $query_error = "query::".$query;
+     throw new Exception($tipo_error.$query_error, 2);
+  }
+}
+
+function run_select_query_sqlser($query) {
+
+  //conectarse al Sql Server
+  //sqlsrv_configure("LogSubsystems", SQLSRV_LOG_SYSTEM_ALL);
+  //sqlsrv_configure("LogSeverity", SQLSRV_LOG_SEVERITY_ALL);
+  ini_set('memory_limit','2048M'); 
+  ini_set('sqlsrv.ClientBufferMaxKBSize','2048288');
+  $conn = conectar_mssql();
+
+  //$result_query = sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, array( "Scrollable" => 'static') );
+  $result_query = sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
+//  if (!$result_query) {
+//    throw new Exception('No se pudo completar la consulta11',11);
+   // echo "6";
+  //}
+  si_es_excepcion($result_query, $query);
+
+  $array_query_result = array();
+  $header = array();
+  foreach(sqlsrv_field_metadata($result_query) as $meta) {
+    $header[] = $meta['Name'];
+  }
+  $array_query_result['header'] = $header;
+  //print_r($header);
+  while( $row = sqlsrv_fetch_array($result_query, SQLSRV_FETCH_NUMERIC) ) {
+    $array_query_result['resultado'][] = $row;
+  }
+ // print_r($array_query_result);
+  sqlsrv_free_stmt($result_query);
+  return $array_query_result;
+}
+
+function procesar_excepcion($e) {
+  $error_message = $e->getMessage();
+  $error_code = $e->getCode();
+  if ($error_code == 2) {
+    echo "<!--".$error_message."-->";
+    $error_message = 'Revisar error en comentarios';
+  }
+  return $error_message;
+} 
 ?>

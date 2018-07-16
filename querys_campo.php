@@ -1,12 +1,20 @@
 <?php
-function reporte_1($cartera, $fecha_desde, $fecha_hasta) {
+function reporte_1() {
 
-  //conectarse al Sql Server
-  //sqlsrv_configure("LogSubsystems", SQLSRV_LOG_SYSTEM_ALL);
-  //sqlsrv_configure("LogSeverity", SQLSRV_LOG_SEVERITY_ALL);
-  ini_set('memory_limit','2048M'); 
-  ini_set('sqlsrv.ClientBufferMaxKBSize','2048288');
-  $conn = conectar_mssql();
+    $cartera = $_POST['cartera'];
+    $fecha_desde = $_POST['fecha_desde'];
+    $fecha_hasta = $_POST['fecha_hasta'];
+    $fecha_desde_ts = DateTime::createFromFormat('d/m/Y', $fecha_desde);
+    $fecha_hasta_ts = DateTime::createFromFormat('d/m/Y', $fecha_hasta);
+
+
+      if ( $cartera == 0 ) {
+        throw new Exception('Seleccione una cartera',1);
+      }
+      if ( $fecha_desde_ts > $fecha_hasta_ts ) {
+        throw new Exception('el rango de fechas no es valido',1);
+      }
+
   $query = "
 DECLARE 
 @FECHA_DESDE VARCHAR(10)
@@ -16,21 +24,21 @@ SET @FECHA_DESDE = '".$fecha_desde."'
 SET @FECHA_HASTA = '".$fecha_hasta."'
 
 SELECT
-MGA.CLI_DOCUMENTO_IDENTIDAD AS DOCUMENTO
-, MGA.DIR_CODIGO
-, ROW_NUMBER() OVER(PARTITION BY MGA.CLI_DOCUMENTO_IDENTIDAD ORDER BY MGA.DIR_CODIGO ASC) AS ORDEN
-, MGA.MEJ_EST AS 'MEJOR ESTADO'
-, MGA.TDI_DESCRIPCION AS 'TIPO DIRECCION'
-, MGA.TOR_DESCRIPCION AS ORIGEN
-, MGA.DEPARTAMENTO
-, MGA.PROVINCIA
-, MGA.DISTRITO
-, REPLACE(MGA.DIR_DIRECCION,'\"','') AS DIRECCION
-, CASE WHEN MGA.TIPIFICACION IS NULL THEN ISNULL(MGA.TIR_DESCRIPCION, '') ELSE CONCAT(MGA.TIPIFICACION,'/',MGA.TIR_DESCRIPCION) END AS RESULTADO_GESTION
-, MGA.FECHA_MG
-, CASE WHEN MGA.TIR_DESCRIPCION IS NULL THEN '0' ELSE MGA.INSTENSIDAD END AS INTENSIDAD
-, MGA.ULTIMO_CONTACTO AS FECHA_ULT_GESTION
-, REPLACE(MGA.GES_OBSERVACIONES,'\"','') AS OBSERVACIONES
+MGA.CLI_DOCUMENTO_IDENTIDAD AS 'S14|DOCUMENTO'
+, MGA.DIR_CODIGO AS 'S12|DIR_CODIGO'
+, ROW_NUMBER() OVER(PARTITION BY MGA.CLI_DOCUMENTO_IDENTIDAD ORDER BY MGA.DIR_CODIGO ASC) AS 'N08|ORDEN'
+, MGA.MEJ_EST AS 'S10|MEJOR ESTADO'
+, MGA.TDI_DESCRIPCION AS 'S14|TIPO DIRECCION'
+, MGA.TOR_DESCRIPCION AS 'S18|ORIGEN'
+, MGA.DEPARTAMENTO AS 'S16|DEPARTAMENTO'
+, MGA.PROVINCIA AS 'S18|PROVINCIA'
+, MGA.DISTRITO AS 'S20|DISTRITO'
+, REPLACE(MGA.DIR_DIRECCION,'\"','') AS 'S26|DIRECCION'
+, CASE WHEN MGA.TIPIFICACION IS NULL THEN ISNULL(MGA.TIR_DESCRIPCION, '-') ELSE CONCAT(MGA.TIPIFICACION,'/',MGA.TIR_DESCRIPCION) END AS 'S22|RESULTADO GESTION'
+, MGA.FECHA_MG AS 'S12|FECHA MEJOR GESTION'
+, CASE WHEN MGA.TIR_DESCRIPCION IS NULL THEN '0' ELSE MGA.INSTENSIDAD END AS 'N12|INTENSIDAD'
+, MGA.ULTIMO_CONTACTO AS 'S12|FECHA ULTIMA GESTION'
+, REPLACE(MGA.GES_OBSERVACIONES,'\"','') AS 'S22|OBSERVACIONES'
 FROM
 (
 SELECT
@@ -60,8 +68,7 @@ INNER JOIN COBRANZA.GCC_CUENTAS CUE ON CUE.CLI_CODIGO=CLI.CLI_CODIGO
 INNER JOIN COBRANZA.GCC_BASEDET BDE ON BDE.CUE_CODIGO=CUE.CUE_CODIGO AND BDE.BAD_ESTADO_CUENTA='A'
 INNER JOIN COBRANZA.GCC_BASE BAS ON BAS.BAS_CODIGO=BDE.BAS_CODIGO
 INNER JOIN COBRANZA.GCC_CARTERAS CAR ON CAR.CAR_CODIGO=BAS.CAR_CODIGO AND CAR.CAR_CODIGO=".$cartera."
-INNER JOIN COBRANZA.GCC_CLIENTE CL2 ON CL2.CLI_DOCUMENTO_IDENTIDAD=CLI.CLI_DOCUMENTO_IDENTIDAD
-INNER JOIN COBRANZA.GCC_DIRECCIONES DIR ON DIR.CLI_CODIGO=CL2.CLI_CODIGO
+INNER JOIN COBRANZA.GCC_DIRECCIONES DIR ON DIR.CLI_CODIGO=CLI.CLI_CODIGO
 INNER JOIN COBRANZA.GCC_TIPO_ORIGEN TOR ON DIR.TOR_CODIGO=TOR.TOR_CODIGO
 INNER JOIN COBRANZA.GCC_TIPO_DIRECCION TPD ON DIR.TDI_CODIGO=TPD.TDI_CODIGO
 LEFT JOIN COBRANZA.GCC_UBIGEO UBI ON UBI.UBI_CODIGO=DIR.UBI_CODIGO
@@ -74,48 +81,8 @@ DIR.DIR_ESTADO_REGISTRO='A'
 WHERE
 MGA.UNICO=1
 ORDER BY 1 ASC, 2 ASC;";
-  
-  $result_query = sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
-//  if (!$result_query) {
-//    throw new Exception('No se pudo completar la consulta11',11);
-   // echo "6";
-  //}
 
-  //throw new Exception('No se pudo completar la consulta11',11);
-    if( ($errors = sqlsrv_errors() ) != null) {
-        foreach( $errors as $error ) {
-            echo "SQLSTATE: ".$error[ 'SQLSTATE']."<br />";
-            echo "code: ".$error[ 'code']."<br />";
-            echo "message: ".$error[ 'message']."<br />";
-        }
-        echo $query;
-        print_r( $errors, false);
-       // echo ini_get('sqlsrv.ClientBufferMaxKBSize');
-     exit;
-}
-//       if ($result_query) {
-//     $rows = sqlsrv_has_rows( $result_query );
-//
-//   if ($rows === true)
-//      echo "There are rows. <br />";
-//   else 
-//      echo "There are no rows. <br />";
-//}
-  $array_query_result = array();
-  $header = array();
- foreach(sqlsrv_field_metadata($result_query) as $meta) {
-
-  $header[] = $meta['Name'];
-}
-$array_query_result[] = $header;
-  //print_r($header);
-  while( $row = sqlsrv_fetch_array($result_query, SQLSRV_FETCH_NUMERIC) ) {
-  $array_query_result[] = $row;
-
-  }
- // print_r($array_query_result);
-  sqlsrv_free_stmt($result_query);
-return $array_query_result;
+  $array_query_result = run_select_query_sqlser($query);
+  return $array_query_result;
 }
 ?>
-
