@@ -68,9 +68,9 @@ if ($error<>"")
 <?php
 }
 //funcion mostrar tabla progresivo
-function mostrar_migracion_progresivo($array, $error) {
+function mostrar_migracion_progresivo2($array, $error) {
 ?>
-    <form action="progresivo.php" method="post">
+    <form action="progresivo2.php" method="post">
       <fieldset>
         <legend>Migracion de llamadas predictivo</legend>
         <div class="div_form only_form">
@@ -139,6 +139,45 @@ llenar_tabla_progresivo($array, $headers, $style);
       myRequest.send();
     }
 </script>
+<?php
+}
+
+function mostrar_migracion_predictiva($mensaje) {
+?>
+    <form action="predictivo.php" method="post" enctype="multipart/form-data">
+      <fieldset>
+        <legend>Carga Gestiones del Predictivo</legend>
+        <div class="div_form only_form">
+            <div id="row_form">
+              <div class="field_row_form" id="fecha_llamada">
+                <label for="datepicker_hasta" id="label_llamada">Fecha Llamada:</label>
+                <div class="input_fecha">
+                  <input type="text" id="datepicker_hasta" name="fecha_llamada" value="<?php echo date('d/m/Y');?>" ><i class="fa fa-calendar" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+          <div id="row_form">
+            <div class="field_row_form">
+              <input type="file" name="archivo_subido" id="archivo_subido">
+            </div>
+          </div>
+          <div id="row_form">
+            <div class="field_row_form">
+              <input type="submit" value="Subir archivo" name="subir">
+            </div>
+          </div>
+              <div class="field_row_form" id="error"><?php if ( $mensaje )// variable $form_number
+{
+  echo $mensaje;
+}
+?>
+            </div>
+        </div>
+      </fieldset>
+    </form>
+    <script src="js/moment.min.js"></script>
+    <script src="js/pikaday.js"></script>
+    <script src="js/datepicker_laz.js"></script>
 <?php
 }
 ?>

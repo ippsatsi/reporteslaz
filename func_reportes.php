@@ -55,7 +55,8 @@ foreach ($array as $key => $row_value) {
   foreach ($row_value as $key => $field_value) {
     $field_value($form_number);
   }
-  echo '            </div>';
+  echo '          </div>
+';
 }
 
 ?>
@@ -119,6 +120,8 @@ function ctrl_select_subcartera($form_number) {
   ctrl_lista_desplegable("SubCartera:", $array, "subcartera", $form_number );
   
 }
+
+
 //################################################################################
 
 function lib_js_reportes() {
@@ -146,6 +149,19 @@ function form_rango_fecha() {
                 <label for="datepicker_hasta">Hasta:</label>
                 <div class="input_fecha">
                   <input type="text" id="datepicker_hasta" name="fecha_hasta" value="<?php echo date('d/m/Y');?>"><i class="fa fa-calendar" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
+<?php
+}
+
+function form_fecha($form_number) {
+?>
+            <div id="row_form">
+              <div class="field_row_form" id="<?php echo "fecha_hasta".$form_number;?>">
+                <label for="datepicker_hasta" id="<?php echo "label_hasta".$form_number;?>">Hasta:</label>
+                <div class="input_fecha">
+                  <input type="text" id="datepicker_hasta" name="fecha_hasta" value="<?php echo date('d/m/Y');?>" ><i class="fa fa-calendar" aria-hidden="true"></i>
                 </div>
               </div>
             </div>
