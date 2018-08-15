@@ -320,6 +320,9 @@ function css_estilos() {
   .thintop_margin {
     margin-top: 10px;
   }
+  .width_div {
+    width:25rem;
+  }
 </style>
 <?php
 }

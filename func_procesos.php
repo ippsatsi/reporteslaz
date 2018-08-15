@@ -149,20 +149,20 @@ function mostrar_migracion_predictiva($mensaje) {
         <legend>Carga Gestiones del Predictivo</legend>
         <div class="div_form only_form">
             <div id="row_form">
-              <div class="field_row_form" id="fecha_llamada">
+              <div class="field_row_form width_div" id="fecha_llamada">
                 <label for="datepicker_hasta" id="label_llamada">Fecha Llamada:</label>
                 <div class="input_fecha">
-                  <input type="text" id="datepicker_hasta" name="fecha_llamada" value="<?php echo date('d/m/Y');?>" ><i class="fa fa-calendar" aria-hidden="true"></i>
+                  <input type="text" id="datepicker_hasta" name="fecha_llamada" value="<?php echo (isset($_POST['fecha_llamada'])?$_POST['fecha_llamada']:date('d/m/Y'));?>" ><i class="fa fa-calendar" aria-hidden="true"></i>
                 </div>
               </div>
             </div>
           <div id="row_form">
-            <div class="field_row_form">
+            <div class="field_row_form  width_div">
               <input type="file" name="archivo_subido" id="archivo_subido">
             </div>
           </div>
           <div id="row_form">
-            <div class="field_row_form">
+            <div class="field_row_form width_div">
               <input type="submit" value="Subir archivo" name="subir">
             </div>
           </div>
