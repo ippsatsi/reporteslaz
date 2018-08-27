@@ -269,6 +269,15 @@ function css_estilos() {
     box-shadow: 0px 0px 0px 1px rgba(155,155,155,0.3);
     height: 243px;
   }
+  input:checked ~ form.altura_baja {
+    height: 243px;
+  }
+  input:checked ~ form.altura_media {
+    height: 343px;
+  }
+  input:checked ~ form.altura_maxima {
+    height: 543px;
+  }
   input:checked + label,
   input:checked + label:hover{
     background: #c6e1ec;
@@ -357,6 +366,7 @@ $mostrar_usuario = $rol_logo.$_SESSION['usuario_valido'];
           <li><a href=borrargestiones.php>Borrar Gestiones</a></li>
 <?php echo ($rol_agente ? '' : '          <li><a href=#gestion2>Actualizar Cajas/Datos</a></li>' )?>
 <?php echo ($rol_agente ? '' : '          <li><a href=predictivo.php>Gestiones Predictivo</a></li>' )?>
+<?php echo ($rol_agente ? '' : '          <li><a href=predictivo_web.php>Gestiones Predictivo WEB</a></li>' )?>
         </ul>
       </li>
       <li><a href=#convenios>Gestiones</a>
@@ -390,7 +400,7 @@ function footer_html() {
 function llenar_tabla($array_input, $array_headers, $css_class) {
 $expandir = 'implode';
 echo <<<Final
-            <table  $css_class>
+            <table  $css_class><!-- llenar tabla-->
               <thead>
                 <tr>
                   <th>{$expandir("</th>\n                  <th>", $array_headers)}</th>

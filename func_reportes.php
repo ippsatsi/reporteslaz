@@ -36,6 +36,7 @@ function form_plantilla4($error, $num_formulario="0", $label, $archivo_action, $
 // $legend: es el texto que aparecera en el fieldset
 // $form_number: es el numero de formulario dentro de la pagina
 // establecemos las cabeceras de los acordeones y los numeramos para identificarlos
+$submit = false;
 ?>
     <div class="row_accordeon">
      <?php echo <<<Final
@@ -54,18 +55,23 @@ foreach ($array as $key => $row_value) {
   echo '            <div id="row_form">';
   foreach ($row_value as $key => $field_value) {
     $field_value($form_number);
+    if ($field_value=='ctrl_submit') {
+      $submit = true;
+    }
   }
   echo '          </div>
 ';
 }
+echo '            <div id="row_form">';
 
+if (!$submit) {
 ?>
-
-
-            <div id="row_form">
               <div class="field_row_form">
                 <button id="downl" type="submit"><i class="fa fa-arrow-circle-o-down fa-fw" aria-hidden="true"></i>descarga</button>
               </div>
+<?php
+}
+?>
               <div class="field_row_form" id="error"><?php if ( $error && $num_formulario==$form_number )// variable $form_number
 {
   echo $error;
@@ -121,7 +127,15 @@ function ctrl_select_subcartera($form_number) {
   
 }
 
+//################################################################################
 
+function ctrl_submit($form_number) {
+?>
+              <div class="field_row_form">
+                <input id="downl" type="button" href="busquedas.php?cartera=" target="_blank" onclick="busquedas('busquedas.php?cartera=', '_blank', 'width=700,height=400, top=300,left=300',<?php echo $form_number; ?>); return false;" value="reporte"/> 
+              </div>
+<?php
+}
 //################################################################################
 
 function lib_js_reportes() {

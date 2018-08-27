@@ -1,5 +1,36 @@
 <?php
 
+setlocale(LC_ALL,"es_ES.utf8");
+function mostrar_tabla($legend, $array, $headers, $error) {
+?>
+    <form action="gestiones.php" method="post">
+      <fieldset>
+        <legend><?php echo $legend; ?></legend>
+        <div class="div_form only_form">
+<?php
+if ($error)
+{
+  echo '          <div id="row_form">'."\n";
+  echo "            <label class=\"thintop_margin\">Error de consulta, revisar comentarios ocultos</label>"."\n";
+  echo '          </div>'."\n";
+}
+?>
+          <div id="row_form">
+
+
+<?php
+
+$style = '';
+llenar_tabla($array, $headers, $style);
+?>
+
+          </div>
+        </div>
+      </fieldset>
+    </form>
+<?php
+}
+
 function mostrar_gestiones ($dni, $array_cuentas, $array_gestiones, $error) {
 ?>
     <form action="borrargestiones.php" method="post">
@@ -179,5 +210,77 @@ function mostrar_migracion_predictiva($mensaje) {
     <script src="js/pikaday.js"></script>
     <script src="js/datepicker_laz.js"></script>
 <?php
+}
+
+function form_proceso($legend, $array, $tipo_form='') {
+
+$action = basename($_SERVER['PHP_SELF']);
+echo <<<Final
+    <form action="$action" method="post" $tipo_form>
+      <fieldset>
+        <legend>$legend</legend>
+        <div class="div_form only_form">
+
+Final;
+foreach ($array as $key => $row_value) {
+  echo '          <div id="row_form"> <!-- foreach-->
+';
+  foreach ($row_value as $key => $field_value) {
+    $field_value();
+  }
+  echo '
+          </div> <!-- foreach-->
+';
+}
+echo <<<Final
+        </div><!-- div_form only_form-->
+      </fieldset>
+    </form>
+
+Final;
+}
+
+function ctrl_boton_submit() {
+?>
+            <div class="field_row_form">
+              <input id="downl" type="submit" value="buscar" name="buscar">
+            </div>
+<?php
+}
+
+function ctrl_fecha_desde () {
+$valor_fecha = (isset($_POST['fecha_llamada'])?$_POST['fecha_llamada']:date('d/m/Y'));
+echo <<<Final
+            <div class="field_row_form" id="fecha_llamada"><!-- ctrl_fecha_desde-->
+              <label for="datepicker_desde" id="label_llamada">Fecha:</label>
+              <div class="input_fecha">
+                <input type="text" id="datepicker_desde" name="fecha_llamada" value="$valor_fecha" ><i class="fa fa-calendar" aria-hidden="true"></i>
+              </div>
+            </div> <!-- ctrl_fecha_desde-->
+Final;
+}
+
+function carga_js_scripts() {
+//funcion para habilitar el datepucker
+?>
+    <script src="js/moment.min.js"></script>
+    <script src="js/pikaday.js"></script>
+    <script src="js/datepicker_laz.js"></script>
+    <script src="js/subcartera_updater_laz.js"></script>
+<?php
+}
+
+function ctrl_tabla() {
+
+  global $listar_tabla;
+  global $headers_tabla;
+  global $array_tabla;
+  $flag = $listar_tabla;
+  if ($flag) {
+    $headers = $headers_tabla;
+    $style = 'class="thintop_margin"';
+    $array = $array_tabla;
+    llenar_tabla($array, $headers, $style);  //si es asi muestra las cuentas
+  }
 }
 ?>
