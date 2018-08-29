@@ -109,6 +109,7 @@ AND TCP2.TMP_ESTADO_LLAMADA IN ('No Responde','Buz?n de Voz','Llamada Fallida','
     $count_telefono_invalido = 0;
     $count_no_contesta = 0;
     $filas_a_migrar = sqlsrv_num_rows($result_query2); //obtenemos la cantidad de llamadas validadas listas para migrar
+    $mensaje = "La campaña ".$filename_campana." no tiene registros a importar";
     if($filas_a_migrar>0){
 
       while( $row = sqlsrv_fetch_array($result_query2, SQLSRV_FETCH_NUMERIC) ) {
@@ -143,21 +144,22 @@ AND TCP2.TMP_ESTADO_LLAMADA IN ('No Responde','Buz?n de Voz','Llamada Fallida','
 
          $filas_migradas++;
       }//while
-    }//if
-   
-    $mensaje = "Campaña: ".$filename_campana.". Se leyeron ".$count." registros. Se importaron ".$filas_migradas." gestiones."." NC=".$count_no_contesta." BZ=".$count_buzon." DP=".$count_telefono_invalido;
+      $mensaje = "Campaña: ".$filename_campana.". Se leyeron ".$count." registros. Se importaron ".$filas_migradas." gestiones."." NC=".$count_no_contesta." BZ=".$count_buzon." DP=".$count_telefono_invalido;
     
   //*****************************************
   //borrado de tabla temporal de carga
-    $query = "
+      $query = "
 DELETE TCP2
 FROM
 COBRANZA.TMP_CARGA_PREDICTIVO2 TCP2
 WHERE
 TCP2.TMP_FECHA_CARGA='".$fecha_hora_carga."' AND TCP2.TMP_USUARIO='".$usuario."'";
     //***************************
-             $result_query2 = sqlsrv_query( $conn2, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
-           si_es_excepcion($result_query2, $query);
+      $result_query2 = sqlsrv_query( $conn2, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
+      si_es_excepcion($result_query2, $query);
+    }//if
+   
+
   }//try
   catch(Exception $e) {
     $mensaje = procesar_excepcion($e);

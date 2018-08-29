@@ -50,34 +50,16 @@ $array = array(array('form_rango_fecha'),array('ctrl_select_cartera'));
 form_plantilla4($error_message, $num_formulario, "Reporte de Campo - Mejor Gestion por Direccion", "campo.php", "Reporte de Campo", $array, 1);
 $array = array(array('ctrl_submit','ctrl_select_cartera'));
 form_plantilla4($error_message, $num_formulario, "Reporte de Busquedas - Ranking busquedas por Asesor", "campo.php", "Reporte de Busquedas", $array, 2);
-
+$array = array(array('ctrl_select_cartera'));
+form_plantilla4($error_message, $num_formulario, "Reporte de Direcciones nuevas", "campo.php", "Reporte de Campo", $array, 3);
 $script = <<<Final
-
 <script>
 function busquedas(destino, tipo_destino, ventana, form_number) {
     console.log(destino);
-    console.log(tipo_destino);
-    console.log(ventana);
-    console.log(form_number);
-
     var x = document.getElementById("cartera"+form_number);
     var cartera = x.value;
     console.log(x.value);
     window.open('busquedas.php?cartera='+cartera, '_blank', 'width=750,height=400, top=300,left=300');
-  //  var label_fecha = document.getElementById("label_hasta"+form_number);
-  //  var y = document.getElementById("tipo_reporte"+form_number);
-  //  var reporte_num = y.value;
-  //  //console.log(reporte_num);
-  //  if (reporte_num == 3) {
-  //      x.style.display = "flex";
-  //      label_fecha.innerHTML = "Hasta:";
-  //  } else if ( reporte_num == 4) {
-  //      x.style.display = "flex";
-  //      label_fecha.innerHTML = "Dia:";
-  //  } else {
-  //      x.style.display = "none";
-  //  }
-
 }
 </script>
 
