@@ -51,7 +51,7 @@ form_plantilla4($error_message, $num_formulario, "Reporte de Campo - Mejor Gesti
 $array = array(array('ctrl_submit','ctrl_select_cartera'));
 form_plantilla4($error_message, $num_formulario, "Reporte de Busquedas - Ranking busquedas por Asesor", "campo.php", "Reporte de Busquedas", $array, 2);
 $array = array(array('ctrl_select_cartera'));
-form_plantilla4($error_message, $num_formulario, "Reporte de Direcciones nuevas", "campo.php", "Reporte de Campo", $array, 3);
+form_plantilla4($error_message, $num_formulario, "Reporte de Direcciones nuevas/actualizadas", "campo.php", "Reporte de Campo", $array, 3);
 $script = <<<Final
 <script>
 function busquedas(destino, tipo_destino, ventana, form_number) {

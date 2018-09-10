@@ -48,6 +48,23 @@ css_estilos();
 header_html();
 $array = array(array('ctrl_select_cartera', 'ctrl_select_subcartera'));
 form_plantilla4($error_message, $num_formulario, "Reporte de Correos", "correo.php", "Reporte de Correos", $array, 1);
+$array = array(array('ctrl_submit','ctrl_select_cartera'));
+form_plantilla4($error_message, $num_formulario, "Reporte de Busquedas - Ranking busquedas por Asesor", "correo.php", "Reporte de Busquedas", $array, 2);
+$array = array(array('ctrl_select_cartera'));
+form_plantilla4($error_message, $num_formulario, "Reporte de Correos nuevas", "correo.php", "Reporte de Correos", $array, 3);
+$script = <<<Final
+<script>
+function busquedas(destino, tipo_destino, ventana, form_number) {
+    console.log(destino);
+    var x = document.getElementById("cartera"+form_number);
+    var cartera = x.value;
+    console.log(x.value);
+    window.open('busquedas_correo.php?cartera='+cartera, '_blank', 'width=750,height=400, top=300,left=300');
+}
+</script>
+
+Final;
+echo $script;
 lib_js_reportes();
 footer_html();
 ?>
