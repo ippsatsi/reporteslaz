@@ -315,7 +315,7 @@ function css_estilos() {
     font-weight: 500;
   }
   #row_form tr {
-    font-weight: 300;
+    font-weight: 500;
   }
   #row_form td {
     text-align: center;
@@ -331,6 +331,9 @@ function css_estilos() {
   }
   .width_div {
     width:25rem;
+  }
+  #output_js_errores {
+    color:#ecf0f5;
   }
 </style>
 <?php
@@ -365,7 +368,7 @@ $mostrar_usuario = $rol_logo.$_SESSION['usuario_valido'];
         <ul id="drop">
           <li><a href=borrargestiones.php>Borrar Gestiones</a></li>
 <?php echo ($rol_agente ? '' : '          <li><a href=#gestion2>Actualizar Cajas/Datos</a></li>' )?>
-<?php echo ($rol_agente ? '' : '          <li><a href=predictivo.php>Gestiones Predictivo</a></li>' )?>
+<!--<?php echo ($rol_agente ? '' : '          <li><a href=predictivo.php>Gestiones Predictivo</a></li>' )?>-->
 <?php echo ($rol_agente ? '' : '          <li><a href=predictivo_web.php>Gestiones Predictivo WEB</a></li>' )?>
         </ul>
       </li>
@@ -391,6 +394,7 @@ $mostrar_usuario = $rol_logo.$_SESSION['usuario_valido'];
 
 function footer_html() {
 ?>
+    <div id="output_js_errores">ff</div>
   </div>
 </body>
 </html>
@@ -409,7 +413,7 @@ echo <<<Final
 
 Final;
   foreach ($array_input as $table_row) {
-    echo "                <tr>\n                  <td>";
+    echo "                <tr id=\"row_".current($table_row)."\">\n                  <td>";//jala el primer elemento del array,para formar id
     echo implode("</td>\n                  <td>",$table_row);
     echo "</td>\n                </tr>\n";
   }

@@ -212,7 +212,7 @@ function mostrar_migracion_predictiva($mensaje) {
 <?php
 }
 
-function form_proceso($legend, $array, $tipo_form='') {
+function form_proceso($legend, $array, $mensaje , $tipo_form='') {
 
 $action = basename($_SERVER['PHP_SELF']);
 echo <<<Final
@@ -232,7 +232,16 @@ foreach ($array as $key => $row_value) {
           </div> <!-- foreach-->
 ';
 }
+?>
+            <div id="row_form">
+              <div class="field_row_form" id="error"><?php if ( $mensaje )// variable $form_number
+{
+  echo $mensaje;
+}
+
 echo <<<Final
+            </div><!-- div_field_row_form-->
+          </div><!-- div_row_form-->
         </div><!-- div_form only_form-->
       </fieldset>
     </form>
