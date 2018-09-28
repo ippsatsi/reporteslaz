@@ -112,7 +112,7 @@ AND TCP2.TMP_ESTADO_LLAMADA IN ('No Responde','Buz?n de Voz','Llamada Fallida','
       }
 
        //ejecutamos el procedimiento de carga de gestiones
-      $query11 = "EXEC ucatel_db_gcc.COBRANZA.SP_REGISTRAR_GESTION_PROGRESIVO_NOCONTESTA
+      $query = "EXEC ucatel_db_gcc.COBRANZA.SP_REGISTRAR_GESTION_PROGRESIVO_NOCONTESTA
          $respuesta, $solucion, 0, ".$row[0].", '".$observacion."', ".$row[1].", ".$row[2].", ".$row[3].", 0, 0, ".USER_PREDICTIVO.", 5, '', 
            0, 0, 0, 0 , 0, 0, '', '', 0, '', '".$row[4]."'";
            
@@ -122,8 +122,8 @@ AND TCP2.TMP_ESTADO_LLAMADA IN ('No Responde','Buz?n de Voz','Llamada Fallida','
            0, 0, 0, 0 , 0, 0, '', '', 0, '', '".$row[4]."'";
     //**************************
     //ejecutamos query de grabacion de gestiones
-      $result_query3 = sqlsrv_query( $conn2, $query_desa);
-      si_es_excepcion($result_query3, $query_desa);
+      $result_query3 = sqlsrv_query( $conn2, $query);
+      si_es_excepcion($result_query3, $query);
 
       $filas_migradas++;
     }//while
