@@ -77,7 +77,9 @@ INNER JOIN COBRANZA.GCC_BASEDET BDE ON BDE.CUE_CODIGO=CUE.CUE_CODIGO
 INNER JOIN COBRANZA.GCC_BASE BAS ON BAS.BAS_CODIGO=BDE.BAS_CODIGO
 WHERE
 TCP2.TMP_TELEFONO=TEL.TEL_NUMERO
-AND TCP2.TMP_ESTADO_LLAMADA IN ('No Responde','Buz?n de Voz','Llamada Fallida','Abandonada')";
+AND TCP2.TMP_ESTADO_LLAMADA IN ('No Responde','Buz?n de Voz','Llamada Fallida','Abandonada')
+AND TCP2.TMP_FECHA_CARGA='".$fecha_hora_carga."' AND TCP2.TMP_USUARIO='".$usuario."'";//esto nos permitira hacer carga simultanea
+//de varias campañas sin que se crucen
 //AND TCP2.TMP_CODIGO_CAUSA <> 'Circuit/channel congestion'";
 
 //*********************************
