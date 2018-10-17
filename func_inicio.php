@@ -1,6 +1,8 @@
 <?php
 require_once 'conectar.php';
 
+date_default_timezone_set('America/Lima'); //para que la hora de la funcion date corresponda a local
+
 const EXCEL_STYLE_HEADER_GENERAL = array('font'=>'Arial','font-size'=>10,'fill'=>'#06f', 'color'=>'#fff',
                                         'halign'=>'center', 'valign'=>'center','border'=>'left,right,top,bottom', 'border-style'=>'thin');
 const EXCEL_STYLE_ROW_GENERAL = array('font'=>'Arial','font-size'=>10, 'color'=>'#000',
