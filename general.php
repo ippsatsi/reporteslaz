@@ -15,11 +15,29 @@ if (isset($_POST['id_formulario'])) {
   try {
     require_once 'func_inicio.php';
     require_once 'querys_general.php';
-
+    
     $funcion_name = "reporte_".$num_formulario;
+    $data =$funcion_name();
+    if ($num_formulario=="2") {
+      header('Content-type: text/csv; charset=utf-8');
+      header('Content-Disposition: attachment; filename=data.csv');
+      
+      $out = fopen('php://output', 'w');
+      
+      fputcsv($out,$data['header'],';');
+      foreach ($data['resultado'] as $linea) {
+        fputcsv($out,$linea,';');
+      }
+      
+      fclose($out);
+      exit(0);
+      
+    }
+
+
     $writer = new XLSXWriter();
 
-    $data =$funcion_name();
+
     $cabecera = $data['header']; //copia la porcion de los encabezados del resultado de la query a un array
     $writer->writeSheetHeaderFormated(EXCEL_SHEET_NAME, $cabecera, EXCEL_STYLE_ROW_HEADER);
     $fila = $data['resultado'];
@@ -50,6 +68,17 @@ css_estilos();
 header_html();
 $array = array(array('ctrl_select_cartera'));
 form_plantilla4($error_message, $num_formulario, "Reporte de ultima gestion", "general.php", "Reporte de Ultima Gestion", $array, 1);
+$array = array(array('form_fecha','ctrl_select_cartera'));
+form_plantilla4($error_message, $num_formulario, "Reporte de Gestiones FUNO", "general.php", "Reporte de Gestiones FUNO", $array, 2);
+$actualizar_label = <<<Final
+<script>
+var label_fecha_id = document.getElementById('label_hasta2');
+label_fecha_id.innerHTML = 'Fecha';
+console.log(label_fecha_id.innerHTML);
+</script>
+Final;
+echo $actualizar_label;
+
 lib_js_reportes();
 footer_html();
 ?>
