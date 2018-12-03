@@ -61,6 +61,7 @@ if (isset($_POST['id_formulario'])) {
   }
 }
 
+
 require_once 'func_inicio.php';
 require_once 'output_html.php';
 require_once 'func_reportes.php';

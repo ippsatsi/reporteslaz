@@ -42,7 +42,7 @@ $submit = false;
      <?php echo <<<Final
       <input id="acor$form_number" name="accordeon1" type="radio" checked />
       <label for="acor$form_number">$label</label> <!-- variable label-->
-      <form action="$archivo_action" method="post"> <!-- variable archivo_action-->
+      <form onsubmit="limpiar_mensaje($form_number)" action="$archivo_action" method="post"> <!-- variable archivo_action-->
         <fieldset>
           <legend>$legend</legend> <!-- variable legend-->
           <div class="div_form">
@@ -145,6 +145,7 @@ function lib_js_reportes() {
     <script src="js/pikaday.js"></script>
     <script src="js/datepicker_laz.js"></script>
     <script src="js/subcartera_updater_laz.js"></script>
+    <script src="js/form_reportes.js"></script>
 <?php
 }
 

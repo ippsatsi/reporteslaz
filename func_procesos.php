@@ -175,7 +175,7 @@ llenar_tabla_progresivo($array, $headers, $style);
 
 function mostrar_migracion_predictiva($mensaje) {
 ?>
-    <form action="predictivo.php" method="post" enctype="multipart/form-data">
+    <form onsubmit="limpiar_mensaje(0)" action="predictivo.php" method="post" enctype="multipart/form-data">
       <fieldset>
         <legend>Carga Gestiones del Predictivo</legend>
         <div class="div_form only_form">
@@ -216,7 +216,7 @@ function form_proceso($legend, $array, $mensaje , $tipo_form='') {
 
 $action = basename($_SERVER['PHP_SELF']);
 echo <<<Final
-    <form action="$action" method="post" $tipo_form>
+    <form onsubmit="limpiar_mensaje(0)" action="$action" method="post" $tipo_form>
       <fieldset>
         <legend>$legend</legend>
         <div class="div_form only_form">
@@ -276,6 +276,7 @@ function carga_js_scripts() {
     <script src="js/pikaday.js"></script>
     <script src="js/datepicker_laz.js"></script>
     <script src="js/subcartera_updater_laz.js"></script>
+    <script src="js/form_reportes.js"></script>
 <?php
 }
 

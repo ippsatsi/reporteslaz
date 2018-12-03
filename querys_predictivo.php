@@ -182,7 +182,7 @@ function buscar_campana($conn2, $nombre_campana, $fecha_campana) {
 // busca si haya campañas ya cargadas
   $query = "
   SELECT
-CPC2.CPC_ID_CAMPANA
+ CPC2.CPC_ID_CAMPANA
 , CPC2.CPC_NOMBRE_CAMPANA
 , CPC2.CPC_FECHA_CAMPANA
 , CPC2.CPC_TELEFONOS_SUBIDOS
