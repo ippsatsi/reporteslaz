@@ -74,7 +74,7 @@ if ($array_gestiones) //si tambien hay gestiones, las muestra
 <?php
 $headers = ['marcar', 'cuenta', 'observaciones', 'respuesta', 'solucion', 'fecha gestion', 'status'];
 $style = '';
-llenar_tabla($array_gestiones, $headers, $style);  //mostrar tabla gestiones
+llenar_tabla_sin_id($array_gestiones, $headers, $style);  //mostrar tabla gestiones
 ?>
 
           </div>
@@ -257,6 +257,22 @@ function ctrl_boton_submit() {
 <?php
 }
 
+function ctrl_input_doc() {
+?>
+            <div class="field_row_form">
+              <label for="dni"> documento: </label>
+              <input id="dni" type="text" name="dni" required>            </div>
+<?php
+}
+
+function ctrl_select_cuenta() {
+  
+  $array = array();
+  ctrl_select("cuenta:", $array, "cuenta" );
+  
+}
+
+
 function ctrl_fecha_desde () {
 $valor_fecha = (isset($_POST['fecha_llamada'])?$_POST['fecha_llamada']:date('d/m/Y'));
 echo <<<Final
@@ -268,6 +284,19 @@ echo <<<Final
             </div> <!-- ctrl_fecha_desde-->
 Final;
 }
+
+function ctrl_fecha_pago () {
+$valor_fecha = (isset($_POST['fecha_llamada'])?$_POST['fecha_llamada']:date('d/m/Y'));
+echo <<<Final
+            <div class="field_row_form" id="fecha_llamada"><!-- ctrl_fecha_pago-->
+              <label for="datepicker_pago" id="label_llamada">Fecha Pago:</label>
+              <div class="input_fecha">
+                <input type="text" id="datepicker_pago" name="fecha_llamada" value="$valor_fecha" ><i class="fa fa-calendar" aria-hidden="true"></i>
+              </div>
+            </div> <!-- ctrl_fecha_pago-->
+Final;
+}
+
 
 function carga_js_scripts() {
 //funcion para habilitar el datepucker
@@ -293,4 +322,126 @@ function ctrl_tabla() {
     llenar_tabla($array, $headers, $style);  //si es asi muestra las cuentas
   }
 }
+
+function ctrl_tabla_sin_id() {
+
+  global $listar_tabla;
+  global $headers_tabla;
+  global $array_tabla;
+  $flag = $listar_tabla;
+  if ($flag) {
+    $headers = $headers_tabla;
+    $style = 'class="thintop_margin"';
+    $array = $array_tabla;
+    llenar_tabla_sin_id($array, $headers, $style);  //si es asi muestra las cuentas
+  }
+}
+
+function ctrl_boton_busqueda() {
+?>
+            <div class="field_row_form">
+              <input id="downl" type="button" value="buscar" name="buscar">
+            </div>
+<?php
+}
+
+function modal_form($funcion) {
+?>
+
+<!-- The Modal -->
+<div id="openModal" class="modalDialog">
+  <div>
+    <a href="#close" title="Close" class="close" onclick="limpiar_modal()">X</a>
+<?php
+
+
+$funcion();
+?>
+  </div>
+</div>
+<?php
+}
+
+//################################################################################
+
+function ctrl_select($label, $array, $control, $js_function ='', $default_option_label='--seleccione--', $default_option_value=0) {
+  ?>
+  <?php
+  echo <<<Final
+
+              <div class="field_row_form">
+                <label>$label</label>
+                <div class="select_input">
+                  <select id="$control" name="$control" $js_function>
+                    <option value="$default_option_value">$default_option_label</option>
+Final;
+foreach ($array as $row)
+  {
+    echo "\n";
+    echo '                    <option value="'.$row['ID'].'">'.$row['NOMBRE'].'</option>';
+  }
+?>
+
+                  </select>
+                </div>
+              </div>
+<?php
+}
+
+//################################################################################
+
+function form_modal($error, $archivo_action, $legend, $array) {
+// formulario basico (cartera, subcartera y boton de descarga, control de fecha opcional)
+// $error: mensaje de error
+// $num_formulario: es el numero de formulario al cual pertenece el error, y el que comparamos despues con $form_number para saber en que formulario
+// mostrar el error
+// $label: es el nombre que aparecera en el acordeon
+// $archivo_action: es el nombre de la pagina al cual se dirigira el formulario
+// $legend: es el texto que aparecera en el fieldset
+// $form_number: es el numero de formulario dentro de la pagina
+// establecemos las cabeceras de los acordeones y los numeramos para identificarlos
+?>
+
+     <?php echo <<<Final
+
+      
+      <form action="$archivo_action" method="post"> <!-- variable archivo_action-->
+        <fieldset>
+          <legend>$legend</legend> <!-- variable legend-->
+          <div class="div_form1">
+            <input id="consulta" name="id_formulario" type="hidden" value="consulta">
+            
+
+Final;
+
+foreach ($array as $key => $row_value) {
+  echo '            <div id="row_form">';
+  foreach ($row_value as $key => $field_value) {
+    $field_value();
+  }
+  echo '            </div>';
+}
+
+?>
+
+
+            <div id="row_form">
+              <div class="field_row_form1">
+                <button id="downl" type="submit"><i class="fa fa-arrow-circle-o-down fa-fw" aria-hidden="true"></i>guardar</button>
+              </div>
+              <div class="field_row_form" id="error"><?php if ( $error )// variable $form_number
+{
+  echo "Revisar error en comentarios";
+}
+?>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+
+<?php
+}
+
+
+
 ?>

@@ -126,6 +126,48 @@ function run_select_query_sqlser($query) {
   return $array_query_result;
 }
 
+function run_select_query_param_sqlser($query, $array) {
+
+  //conectarse al Sql Server
+  //sqlsrv_configure("LogSubsystems", SQLSRV_LOG_SYSTEM_ALL);
+  //sqlsrv_configure("LogSeverity", SQLSRV_LOG_SEVERITY_ALL);
+  ini_set('memory_limit','2048M'); 
+  ini_set('sqlsrv.ClientBufferMaxKBSize','2048288');
+  $conn = conectar_mssql();
+
+  //$result_query = sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, array( "Scrollable" => 'static') );
+  $result_query = sqlsrv_query( $conn, $query, $array, OPTIONS_MSSQL_QUERY );
+//  if (!$result_query) {
+//    throw new Exception('No se pudo completar la consulta11',11);
+   // echo "6";
+  //}
+  si_es_excepcion($result_query, $query);
+
+  $array_query_result = array();
+  $header = array();
+  foreach(sqlsrv_field_metadata($result_query) as $meta) {
+    $header[] = $meta['Name'];
+  }
+  $array_query_result['header'] = $header;
+  //print_r($header);
+  while( $row = sqlsrv_fetch_array($result_query, SQLSRV_FETCH_NUMERIC) ) {
+    $array_query_result['resultado'][] = $row;
+  }
+ // print_r($array_query_result);
+  sqlsrv_free_stmt($result_query);
+  return $array_query_result;
+}
+
+function run_upd_del_query_param_sqlserv($query,$array) {
+  ini_set('memory_limit','2048M'); 
+  ini_set('sqlsrv.ClientBufferMaxKBSize','2048288');
+  $conn = conectar_mssql();
+  
+  $result_query = sqlsrv_query( $conn, $query, $array, array());
+  si_es_excepcion($result_query, $query);
+  $rows_affected = sqlsrv_rows_affected($result_query);
+  return $rows_affected;
+}
 function procesar_excepcion($e) {
   $error_message = $e->getMessage();
   $error_code = $e->getCode();

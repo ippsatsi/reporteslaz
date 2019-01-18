@@ -1,12 +1,48 @@
 <?php
-require_once 'branch.php';
+session_start();
 
+if (!isset($_SESSION['usuario_valido']))
+{
+  header("Location:index.php");
+}
+
+require_once 'func_procesos.php';
+
+require_once 'func_inicio.php';
+
+if (isset($_POST['id_formulario'])) {
+  try {
+    require_once 'func_inicio.php';
+    require_once 'querys_pagos.php';
+    $dni = $_POST['dni'];
+    $cue_codigo = $_POST['cuenta'];
+    $importe = $_POST['importe'];
+    $fecha_pago = $_POST['fecha_llamada'];
+    $movimiento = $_POST['movimiento'];
+    $tipo_pago = $_POST['pago'];
+    $observaciones = $_POST['observaciones'];
+    $cod_usuario = $_SESSION['usuario_codigo'];
+    $remote_addr = $_SERVER['REMOTE_ADDR'];
+    //echo "2";
+   // exit;
+    $conn2 = conectar_mssql();//GCC
+    $resultado = insertar_pagos($conn2, $cue_codigo, $importe, $fecha_pago, $movimiento, $tipo_pago, $observaciones, $cod_usuario, $remote_addr);
+    
+    
+  }
+  catch(Exception $e) {
+    $mensaje = procesar_excepcion($e);
+  }//catch
+
+
+
+}
 function css_estilos() {
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<title><?php echo TITULO_HTML; ?></title>
+<title><?php echo "Insertar Pago"; ?></title>
 </head>
 <meta charset="UTF-8" />
 <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
@@ -29,7 +65,7 @@ function css_estilos() {
     font-family: 'Open Sans', sans-serif;
     font-size: 1rem;
     counter-reset: rowacord;
-    min-width: 1200px;
+    min-width: 700px;
   }
   nav {
     position: fixed;
@@ -127,7 +163,7 @@ function css_estilos() {
     display: flex;
     margin: inherit;
     padding:0.5rem;
-    width: 18rem;
+    width: 20rem;
     justify-content: space-between;
     box-sizing: border-box;
     line-height: 1.8rem;
@@ -141,11 +177,11 @@ function css_estilos() {
     border: 1px solid black;
     border-radius:0.25rem;
     height: 1.7rem;
-    width: 90px;
+    width: 120px;
     #cursor: pointer;
     padding: 0px 7px 0px 7px;
   }
-  button#downl, button#add, input#add, input#downl, .bt_red {
+  button#downl, button#add, input#add, input#downl {
     border: 1px solid rgba(149, 19, 19, 0.98);
     font-size: 12px;
     background-color: #c0392e;
@@ -158,7 +194,7 @@ function css_estilos() {
     text-transform: uppercase;
     width: 100%;
   }
-  button#downl:hover, button#add:hover, input#add:hover, input#downl:hover, .bt_red:hover {
+  button#downl:hover, button#add:hover, input#add:hover, input#downl:hover {
     background-color: rgba(149, 19, 19, 0.98);
     border: 1px solid #7a0b0b;
     # #e44133;
@@ -177,7 +213,7 @@ function css_estilos() {
   }
   select {
     height: 1.7rem;
-    width: 9.9rem;
+    width: 15.4rem;
     background: white url('images/arrow_down_select.png') no-repeat 81% 100%;
     border: 0px;
   }
@@ -223,7 +259,7 @@ function css_estilos() {
   .select_input {
     float: right;
     overflow: hidden;
-    width: 8.7rem;
+    width: 13.1rem;
     border: 1px solid rgba(23, 13, 13, 0.4);
     border-radius: ;
   }
@@ -358,7 +394,7 @@ function css_estilos() {
   }
 
   .modalDialog > div {
-    width: 900px;
+    width: 700px;
     #width:auto;
     position: relative;
     #margin: 10% auto;
@@ -397,126 +433,191 @@ function css_estilos() {
 <?php
 }
 
-function header_html() {
-define('PRUEBA', "STADO ROL");
-//mostrar logo correcto de usuario segun rol
-$logo_admin='<i class="fa fa-user-circle-o fa-fw" aria-hidden="true"></i>';
-$logo_agente='<i class="fa fa-user fa-fw" aria-hidden="true"></i>';
-$rol_agente = ($_SESSION['rol']==4 || $_SESSION['rol']==5 ? true : false );
-$rol_logo = ($rol_agente ? $logo_agente : $logo_admin );
-$mostrar_usuario = $rol_logo.$_SESSION['usuario_valido'];
+function header1(){
 ?>
+
 <body>
-        <!--#949DA8 #4F84C4 #578CA9 #AF9483 #91A8D0 #55B4B0 #7FCDCD #45B8AC-->
-  <nav>
-    <p><?php echo TITULO_HTML; ?></p>
-    <ul id="menu">
-      <li id="gestionm"><a href=#gestion>Reportes</a>
-        <ul id="drop">
-<?php echo ($rol_agente ? '' : '          <li><a href=general.php>General</a></li>' )?>
-<?php echo ($rol_agente ? '' : '          <li><a href=call.php>Call</a></li>' )?>
-<?php echo ($rol_agente ? '' : '          <li><a href=campo.php>Campo</a></li>' )?>
-<?php echo ($rol_agente ? '' : '          <li><a href=correo.php>Correos</a></li>' )?>
-<?php echo ($rol_agente ? '' : '          <li><a href=pagos.php>Pagos</a></li>' )?>
-<?php echo ($rol_agente ? '' : '          <li><a href=asignacion.php>Asignacion</a></li>' )?>
-<?php echo ($rol_agente ? '' : '          <li><a href=#gestion3>Paleta</a></li>' )?>
-<?php echo ($rol_agente ? '' : '          <li><a href=#gestion3>Base Cartera</a></li>' )?>
-        </ul>
-      </li>
-      <li><a href=#compromisos>Procesos</a>
-        <ul id="drop">
-          <li><a href=borrargestiones.php>Borrar Gestiones</a></li>
-          <li><a href=registro_pagos.php>Registro Pagos</a></li>
-<?php echo ($rol_agente ? '' : '          <li><a href=#gestion2>Actualizar Cajas/Datos</a></li>' )?>
-<!--<?php echo ($rol_agente ? '' : '          <li><a href=predictivo.php>Gestiones Predictivo</a></li>' )?>-->
-<?php echo ($rol_agente ? '' : '          <li><a href=predictivo_web.php>Gestiones Predictivo WEB</a></li>' )?>
-        </ul>
-      </li>
-      <li><a href=#convenios>Gestiones</a>
-        <ul id="drop">
-          <li><a href=#gestion1>Envio Correo</a></li>
-          <li><a href=#gestion2>Envio SMS</a></li>
-        </ul>
-      </li>
-      <li><a href=#usuarios>Usuarios</a>
-        <ul id="drop">
-        </ul>
-      </li>
-      <li class="menu_right"><a href="logout.php"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>Salir</a>
-      </li>
-      <li class="menu_right"><a href=#login><?php echo $mostrar_usuario;?></a>
-      </li>
-    </ul>
-  </nav>
-  <div style="padding-top:2.2rem;margin-top:0;background-color:#ecf0f5;min-height:600px;">
+<div>
+
 <?php
 }
 
 function footer_html() {
 ?>
-    <div id="output_js_errores">ff</div>
+    <div id="output_js_errores"></div>
   </div>
 </body>
 </html>
 <?php
 }
 
-function llenar_tabla($array_input, $array_headers, $css_class) {
-$expandir = 'implode';
-echo <<<Final
-            <table  $css_class><!-- llenar tabla-->
-              <thead>
-                <tr>
-                  <th>{$expandir("</th>\n                  <th>", $array_headers)}</th>
-                </tr>
-              </thead>
-
-Final;
-
-  foreach ($array_input as $table_row) {
-
-    echo "                <tr id=\"row_".current($table_row)."\">\n                  <td>";//jala el primer elemento del array,para formar id
-    echo implode("</td>\n                  <td>",$table_row);
-    echo "</td>\n                </tr>\n";
+//recogel la lista de tipos de pagos para rellenar el select
+function obtener_tipos_pagos() {
+  $conn = conectar_mssql();
+  $query = "
+SELECT
+TRPG.TRPG_CODIGO AS TRPG_CODIGO
+, TRPG_DESCRIPCION AS TRPG_DESCRIPCION
+FROM
+COBRANZA.GCC_TIPO_REGISTRO_PAGO TRPG
+WHERE
+TRPG.TRPG_ESTADO_REGISTRO='A'";
+  
+  $result_query= sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
+  if (!$result_query) {
+    throw new Exception('No se pudo completar la consulta',2);
   }
-  echo '            </table>';
+  $array_tipo_select = array();
+  while( $row = sqlsrv_fetch_array($result_query) ) {
+    $array_tipo_select[] = array('ID'=>$row['TRPG_CODIGO'],'NOMBRE'=>$row['TRPG_DESCRIPCION']);
+  }
+  return $array_tipo_select;
 }
 
-function llenar_tabla_sin_id($array_input, $array_headers, $css_class) {
-$expandir = 'implode';
-echo <<<Final
-            <table  $css_class><!-- llenar tabla-->
-              <thead>
-                <tr>
-                  <th>{$expandir("</th>\n                  <th>", $array_headers)}</th>
-                </tr>
-              </thead>
-
-Final;
-  foreach ($array_input as $table_row) {
-    echo "                <tr>\n                  <td>";//jala el primer elemento del array,para formar id
-    echo implode("</td>\n                  <td>",$table_row);
-    echo "</td>\n                </tr>\n";
-  }
-  echo '            </table>';
+//select tipos de pagos
+function ctrl_select_acuerdo() {
+  $array = obtener_tipos_pagos();
+  ctrl_select("pago:", $array, "pago" );
+  
 }
 
-function llenar_tabla_progresivo($array_input, $array_headers, $css_class) {
-$expandir = 'implode';
-echo <<<Final
-            <table  $css_class>
-              <thead>
-                <tr>
-                  <th>{$expandir("</th>\n                  <th>", $array_headers)}</th>
-                </tr>
-              </thead>
-
-Final;
-  foreach ($array_input as $table_row) {
-    echo "                <tr id=\"$table_row[0]\">\n                  <td>";  //extraemos la fecha del array para colocarlo como id
-    echo implode("</td>\n                  <td>",$table_row);
-    echo "</td>\n                </tr>\n";
-  }
-  echo '            </table>';
+function ctrl_input_importe() {
+?>
+            <div class="field_row_form">
+              <label for="importe"> importe: </label>
+              <input id="importe" type="number" name="importe" required min="0" value="" step="0.01" placeholder="0,00">            </div>
+<?php
 }
+function ctrl_input_movimiento() {
+?>
+            <div class="field_row_form">
+              <label for="movimiento"> movimiento: </label>
+              <input id="movimiento" type="text" name="movimiento" maxlength="40" required>            </div>
+<?php
+}
+
+function ctrl_input_observaciones() {
+?>
+            <div class="field_row_form">
+              <label for="observaciones"> observaciones: </label>
+              <input id="observaciones" type="text" name="observaciones" maxlength="40" >            </div>
+<?php
+}
+
+function form2() {
+$error_message=false;
+$num_formulario=1;
+$array = array(array('ctrl_input_doc','ctrl_boton_busqueda'),
+array('ctrl_input_importe','ctrl_fecha_pago'),array('ctrl_input_movimiento','ctrl_select_acuerdo'),array('ctrl_input_observaciones'));
+form_modal($error_message, "insertar_pago.php", "Registro de pagos", $array);
+}
+
+function js_script() {
+?>
+<script>
+
+//remover --seleccione--
+var select_pago = document.getElementById("pago");
+select_pago.remove(0);
+
+//remover funcion sumit del boton GUARDAR
+var bt_guardar = document.getElementsByTagName("button");
+bt_guardar[0].type = "button";
+
+function insertar() {
+  var x = document.getElementById("cuenta"); //averiguamos cual cuenta esta seleccionada
+    var imp = document.getElementById('importe');
+    var importe = imp.value;
+    var mov = document.getElementById('movimiento');
+    var movimiento = mov.value;
+  if (x==null) {
+    alert("No hay cuenta seleccionada");
+  } else {
+    if (importe == '') {
+      alert('Colocar importe');
+    } else if (movimiento == '') {
+      alert('Colocar movimiento');
+    } else {
+      var cue_codigo = x.value;
+      var fecha = document.getElementById('datepicker_pago');
+      var fecha_pago = fecha.value;
+      var pago = document.getElementById('pago');
+      var tipo_pago = pago.value;
+      var obsv = document.getElementById('observaciones');
+      var observaciones = obsv.value;
+      var myRequest = new XMLHttpRequest();
+      myRequest.open('GET','guardar_pago.php?id_formulario=consulta&cuenta='+cue_codigo+'&importe='+importe+'&fecha_llamada='+fecha_pago+'&movimiento='+movimiento+'&pago='+tipo_pago+'&observaciones='+observaciones, true);
+      myRequest.onreadystatechange = function () {
+      if (myRequest.readyState === 4 ) {
+      if (myRequest.responseText=='1'){
+        alert('Se grabo el pago correctamente');
+      }
+      console.log(myRequest.responseText);
+
+    }
+  };
+  myRequest.send();
+      //alert('todo esta ok');
+    }
+  }
+}
+
+//habiltar solo una de las tablas segun select cuenta
+function enable_tabla() { 
+//  console.log("prueba");
+  var x = document.getElementById("cuenta"); //averiguamos cual cuenta esta seleccionada
+  var cue_selected = x.value;
+ // console.log(cue_selected);
+  var tablas = document.getElementsByClassName("tabla_cuenta");//obtenemos todas las tablas
+  console.log(tablas.length);
+  for (var i = 0; i < tablas.length; i++ ){//ocultamos todas las tablas
+    tablas[i].style.display = "none";
+  }
+  document.getElementById("cuenta_"+cue_selected).style.display = "inline-table";//solo activamos la tabla/cuenta seleccionada
+}
+
+//hacemos la consulta de dni
+function buscar_datos_dni() {
+  var filas_nuevas = document.getElementsByClassName("row_new");//antes de buscar y presentar un
+  var len = filas_nuevas.length; //nuevo resultado, buscamos i existe una busqueda anterior
+  if (len!=0) {                  //para eliminarla y recien presentar los nuevos resultados
+    for (var i = 0; i < len; i++ ) {
+      filas_nuevas[0].remove(); //mantenemos el indice en 0, porque se corren los indices
+    }                           //despues de cada eliminacion
+  }
+  var myRequest = new XMLHttpRequest();
+  var dni = document.getElementById('dni');
+  var dni_text = dni.value;
+
+  myRequest.open('GET','obtener_datos_pagos.php?dni='+dni_text, true);
+  myRequest.onreadystatechange = function () {
+    if (myRequest.readyState === 4 ) {
+      
+      var select_row_form = document.querySelectorAll('#row_form');
+      select_row_form[0].insertAdjacentHTML('afterend',myRequest.responseText);//insertamos el html recibido despues del
+      var tablas = document.getElementsByClassName("tabla_cuenta");//primer row_form
+      tablas[0].style.display = "inline-table"; //activamos la primera tabla
+
+     // select_row_form[1].innerHTML = myRequest.responseText;
+     // console.log(myRequest.responseText);
+    }
+  };
+  myRequest.send();
+//console.log(dni_text);
+}
+
+var enigma = document.querySelectorAll('input[id="downl"]')[0].addEventListener("click",buscar_datos_dni);
+var enigma2 = document.querySelectorAll('button[id="downl"]')[0].addEventListener("click",insertar);
+//boton de busqueda de dni
+</script>
+<?php
+}
+
+css_estilos();
+header1();
+form2();
+carga_js_scripts();
+js_script();
+footer_html();
+
 ?>
