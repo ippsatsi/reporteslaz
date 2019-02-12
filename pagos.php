@@ -21,7 +21,12 @@ if (isset($_POST['id_formulario'])) {
     $data =$funcion_name();
     $cabecera = $data['header']; //copia la porcion de los encabezados del resultado de la query a un array
     $writer->writeSheetHeaderFormated(EXCEL_SHEET_NAME, $cabecera, EXCEL_STYLE_ROW_HEADER);
-    $fila = $data['resultado'];
+    if (array_key_exists('resultado',$data)) {
+       $fila = $data['resultado'];
+    } 
+    else {
+      $fila = array();
+    }
     while ($fila2 = each($fila)) {//recorre todas las filas de resultados
       $writer->writeSheetRow(EXCEL_SHEET_NAME, $fila2[1],
                               $row_options = array_merge(EXCEL_STYLE_ROW_GENERAL, WHITE_FILL, LOW_ROW, WRAP_FALSE));
@@ -44,9 +49,19 @@ if (isset($_POST['id_formulario'])) {
 require_once 'func_inicio.php';
 require_once 'output_html.php';
 require_once 'func_reportes.php';
+require_once 'func_procesos.php';
+
+$carteras = array(array(2,'4K'),array(7,'BCP'));
+
+function ctrl_select_carteras() {
+  global $carteras;
+  $array = array(array('ID'=>$carteras[1][0],'NOMBRE'=>$carteras[1][1]));
+  ctrl_select("cartera:", $array, "cartera", '',$carteras[0][1],$carteras[0][0]);
+}
+
 css_estilos();
 header_html();
-$array = array(array('form_rango_fecha'));
+$array = array(array('form_rango_fecha'),array('ctrl_select_carteras'));
 form_plantilla4($error_message, $num_formulario, "Reporte de Pagos", "pagos.php", "Reporte de Pagos", $array, 1);
 lib_js_reportes();
 footer_html();

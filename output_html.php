@@ -494,7 +494,7 @@ echo <<<Final
 
 Final;
   foreach ($array_input as $table_row) {
-    echo "                <tr>\n                  <td>";//jala el primer elemento del array,para formar id
+    echo "                <tr>\n                  <td>";
     echo implode("</td>\n                  <td>",$table_row);
     echo "</td>\n                </tr>\n";
   }

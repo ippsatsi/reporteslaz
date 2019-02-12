@@ -579,7 +579,7 @@ function enable_tabla() {
 //hacemos la consulta de dni
 function buscar_datos_dni() {
   var filas_nuevas = document.getElementsByClassName("row_new");//antes de buscar y presentar un
-  var len = filas_nuevas.length; //nuevo resultado, buscamos i existe una busqueda anterior
+  var len = filas_nuevas.length; //nuevo resultado, buscamos si existe una busqueda anterior
   if (len!=0) {                  //para eliminarla y recien presentar los nuevos resultados
     for (var i = 0; i < len; i++ ) {
       filas_nuevas[0].remove(); //mantenemos el indice en 0, porque se corren los indices

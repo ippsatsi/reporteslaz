@@ -80,8 +80,12 @@ $plantilla_select =<<<Final
                   </select>
                 </div>
               </div>
-            </div> </div>
-            <div id="row_form" class="row_new">
+              <div class="field_row_form">
+                Tiene ||NUM_CUENTAS|| cuenta(s)
+              </div>
+            </div>
+          </div>
+          <div id="row_form" class="row_new">
 Final;
 
 $js_enable_tabla = <<<Final
@@ -105,26 +109,6 @@ Final;
 $plantilla_line_select = '<option value="||CUE_CODIGO||">||CUENTA||</option>';
   //conectarse al Sql Server
   $conn = conectar_mssql();
-  $query = "
-SELECT
-CLI.CLI_NOMBRE_COMPLETO AS 'NC'
-, CUE.CUE_NROCUENTA AS CUENTA
-, BDE.BAD_DEUDA_MONTO_CAPITAL AS CAPITAL
-, BDE.BAD_DEUDA_SALDO AS TOTAL
-, SCA.SCA_DESCRIPCION AS PORTAFOLIO
-, ISNULL(UCAL.USU_LOGIN, 'SIN ASIGNAR') AS USUARIO
-, '' AS COMPROMISO
-, CUE.CUE_CODIGO AS CUE_CODIGO
-FROM
-COBRANZA.GCC_CLIENTE CLI
-INNER JOIN COBRANZA.GCC_CUENTAS CUE ON CUE.CLI_CODIGO=CLI.CLI_CODIGO
-INNER JOIN COBRANZA.GCC_BASEDET BDE ON BDE.CUE_CODIGO=CUE.CUE_CODIGO AND BDE.BAD_ESTADO_CUENTA='A'
-INNER JOIN COBRANZA.GCC_BASE BAS ON BAS.BAS_CODIGO=BDE.BAS_CODIGO
-INNER JOIN COBRANZA.GCC_SUBCARTERAS SCA ON SCA.SCA_CODIGO=BAS.SCA_CODIGO
-LEFT JOIN COBRANZA.GCC_ASIGNACION ASI ON ASI.CUE_CODIGO=CUE.CUE_CODIGO AND ASI.ASI_ESTADO=1 AND ASI.ROL_CODIGO=4
-LEFT JOIN COBRANZA.GCC_USUARIO UCAL ON UCAL.USU_CODIGO=ASI.USU_CODIGO
-WHERE
-CLI.CLI_DOCUMENTO_IDENTIDAD='".$_GET['dni']."';";
 
   $query = "
 SELECT
@@ -146,7 +130,7 @@ LEFT JOIN COBRANZA.GCC_ASIGNACION ASI ON ASI.CUE_CODIGO=CUE.CUE_CODIGO AND ASI.A
 LEFT JOIN COBRANZA.GCC_USUARIO UCAL ON UCAL.USU_CODIGO=ASI.USU_CODIGO
 WHERE
 CLI.CLI_DOCUMENTO_IDENTIDAD=(?)
-AND BAS.PRV_CODIGO=2;";
+AND BAS.PRV_CODIGO IN (2,7);";
 
   $dni = array($_GET['dni']);
 
@@ -158,6 +142,8 @@ AND BAS.PRV_CODIGO=2;";
     $select_final = ''; //inicializamos el select
     $tablas_final = ''; //inicializamos las tablas
     $cuentas = $array_result['resultado']; //copiamos a un nuevo array para recorrerlo
+    $numero_resultados = count($cuentas);
+    
     foreach ($cuentas as $cuenta) { //seleccionamos cuenta por cuenta, RECORRIDO POR FILA
       $indice = 0; //para recorrer columnas
       $tabla = $plantilla; // hacemos copia de la plantilla para modificarla
@@ -174,7 +160,7 @@ AND BAS.PRV_CODIGO=2;";
       //echo $tabla;
       //echo $select_final;
     }//foreach
-    $ctrl_select = str_replace("||CUENTAS||", $select_final,$plantilla_select);
+    $ctrl_select = str_replace("||CUENTAS||", $select_final,str_replace("||NUM_CUENTAS||",$numero_resultados,$plantilla_select));
     echo $ctrl_select;
     echo $tablas_final.'            </div>';
 //    echo $js_enable_tabla;

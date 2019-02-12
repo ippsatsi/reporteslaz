@@ -2,7 +2,7 @@
 
 require_once 'func_inicio.php';
 
-function buscar_pagos($conn2, $mes_reporte, $usuario, $rol) {
+function buscar_pagos($conn2, $mes_reporte, $usuario, $rol,$cartera) {
 // busca si haya campañas ya cargadas
 
 $columna_usuario_reg = ", USU.USU_LOGIN AS 'usuario registro'";
@@ -13,7 +13,6 @@ if ($rol == 4 || $rol == 5 ) {
 }
   $query = "
 SELECT
---CPG.CPG_CODIGO AS id
 CONCAT('<input type=\"radio\" name=\"id_pago\" value=\"',CPG.CPG_CODIGO,'\">',CPG.CPG_CODIGO) AS id
 , CLI.CLI_DOCUMENTO_IDENTIDAD AS documento
 , CUE.CUE_NROCUENTA AS cuenta
@@ -32,7 +31,7 @@ COBRANZA.GCC_CONTROL_PAGOS CPG
 INNER JOIN COBRANZA.GCC_CUENTAS CUE ON CUE.CUE_CODIGO=CPG.CUE_CUEDIGO
 INNER JOIN COBRANZA.GCC_CLIENTE CLI ON CLI.CLI_CODIGO=CUE.CLI_CODIGO
 INNER JOIN COBRANZA.GCC_BASEDET BDE ON BDE.CUE_CODIGO=CUE.CUE_CODIGO
-INNER JOIN COBRANZA.GCC_BASE BAS ON BAS.BAS_CODIGO=BDE.BAS_CODIGO
+INNER JOIN COBRANZA.GCC_BASE BAS ON BAS.BAS_CODIGO=BDE.BAS_CODIGO AND BAS.PRV_CODIGO=".$cartera."
 INNER JOIN COBRANZA.GCC_SUBCARTERAS SCA ON SCA.SCA_CODIGO=BAS.SCA_CODIGO
 INNER JOIN COBRANZA.GCC_USUARIO USU ON USU.USU_CODIGO=CPG.USU_CODIGO
 INNER JOIN COBRANZA.GCC_TIPO_REGISTRO_PAGO TRPG ON TRPG.TRPG_CODIGO=CPG.TRPG_CODIGO
@@ -42,7 +41,7 @@ WHERE
 ".$condicion_supervisor."
 DATEPART(MM,CPG.CPG_FECHA_OPERACION)=DATEPART(MM,'".$mes_reporte."')
 AND DATEPART(YY,CPG.CPG_FECHA_OPERACION)=DATEPART(YY,'".$mes_reporte."') 
-AND CPG.CPG_ESTADO_REGISTRO = 'A'  ORDER BY CPG.CPG_CODIGO DESC";
+AND CPG.CPG_ESTADO_REGISTRO = 'A' ORDER BY CPG.CPG_CODIGO DESC";
 
 //echo $query;
 //exit;
@@ -50,7 +49,7 @@ AND CPG.CPG_ESTADO_REGISTRO = 'A'  ORDER BY CPG.CPG_CODIGO DESC";
 
   return $result_query;
   }
-  
+
 function insertar_pagos($conn2, $cue_codigo, $importe, $fecha_pago, $movimiento, $tipo_pago, $observaciones, $cod_usuario, $remote_addr ) {
 // busca si haya campañas ya cargadas
   $query = "
@@ -90,12 +89,12 @@ CUE.CUE_CODIGO=".$cue_codigo;
 function reporte_1() {
 
 
-    $fecha_desde = $_POST['fecha_desde'];
-    $fecha_hasta = $_POST['fecha_hasta'];
-    $fecha_desde_ts = DateTime::createFromFormat('d/m/Y', $fecha_desde);
-    $fecha_hasta_ts = DateTime::createFromFormat('d/m/Y', $fecha_hasta);
-
-
+  $fecha_desde = $_POST['fecha_desde'];
+  $fecha_hasta = $_POST['fecha_hasta'];
+  $fecha_desde_ts = DateTime::createFromFormat('d/m/Y', $fecha_desde);
+  $fecha_hasta_ts = DateTime::createFromFormat('d/m/Y', $fecha_hasta);
+  $cartera = $_POST['cartera'];
+  
       if ( $fecha_desde_ts > $fecha_hasta_ts ) {
         throw new Exception('el rango de fechas no es valido',1);
       }
@@ -121,7 +120,7 @@ COBRANZA.GCC_CONTROL_PAGOS CPG
 INNER JOIN COBRANZA.GCC_CUENTAS CUE ON CUE.CUE_CODIGO=CPG.CUE_CUEDIGO
 INNER JOIN COBRANZA.GCC_CLIENTE CLI ON CLI.CLI_CODIGO=CUE.CLI_CODIGO
 INNER JOIN COBRANZA.GCC_BASEDET BDE ON BDE.CUE_CODIGO=CUE.CUE_CODIGO
-INNER JOIN COBRANZA.GCC_BASE BAS ON BAS.BAS_CODIGO=BDE.BAS_CODIGO
+INNER JOIN COBRANZA.GCC_BASE BAS ON BAS.BAS_CODIGO=BDE.BAS_CODIGO AND BAS.PRV_CODIGO=".$cartera."
 INNER JOIN COBRANZA.GCC_SUBCARTERAS SCA ON SCA.SCA_CODIGO=BAS.SCA_CODIGO
 INNER JOIN COBRANZA.GCC_USUARIO USU ON USU.USU_CODIGO=CPG.USU_CODIGO
 INNER JOIN COBRANZA.GCC_TIPO_REGISTRO_PAGO TRPG ON TRPG.TRPG_CODIGO=CPG.TRPG_CODIGO

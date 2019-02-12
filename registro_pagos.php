@@ -25,16 +25,29 @@ if (isset($_POST['buscar'])){// comprueba si se envio formulario
     $conn2 = conectar_mssql();//GCC
     $fecha_reporte = $_POST['fecha_llamada'];
     $fecha_reporte = str_replace('/','-',$fecha_reporte);
-    $array_tabla = buscar_pagos($conn2, $fecha_reporte, $cod_usuario,$rol);
+    $cartera = $_POST['cartera'];// para permitir el reporte por cuentas
+    $array_tabla = buscar_pagos($conn2, $fecha_reporte, $cod_usuario,$rol, $cartera);
     if ($array_tabla) {
     //echo "false";
 
       $headers_tabla = $array_tabla['header'];
       $listar_tabla = true;
-      $array_tabla = $array_tabla['resultado'];
-      if (count($array_tabla)>0) {
-        $carga_js_borrado = true;
+      if (array_key_exists('resultado',$array_tabla)) {
+        $array_tabla = $array_tabla['resultado'];
+        $recaudo = 0; // para la funcion del mensaje de recaudo
+        foreach ($array_tabla as $fila) {
+          $recaudo = $fila[6] + $recaudo; //sumamos todos los montos de la columna 7 'MONTO_PAGO'
+        }
+      } else {
+        $carga_js_borrado = true;//flag para cargar el codigo js de borrado, solo cuando mostramos pagos
+        $array_tabla = array();//colocamos un array vacio para evitar warnings
       }
+  //    $array_tabla = $array_tabla['resultado'];
+             
+    //    $array_tabla = array();
+   //   if (count($array_tabla)>0) {
+    //    $carga_js_borrado = true;//flag para cargar el codigo js de borrado, solo cuando mostramos pagos
+   //   }
     }
   }//try
   catch(Exception $e) {
@@ -45,8 +58,8 @@ if (isset($_POST['buscar'])){// comprueba si se envio formulario
 
 require_once 'output_html.php';
 require_once 'func_procesos.php';
-
 require_once 'func_inicio.php';
+
 
 function ctrl_boton_add() {
 ?>
@@ -58,10 +71,36 @@ function ctrl_boton_add() {
 <?php
 }
 
-css_estilos();
-header_html();
-$array = array(array('ctrl_boton_submit', 'ctrl_fecha_desde'),array('ctrl_boton_add'),array('ctrl_tabla_sin_id'));
-form_proceso('Registro Pagos', $array, $mensaje, 'id="form_pago"');
+$carteras = array(array(2,'4K'),array(7,'BCP'));
+
+if (isset($cartera)) {   //habilitar el cambio en el select
+  if ($cartera == 7) {   //cuando se selecciona una cartera, esta quede seleccionada
+    $carteras = array_reverse($carteras); //despues de la recarga del formulario
+  }
+}
+
+function ctrl_select_carteras() {
+  global $carteras;
+  $array = array(array('ID'=>$carteras[1][0],'NOMBRE'=>$carteras[1][1]));
+  ctrl_select("cartera:", $array, "cartera", '',$carteras[0][1],$carteras[0][0]);
+}
+
+//funcion para mostrar el mensaje de cuanto se va recaudando
+function ctrl_mensaje_recaudo() {
+  $campo_mensaje = <<<Final
+              <div class="field_row_form">
+                Tiene un recaudo de S/.||mensaje||
+              </div>
+Final;
+
+  global $recaudo;
+
+  if (isset($recaudo)) {
+    echo str_replace('||mensaje||',number_format($recaudo),$campo_mensaje);
+  }
+}
+
+$array = array(array('ctrl_boton_submit','ctrl_select_carteras', 'ctrl_fecha_desde'),array('ctrl_boton_add', 'ctrl_mensaje_recaudo'),array('ctrl_tabla_sin_id'));
 
 function form2() {
 $error_message=false;
@@ -87,6 +126,7 @@ function limpiar_modal() {
 <?php
 }
 
+//funcion de borrado de pagos
 function js_borrado() {
 ?>
 <script>
@@ -114,12 +154,14 @@ function borrar_id() {
 <?php
 }
 
-
+css_estilos();
+header_html();
+form_proceso('Registro Pagos', $array, $mensaje, 'id="form_pago"');
 modal_form('form3');
 carga_js_scripts();
 js_limpiar_modal();
-if ($carga_js_borrado) {
-  js_borrado();
+if ($carga_js_borrado) { //condicional para cargar el codigo js solo cuando existan
+  js_borrado();          //pagos para que no muestre errores de js al no encontrar id_pago
 }
 
 footer_html();
