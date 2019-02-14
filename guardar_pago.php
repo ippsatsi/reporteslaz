@@ -8,16 +8,14 @@ if (!isset($_SESSION['usuario_valido']))
 }
 
 require_once 'func_procesos.php';
-
 require_once 'func_inicio.php';
-
 
 if (isset($_GET['id_formulario'])) {
 
 function insertar_pagos($conn2, $cue_codigo, $importe, $fecha_pago, $movimiento, $tipo_pago, $observaciones, $cod_usuario, $remote_addr ) {
 // busca si haya campañas ya cargadas
   $query = "
-INSERT INTO COBRANZA.GCC_CONTROL_PAGOS
+INSERT INTO COBRANZA.GCC_CONTROL_PAGOS_TEMP
 (CUE_CUEDIGO
 , CPG_FECHA_OPERACION
 , CPG_IMPORTE
@@ -58,7 +56,7 @@ CUE.CUE_CODIGO=".$cue_codigo;
     $cue_codigo = $_GET['cuenta'];
     $importe = $_GET['importe'];
     $fecha_pago = $_GET['fecha_llamada'];
-    $movimiento = $_GET['movimiento'];
+    $movimiento = trim($_GET['movimiento']);
     $tipo_pago = $_GET['pago'];
     $observaciones = $_GET['observaciones'];
     $cod_usuario = $_SESSION['usuario_codigo'];

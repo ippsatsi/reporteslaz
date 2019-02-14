@@ -51,12 +51,12 @@ require_once 'output_html.php';
 require_once 'func_reportes.php';
 require_once 'func_procesos.php';
 
-$carteras = array(array(2,'4K'),array(7,'BCP'));
+$carteras = array(array(7,'BCP'),array(0,'TODOS'));
 
 function ctrl_select_carteras() {
   global $carteras;
-  $array = array(array('ID'=>$carteras[1][0],'NOMBRE'=>$carteras[1][1]));
-  ctrl_select("cartera:", $array, "cartera", '',$carteras[0][1],$carteras[0][0]);
+  $array = array(array('ID'=>7,'NOMBRE'=>'BCP'),array('ID'=>0,'NOMBRE'=>'TODOS'));
+  ctrl_select("cartera:", $array, "cartera", '',"4K",2);
 }
 
 css_estilos();

@@ -96,7 +96,7 @@ Final;
   global $recaudo;
 
   if (isset($recaudo)) {
-    echo str_replace('||mensaje||',number_format($recaudo),$campo_mensaje);
+    echo str_replace('||mensaje||',number_format($recaudo,2),$campo_mensaje);
   }
 }
 
@@ -111,7 +111,7 @@ form_modal($error_message, "registro_pagos.php", "Registro de pagos", $array);
 
 function form3() {
 echo <<<Final
- <iframe id="modal_iframe" src="insertar_pago.php" height="500" width="900"></iframe> 
+ <iframe id="modal_iframe" src="insertar_pago.php" height="500" width="900" frameBorder="0">xxx</iframe> 
 Final;
 }
 

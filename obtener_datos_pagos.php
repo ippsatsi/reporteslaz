@@ -5,14 +5,30 @@ if (isset($_GET['dni']))
 {
 
 $tabla_vacia = <<<Final
- <table id="cuenta_0" class="tabla_cuenta" style="display:inline-table;" ><!-- llenar tabla-->
+            <div id="row_form" class="row_new">
+              <div class="field_row_form">
+                <label>cuenta:</label>
+                <div class="select_input">
+                  <select id="cuenta" name="cuenta" disabled>
+              <!--      <option value="0">--seleccione--</option> -->
+
+                  </select>
+                </div>
+              </div>
+              <div class="field_row_form">
+                No se encuentra el cliente
+              </div>
+            </div>
+          </div>
+          <div id="row_form" class="row_new">
+           <table  class="tabla_cuenta"><!-- llenar tabla-->
               <thead>
                 <tr>
                   <th colspan="6">Nombre completo</th>
                 </tr>
               </thead>
                 <tr>
-                  <td colspan="6">----------------</td>
+                  <td colspan="6">---------------</td>
                 </tr>
 
                <thead>
@@ -29,11 +45,11 @@ $tabla_vacia = <<<Final
                   <td>--------------------</td>
                   <td>-------</td>
                   <td>-------</td>
-                  <td>----------</td>
-                  <td>------</td>
-                  <td>----</td>
+                  <td>---------</td>
+                  <td>-------</td>
+                  <td></td>
                </tr>
-            </table>
+            </table>            </div>
 Final;
 
 $plantilla = <<<Final
@@ -86,24 +102,6 @@ $plantilla_select =<<<Final
             </div>
           </div>
           <div id="row_form" class="row_new">
-Final;
-
-$js_enable_tabla = <<<Final
-<script>
-function enable_tabla() {
-//  console.log("prueba");
-  var x = document.getElementById("cuenta");
-  var cue_selected = x.value;
- // console.log(cue_selected);
-  var tablas = document.getElementsByClassName("tabla_cuenta");
-//  console.log(tablas.length);
-  for (var i = 0; i < tablas.length; i++ ){
-    tablas[i].style.display = "none";
-  //  console.log(i);
-  }
-  document.getElementById("cuenta_"+cue_selected).style.display = "block";
-}
-</script>
 Final;
 
 $plantilla_line_select = '<option value="||CUE_CODIGO||">||CUENTA||</option>';
@@ -163,10 +161,12 @@ AND BAS.PRV_CODIGO IN (2,7);";
     $ctrl_select = str_replace("||CUENTAS||", $select_final,str_replace("||NUM_CUENTAS||",$numero_resultados,$plantilla_select));
     echo $ctrl_select;
     echo $tablas_final.'            </div>';
-//    echo $js_enable_tabla;
+
   }//if
   else {
-    echo ' <div id="row_form" class="row_new">              <div class="field_row_form" id="error">No se encuentra el cliente</div> </div>';
+  //  echo ' <div id="row_form" class="row_new">              <div class="field_row_form" id="error">No se encuentra el cliente</div> </div>';
+  //insertamos tabla vacia con mesnaje de no se encuentra el cliente
+    echo $tabla_vacia;
   }
 }
 ?>

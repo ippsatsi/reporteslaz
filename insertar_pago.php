@@ -10,7 +10,7 @@ require_once 'func_procesos.php';
 
 require_once 'func_inicio.php';
 
-if (isset($_POST['id_formulario'])) {
+/*if (isset($_POST['id_formulario'])) {
   try {
     require_once 'func_inicio.php';
     require_once 'querys_pagos.php';
@@ -18,7 +18,7 @@ if (isset($_POST['id_formulario'])) {
     $cue_codigo = $_POST['cuenta'];
     $importe = $_POST['importe'];
     $fecha_pago = $_POST['fecha_llamada'];
-    $movimiento = $_POST['movimiento'];
+    $movimiento = ltrim($_POST['movimiento']);
     $tipo_pago = $_POST['pago'];
     $observaciones = $_POST['observaciones'];
     $cod_usuario = $_SESSION['usuario_codigo'];
@@ -33,10 +33,9 @@ if (isset($_POST['id_formulario'])) {
   catch(Exception $e) {
     $mensaje = procesar_excepcion($e);
   }//catch
-
-
-
 }
+*/
+
 function css_estilos() {
 ?>
 <!DOCTYPE html>
@@ -483,6 +482,7 @@ function ctrl_select_acuerdo() {
 
 function ctrl_input_importe() {
 ?>
+
             <div class="field_row_form">
               <label for="importe"> importe: </label>
               <input id="importe" type="number" name="importe" required min="0" value="" step="0.01" placeholder="0,00">            </div>
@@ -490,6 +490,7 @@ function ctrl_input_importe() {
 }
 function ctrl_input_movimiento() {
 ?>
+
             <div class="field_row_form">
               <label for="movimiento"> movimiento: </label>
               <input id="movimiento" type="text" name="movimiento" maxlength="40" required>            </div>
@@ -498,11 +499,13 @@ function ctrl_input_movimiento() {
 
 function ctrl_input_observaciones() {
 ?>
+
             <div class="field_row_form">
               <label for="observaciones"> observaciones: </label>
               <input id="observaciones" type="text" name="observaciones" maxlength="40" >            </div>
 <?php
 }
+
 
 function form2() {
 $error_message=false;
@@ -515,6 +518,53 @@ form_modal($error_message, "insertar_pago.php", "Registro de pagos", $array);
 function js_script() {
 ?>
 <script>
+
+window.onload = function() {
+  var tabla_vacia = '            <div id="row_form" class="row_new">\
+              <div class="field_row_form">\
+                <label>cuenta:</label>\
+                <div class="select_input">\
+                  <select id="cuenta" name="cuenta" disabled>\
+              <!--      <option value="0">--seleccione--</option> -->\
+                  </select>\
+                </div>\
+              </div>\
+            </div>\
+          </div>\
+          <div id="row_form" class="row_new">\
+           <table  class="tabla_cuenta"  ><!-- llenar tabla-->\
+              <thead>\
+                <tr>\
+                  <th colspan="6">Nombre completo</th>\
+                </tr>\
+              </thead>\
+                <tr>\
+                  <td colspan="6">---------------</td>\
+                </tr>\
+               <thead>\
+                <tr>\
+                  <th>cuenta</th>\
+                  <th>deuda capital</th>\
+                  <th>deuda total</th>\
+                  <th>portafolio</th>\
+                  <th>usuario asignado</th>\
+                  <th>compromiso</th>\
+                </tr>\
+              </thead>\
+                <tr>\
+                  <td>--------------------</td>\
+                  <td>-------</td>\
+                  <td>-------</td>\
+                  <td>---------</td>\
+                  <td>-------</td>\
+                  <td></td>\
+               </tr>\
+            </table>            </div>';
+            
+  var select_row_form = document.querySelectorAll('#row_form');
+  select_row_form[0].insertAdjacentHTML('afterend',tabla_vacia);//insertamos el html recibido despues del
+  console.log('listo');
+};
 
 //remover --seleccione--
 var select_pago = document.getElementById("pago");
