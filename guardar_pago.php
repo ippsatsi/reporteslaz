@@ -15,7 +15,7 @@ if (isset($_GET['id_formulario'])) {
 function insertar_pagos($conn2, $cue_codigo, $importe, $fecha_pago, $movimiento, $tipo_pago, $observaciones, $cod_usuario, $remote_addr ) {
 // busca si haya campañas ya cargadas
   $query = "
-INSERT INTO COBRANZA.GCC_CONTROL_PAGOS_TEMP
+INSERT INTO COBRANZA.GCC_CONTROL_PAGOS
 (CUE_CUEDIGO
 , CPG_FECHA_OPERACION
 , CPG_IMPORTE
