@@ -33,13 +33,13 @@ if (isset($_POST['buscar'])){// comprueba si se envio formulario
       $headers_tabla = $array_tabla['header'];
       $listar_tabla = true;
       if (array_key_exists('resultado',$array_tabla)) {
+        $carga_js_borrado = true;//flag para cargar el codigo js de borrado, solo cuando mostramos pagos
         $array_tabla = $array_tabla['resultado'];
         $recaudo = 0; // para la funcion del mensaje de recaudo
         foreach ($array_tabla as $fila) {
           $recaudo = $fila[6] + $recaudo; //sumamos todos los montos de la columna 7 'MONTO_PAGO'
         }
       } else {
-        $carga_js_borrado = true;//flag para cargar el codigo js de borrado, solo cuando mostramos pagos
         $array_tabla = array();//colocamos un array vacio para evitar warnings
       }
   //    $array_tabla = $array_tabla['resultado'];
