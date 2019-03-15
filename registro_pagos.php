@@ -71,18 +71,15 @@ function ctrl_boton_add() {
 <?php
 }
 
-$carteras = array(array(2,'4K'),array(7,'BCP'));
+//$carteras = array(array(2,'4K'),array(7,'BCP'),array(8,'LFT'));
+$carteras = array(array('ID'=> 2,'NOMBRE'=>'4K'),array('ID'=>7,'NOMBRE'=>'BCP'),array('ID'=>8,'NOMBRE'=>'LFT'));
 
-if (isset($cartera)) {   //habilitar el cambio en el select
-  if ($cartera == 7) {   //cuando se selecciona una cartera, esta quede seleccionada
-    $carteras = array_reverse($carteras); //despues de la recarga del formulario
-  }
-}
 
 function ctrl_select_carteras() {
   global $carteras;
-  $array = array(array('ID'=>$carteras[1][0],'NOMBRE'=>$carteras[1][1]));
-  ctrl_select("cartera:", $array, "cartera", '',$carteras[0][1],$carteras[0][0]);
+ 
+ // $array = array(array('ID'=>$carteras[1][0],'NOMBRE'=>$carteras[1][1]));
+  ctrl_select("cartera:", $carteras, "cartera", '','','');
 }
 
 //funcion para mostrar el mensaje de cuanto se va recaudando
@@ -113,6 +110,18 @@ function form3() {
 echo <<<Final
  <iframe id="modal_iframe" src="insertar_pago.php" height="500" width="900" frameBorder="0">xxx</iframe> 
 Final;
+}
+
+//****************funciones js
+
+if (isset($cartera)) {   //habilitar el update en el select si se selecciono una cartera
+?>
+<script>
+window.onload = function () {
+  document.getElementById('cartera').value=<?php echo $cartera;?>;
+}
+</script>
+<?php
 }
 
 function js_limpiar_modal() {
@@ -153,6 +162,8 @@ function borrar_id() {
 </script>
 <?php
 }
+
+//*********************
 
 css_estilos();
 header_html();
