@@ -476,6 +476,8 @@ TRPG.TRPG_ESTADO_REGISTRO='A'";
 //select tipos de pagos
 function ctrl_select_acuerdo() {
   $array = obtener_tipos_pagos();
+ // print_r($array);
+ // exit;
   ctrl_select("pago:", $array, "pago" );
   
 }
@@ -567,8 +569,8 @@ window.onload = function() {
 };
 
 //remover --seleccione--
-var select_pago = document.getElementById("pago");
-select_pago.remove(0);
+//var select_pago = document.getElementById("pago"); // Ya no se usa, se modifico funcion ctrl_select
+///select_pago.remove(0);                            // para que use seleccione segun parametros
 
 //remover funcion sumit del boton GUARDAR
 var bt_guardar = document.getElementsByTagName("button");
