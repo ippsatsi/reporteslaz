@@ -427,7 +427,7 @@ $mostrar_usuario = $rol_logo.$_SESSION['usuario_valido'];
         <ul id="drop">
           <li><a href=borrargestiones.php>Borrar Gestiones</a></li>
           <li><a href=registro_pagos.php>Registro Pagos</a></li>
-<?php echo ($rol_agente ? '' : '          <li><a href=#gestion2>Actualizar Cajas/Datos</a></li>' )?>
+<?php echo ($rol_agente ? '' : '          <li><a href=update_cuadros.php>Actualizar Cajas/Datos</a></li>' )?>
 <!--<?php echo ($rol_agente ? '' : '          <li><a href=predictivo.php>Gestiones Predictivo</a></li>' )?>-->
 <?php echo ($rol_agente ? '' : '          <li><a href=predictivo_web.php>Gestiones Predictivo WEB</a></li>' )?>
         </ul>
