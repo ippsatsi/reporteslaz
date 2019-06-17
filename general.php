@@ -18,7 +18,8 @@ if (isset($_POST['id_formulario'])) {
     
     $funcion_name = "reporte_".$num_formulario;
     $data =$funcion_name();
-    if ($num_formulario=="2") {
+    /* CODIGO ESPECIFICO PARA QUE DETERMINADO REPORTE SEA EN CSV
+    if ($num_formulario=="33") {
       header('Content-type: text/csv; charset=utf-8');
       header('Content-Disposition: attachment; filename=data.csv');
       
@@ -32,7 +33,7 @@ if (isset($_POST['id_formulario'])) {
       fclose($out);
       exit(0);
       
-    }
+    } */
 
 
     $writer = new XLSXWriter();
@@ -69,8 +70,18 @@ css_estilos();
 header_html();
 $array = array(array('ctrl_select_cartera'));
 form_plantilla4($error_message, $num_formulario, "Reporte de ultima gestion", "general.php", "Reporte de Ultima Gestion", $array, 1);
-$array = array(array('form_fecha','ctrl_select_cartera'));
-form_plantilla4($error_message, $num_formulario, "Reporte de Gestiones FUNO", "general.php", "Reporte de Gestiones FUNO", $array, 2);
+
+
+function ctrl_select_subcartera_GENERAL($form_number) {
+  
+  $array = array(array("ID"=>10,"NOMBRE"=>"FLUJO"),array("ID"=>13,"NOMBRE"=>"CASTIGO"),array("ID"=>15,"NOMBRE"=>"CAPTURA"),array("ID"=>99,"NOMBRE"=>"TODOS"));
+  ctrl_lista_desplegable("SubCartera:", $array, "subcartera", $form_number );
+  
+}
+
+
+$array = array(array('form_rango_fecha'),array('ctrl_select_subcartera_GENERAL'));
+form_plantilla4($error_message, $num_formulario, "Reporte de Gestiones MAF", "general.php", "Reporte de Gestiones MAF", $array, 2);
 $actualizar_label = <<<Final
 <script>
 var label_fecha_id = document.getElementById('label_hasta2');

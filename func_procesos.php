@@ -416,6 +416,35 @@ foreach ($array as $row)
               </div>
 <?php
 }
+
+//################################################################################
+
+function ctrl_wide_select($label, $array, $control, $js_function ='', $default_option_label='--seleccione--', $default_option_value=0) {
+  ?>
+  <?php
+  echo <<<Final
+
+              <div class="field_row_form">
+                <label>$label</label>
+                <div  style="width: 13.2rem" class="select_input">
+                  <select  style="width: 15.4rem" id="$control" name="$control" $js_function>
+Final;
+  if ($default_option_value<>'') {//si $default_option_value='' entonces solo usamos como opciones las asignadas por $array
+    echo '                    <option value="'.$default_option_value.'">'.$default_option_label.'</option>';
+  }
+
+foreach ($array as $row)
+  {
+    echo "\n";
+    echo '                    <option value="'.$row['ID'].'">'.$row['NOMBRE'].'</option>';
+  }
+?>
+
+                  </select>
+                </div>
+              </div>
+<?php
+}
 //################################################################################
 
 function form_modal($error, $archivo_action, $legend, $array) {
