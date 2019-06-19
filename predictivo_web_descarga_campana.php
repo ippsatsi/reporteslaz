@@ -16,7 +16,7 @@
   $fecha_hora_carga = date('Y-m-d H:i:s');
   $fecha_hora_carga_sql = str_replace("-","", $fecha_hora_carga);
   try {
-    $texto_campana = shell_exec("wget -qO- --no-check-certificate https://predictivo.ucatel.com:44443/mi_reporte/campana_exportcsv.php?id_campe=".$_GET['idcampana']); //descargamos el archivo
+    $texto_campana = shell_exec("wget -qO- --no-check-certificate https://predictivo.ucatel.com:44443/mi_reporte/campana_out_exportcsv.php?id_campe=".$_GET['idcampana']); //descargamos el archivo
   
     $array_file = explode("\n", $texto_campana); //lo rompemos en un array de lineas
     $ultimo_valor = array_pop($array_file);//extraemos el ultimo valor que esta vacio, debido al ultimo \n

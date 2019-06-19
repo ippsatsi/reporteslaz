@@ -17,11 +17,11 @@ function generar_array_predictivo($array_line,$usuario, $fecha_control, $fecha_h
     $linea_array[0] = $fecha_llamada;//fecha
     $linea_array[1] = $array_line[1];//telefono
     $linea_array[2] = $array_line[2];//cuenta
-    $linea_array[3] = $array_line[3];//estado
-    $linea_array[4] = $array_line[4];//causa
-    $linea_array[5] = $array_line[5];//no se usa
-    $linea_array[6] = $array_line[6];//intento
-    $linea_array[7] = $array_line[7];//agente
+    $linea_array[3] = $array_line[4];//estado
+    $linea_array[4] = $array_line[5];//causa
+    $linea_array[5] = $array_line[6];//no se usa
+    $linea_array[6] = $array_line[7];//intento
+    $linea_array[7] = $array_line[8];//agente
     $linea_array[8] = $usuario;//usuario
     $linea_array[9] = $fecha_hora_carga;//fecha_carga
     return $linea_array;

@@ -18,22 +18,34 @@ if (isset($_POST['buscar'])){// comprueba si se envio formulario
   // $conn2 = conectar_ucadesa_mssql();//UCADESA
     $conn2 = conectar_mssql();//GCC
     $fecha_llamada = $_POST['fecha_llamada'];
-    $fecha_llamada = str_replace('/','-',$fecha_llamada);
+    $fecha_llamada = str_replace('/','-',$fecha_llamada); //18-06-2019
     $result_login = shell_exec("wget -qO- --save-cookies ./uploads/cookies.txt --no-check-certificate --post-data 'user=Administra&password=Cde3Vfr4' https://predictivo.ucatel.com:44443");//logueo en el proveedor
 
     $camp_pred =<<<'Final'
-wget -qO- --load-cookies cookies.txt --no-check-certificate https://predictivo.ucatel.com:44443/mi_reporte/campanas.php | grep -A 2 '" href="campana.php?idcampana='| grep -a -v '<td>' | grep -a -v '\-\-' | sed 's/\t//g' | sed 's/$/|/g' | tr  '\n' ' ' | sed -e 's/| <a/| \n<a/g' | sed -e 's@a=\|"><b>\|</b></a></td>| \|</td>| @|@g'
+wget -qO- --load-cookies cookies.txt --no-check-certificate https://predictivo.ucatel.com:44443/mi_reporte/campanas_out.php | grep -A 2 '" href="campana_out.php?idcampana=' | grep -a -v '<td>' | grep -a -v '\-\-' | sed 's/\t//g' | sed 's/$/|/g' | tr  '\n' ' ' | sed -e 's/| <a/| \n<a/g' | sed -e 's@a=\|"><b>\|</b></a></td>| \|</td>| @|@g'
 Final;
+
+//| sed 's/$/|/g'  coloca palote al final de la linea
+
+    $camp_pred =<<<'Final'
+wget -qO- --load-cookies cookies.txt --no-check-certificate https://predictivo.ucatel.com:44443/mi_reporte/campanas_out.php | grep -A 2 '" href="campana_out.php?idcampana=' | grep -a -v '<td>' | grep -a -v '\-\-' | sed 's/\t//g' | sed 's/$/|/g' | tr  '\n' ' ' | sed -e 's/| <a/| \n<a/g' | sed -e 's@a=\|"><b>\|</b> &nbsp;&nbsp;</a></td>| \|</td>| @|@g'
+Final;
+
 //descargamos la lista de campañas y separamos columnas por palotes|
 $result_web = shell_exec($camp_pred);
+//resultado: <a style="color:#868e96" href="campana_out.php?idcampan|921|P1.2H-P3.4A-05.05.2019|04 May|
+//echo $fecha_llamada;
+//exit;
 $array_campana = array();
 $enlineas = explode(PHP_EOL, $result_web); // SEPARAR POR LINEAS
 foreach ($enlineas as $linea) { 
   $line = explode("|", $linea);
+ // echo " v1:".$line[1]." v2:".$line[2]."-- v3:".$line[3]; //depuracion
+  $line[3]=date("d-m-Y",strtotime($line[3])); //convirtiendo el formato 18 Jun a 18-06-2019
   if ($fecha_llamada==$line[3]) {
 
     $consulta_tabla = buscar_campana($conn2, $line[2],$line[3]); //buscamos la campaña en la base por nombre y fecha
-//echo " v2:".$line[2]."-- v3:".$line[3];
+//echo " v1:".$line[1]." v2:".$line[2]."-- v3:".$line[3]; //depuracion
     $boton = '<input type="button" value="cargar" onclick="procesar_campana('.$line[1].',\''.$line[2].'\' ,\''.$usuario.'\', \''.$line[3].'\')" >';
     if ($consulta_tabla[9]!=='-') {//comprobamos que no exista campaña subida para activar el boton de carga
         $boton = 'CARGADO';
