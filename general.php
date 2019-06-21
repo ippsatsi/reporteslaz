@@ -74,7 +74,7 @@ form_plantilla4($error_message, $num_formulario, "Reporte de ultima gestion", "g
 
 function ctrl_select_subcartera_GENERAL($form_number) {
   
-  $array = array(array("ID"=>10,"NOMBRE"=>"FLUJO"),array("ID"=>13,"NOMBRE"=>"CASTIGO"),array("ID"=>15,"NOMBRE"=>"CAPTURA"),array("ID"=>99,"NOMBRE"=>"TODOS"));
+  $array = array(array("ID"=>10,"NOMBRE"=>"JUDICIAL"),array("ID"=>13,"NOMBRE"=>"CASTIGO"),array("ID"=>99,"NOMBRE"=>"TODOS"));
   ctrl_lista_desplegable("SubCartera:", $array, "subcartera", $form_number );
   
 }
