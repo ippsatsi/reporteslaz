@@ -72,14 +72,14 @@ function ctrl_boton_add() {
 }
 
 //$carteras = array(array(2,'4K'),array(7,'BCP'),array(8,'LFT'));
-$carteras = array(array('ID'=> 2,'NOMBRE'=>'4K'),array('ID'=>7,'NOMBRE'=>'BCP'),array('ID'=>8,'NOMBRE'=>'LFT'));
+$carteras = obtener_proveedores();
 
 
 function ctrl_select_carteras() {
   global $carteras;
  
  // $array = array(array('ID'=>$carteras[1][0],'NOMBRE'=>$carteras[1][1]));
-  ctrl_select("cartera:", $carteras, "cartera", '','','');
+  ctrl_select("Proveedor:", $carteras, "cartera", '','','');
 }
 
 //funcion para mostrar el mensaje de cuanto se va recaudando

@@ -52,14 +52,11 @@ require_once 'func_reportes.php';
 require_once 'func_procesos.php';
 
 $carteras = array(array(7,'BCP'),array(0,'TODOS'));
-$carteras = array(array('ID'=> 2,'NOMBRE'=>'4K'),
-                  array('ID'=>7,'NOMBRE'=>'BCP'),
-                  array('ID'=>8,'NOMBRE'=>'LFT'),
-                  array('ID'=>0,'NOMBRE'=>'TODOS'));
+$carteras = obtener_proveedores();
 function ctrl_select_carteras() {
   global $carteras;
  // $array = array(array('ID'=>7,'NOMBRE'=>'BCP'),array('ID'=>0,'NOMBRE'=>'TODOS'));
-  ctrl_select("cartera:", $carteras, "cartera", '','','');
+  ctrl_select("Proveedor:", $carteras, "cartera", '','','');
 }
 
 css_estilos();

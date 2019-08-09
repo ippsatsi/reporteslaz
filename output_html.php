@@ -394,6 +394,7 @@ function css_estilos() {
 
   .close:hover { background: #00d9ff; }
 </style>
+<link rel="stylesheet" href="css/modal_js.css">
 <?php
 }
 
@@ -440,6 +441,7 @@ $mostrar_usuario = $rol_logo.$_SESSION['usuario_valido'];
       </li>
       <li><a href=#usuarios>Usuarios</a>
         <ul id="drop">
+        <?php echo ($_SESSION['usuario_codigo']=="3052" ? '          <li><a href=asig_cartera.php>Asignacion Carteras</a></li>' : '' )?>
         </ul>
       </li>
       <li class="menu_right"><a href="logout.php"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>Salir</a>
@@ -456,6 +458,17 @@ function footer_html() {
 ?>
     <div id="output_js_errores">ff</div>
   </div>
+  <!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close_modal">X</span>
+     <!-- <iframe id="modal_iframe" src="insertar_pago.php" height="500" width="900" frameBorder="0">xxx</iframe> -->
+    <!-- <iframe id="modal_iframe"  height="500" width="900" frameBorder="0">xxx</iframe> -->
+  </div>
+
+</div>
 </body>
 </html>
 <?php
@@ -518,5 +531,30 @@ Final;
     echo "</td>\n                </tr>\n";
   }
   echo '            </table>';
+}
+
+//####################################################################
+function obtener_proveedores () {
+  //conectarse al Sql Server
+  $conn = conectar_mssql();
+  $query = "
+  SELECT
+  PRV_CODIGO
+  , PRV_NOMBRES
+  FROM
+  COBRANZA.GCC_PROVEEDOR WHERE PRV_ESTADO_REGISTRO='A';";
+  
+  $result_query= sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
+  if (!$result_query) {
+    throw new Exception('No se pudo completar la consulta',2);
+  }
+  $array_return = array();
+  //for ($count = 1; $)
+  while( $row = sqlsrv_fetch_array($result_query) ) {
+    $array_return[] = array('ID'=>$row['PRV_CODIGO'], 'NOMBRE'=>$row['PRV_NOMBRES']);
+//    $array_return['cartera'][] = $row['CAR_CODIGO'];
+//    $array_return['descripcion'][] = $row['CAR_DESCRIPCION'];
+  }
+  return $array_return;
 }
 ?>

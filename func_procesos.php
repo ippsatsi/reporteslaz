@@ -419,6 +419,38 @@ foreach ($array as $row)
 
 //################################################################################
 
+function ctrl_select2($label, $array, $control,$selected_value, $js_function ='',  $default_option_label='--seleccione--', $default_option_value=0) {
+  ?>
+  <?php
+  echo <<<Final
+
+              <div class="field_row_form">
+                <label>$label</label>
+                <div class="select_input">
+                  <select id="$control" name="$control" $js_function>
+Final;
+  if ($default_option_value<>'') {//si $default_option_value='' entonces solo usamos como opciones las asignadas por $array
+    echo '                    <option value="'.$default_option_value.'">'.$default_option_label.'</option>';
+  }
+
+foreach ($array as $row)
+  {
+    echo "\n";
+    if ($row['ID'] == $selected_value) {
+      echo '                    <option selected value="'.$row['ID'].'">'.$row['NOMBRE'].'</option>';
+    } else {
+      echo '                    <option value="'.$row['ID'].'">'.$row['NOMBRE'].'</option>';
+    }
+  }
+?>
+
+                  </select>
+                </div>
+              </div>
+<?php
+}
+//################################################################################
+
 function ctrl_wide_select($label, $array, $control, $js_function ='', $default_option_label='--seleccione--', $default_option_value=0) {
   ?>
   <?php
@@ -499,6 +531,38 @@ foreach ($array as $key => $row_value) {
 <?php
 }
 
+//######################################################################################
 
+function form_modal2($legend, $custom_function, $array, $headers, $error) {
+?>
+    <form action="#" method="post">
+      <fieldset>
+        <legend><?php echo $legend; ?></legend>
+        <div class="div_form only_form">
+<?php
+if ($error)
+{
+  echo '          <div id="row_form">'."\n";
+  echo "            <label class=\"thintop_margin\">Error de consulta, revisar comentarios ocultos</label>"."\n";
+  echo '          </div>'."\n";
+}
+?>
+          <div id="row_form">
+
+
+<?php
+
+$style = '';
+$custom_function($array, $headers,$style);
+
+//llenar_tabla($array, $headers, $style);
+?>
+
+          </div>
+        </div>
+      </fieldset>
+    </form>
+<?php
+}
 
 ?>
