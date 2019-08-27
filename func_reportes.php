@@ -26,7 +26,7 @@ function obtener_carteras () {
 
 //################################################################################
 
-function form_plantilla4($error, $num_formulario="0", $label, $archivo_action, $legend, $array, $form_number) {
+function form_plantilla4($error, $num_formulario="0", $label, $archivo_action, $legend, $array, $form_number, $altura_form='') {
 // formulario basico (cartera, subcartera y boton de descarga, control de fecha opcional)
 // $error: mensaje de error
 // $num_formulario: es el numero de formulario al cual pertenece el error, y el que comparamos despues con $form_number para saber en que formulario
@@ -37,12 +37,18 @@ function form_plantilla4($error, $num_formulario="0", $label, $archivo_action, $
 // $form_number: es el numero de formulario dentro de la pagina
 // establecemos las cabeceras de los acordeones y los numeramos para identificarlos
 $submit = false;
+if ($altura_form == '') {
+    $class_form = '';
+
+} else {
+    $class_form = 'class="'.$altura_form.'"';
+}
 ?>
     <div class="row_accordeon">
      <?php echo <<<Final
       <input id="acor$form_number" name="accordeon1" type="radio" checked />
       <label for="acor$form_number">$label</label> <!-- variable label-->
-      <form onsubmit="limpiar_mensaje($form_number)" action="$archivo_action" method="post"> <!-- variable archivo_action-->
+      <form onsubmit="limpiar_mensaje($form_number)" action="$archivo_action" $class_form method="post"> <!-- variable archivo_action-->
         <fieldset>
           <legend>$legend</legend> <!-- variable legend-->
           <div class="div_form">
@@ -57,28 +63,31 @@ foreach ($array as $key => $row_value) {
     $field_value($form_number);
     if ($field_value=='ctrl_submit') {
       $submit = true;
-    }
-  }
-  echo '          </div>
+    }//if
+  }// foreach
+  echo '            </div> <!-- row_form -->
 ';
-}
+} // foreach
 echo '            <div id="row_form">';
 
 if (!$submit) {
 ?>
+
               <div class="field_row_form">
                 <button id="downl" type="submit"><i class="fa fa-arrow-circle-o-down fa-fw" aria-hidden="true"></i>descarga</button>
-              </div>
+              </div> <!-- field_row_form -->
 <?php
 }
 ?>
               <div class="field_row_form" id="error"><?php if ( $error && $num_formulario==$form_number )// variable $form_number
 {
   echo $error;
-}
+} //if
 ?>
-            </div>
-          </div>
+
+              </div><!-- field_row_form -->
+            </div><!-- row_form -->
+          </div> <!-- div_form -->
         </fieldset>
       </form>
     </div>

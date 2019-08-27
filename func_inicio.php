@@ -38,6 +38,7 @@ define('EXCEL_SHEET_NAME', 'Hoja1');
 // 'F' = 'date';
 // 'D' = 'datetime';
 // 'P' = 'price';
+// 'G' = 'general';
 
 function login($user,$pass) {
 //  conectarse al Sql Server

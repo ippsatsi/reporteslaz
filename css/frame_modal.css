@@ -1,0 +1,55 @@
+  @font-face {
+    font-family: 'BebasNeueRegular';
+    src: url('fonts/BebasNeue-webfont.eot');
+    src: url('fonts/BebasNeue-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/BebasNeue-webfont.woff') format('woff'),
+         url('fonts/BebasNeue-webfont.ttf') format('truetype'),
+         url('fonts/BebasNeue-webfont.svg#BebasNeueRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+  body {
+    margin: 0;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1rem;
+    counter-reset: rowacord;
+    background-color: #ecf0f5;
+  }
+  #row_form table {
+    border: 1px solid rgba(23, 13, 13, 0.4);
+    border-radius: 0.25rem;
+    width: 500px;
+    border-collapse: collapse;
+    #border-spacing: 0;
+    margin: 20px;
+  }
+    fieldset {
+    border: 2px solid #2c3e50;
+    border-radius: 6px;
+    margin: 12px;
+  }
+  #row_form td, #row_form th {
+    padding: 6px;
+    border-left: 1px solid rgba(23, 13, 13, 0.4);
+    border-top: 1px solid rgba(23, 13, 13, 0.4);
+    font-size: 0.8rem;
+  }
+  #row_form th {
+    font-weight: 600;
+  }
+  #row_form tr {
+    font-weight: 400;
+  }
+  #row_form td {
+    text-align: center;
+  }
+  .only_form {
+    height: auto;
+  }
+  .nofloat {
+    float:none;
+  }
+  .thintop_margin {
+    margin-top: 10px;
+  }
+</style>

@@ -7,7 +7,7 @@ function css_estilos() {
 <html lang="es">
 <head>
 <title><?php echo TITULO_HTML; ?></title>
-</head>
+
 <meta charset="UTF-8" />
 <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 <!--    <script src="script.js" ></script>-->
@@ -189,7 +189,9 @@ function css_estilos() {
   .div_form {
     display: flex;
     flex-direction: column;
-    height: 180px;
+    /*height: 180px;*/
+    height: auto;
+    min-height: 180px;
     justify-content: space-around;
   }
   #datepicker_desde ,#datepicker_hasta {
@@ -259,9 +261,9 @@ function css_estilos() {
     background: -ms-linear-gradient(top, #ffffff 1%,#eaeaea 100%);
     background: linear-gradient(top, #ffffff 1%,#eaeaea 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#eaeaea',GradientType=0 );
-    box-shadow: 
-    0px 0px 0px 1px rgba(155,155,155,0.3), 
-    1px 0px 0px 0px rgba(255,255,255,0.9) inset, 
+    box-shadow:
+    0px 0px 0px 1px rgba(155,155,155,0.3),
+    1px 0px 0px 0px rgba(255,255,255,0.9) inset,
     0px 2px 2px rgba(0,0,0,0.1);
   }
   input:checked ~ form {
@@ -283,8 +285,8 @@ function css_estilos() {
     background: #c6e1ec;
     color: #3d7489;
     text-shadow: 0px 1px 1px rgba(255,255,255, 0.6);
-    box-shadow: 
-    0px 0px 0px 1px rgba(155,155,155,0.3), 
+    box-shadow:
+    0px 0px 0px 1px rgba(155,155,155,0.3),
     0px 2px 2px rgba(0,0,0,0.1);
   }
   input + label:hover {
@@ -335,7 +337,7 @@ function css_estilos() {
   #output_js_errores {
     color:#ecf0f5;
   }
-  
+
   .modalDialog {
     position: fixed;
     font-family: Arial, Helvetica, sans-serif;
@@ -395,6 +397,7 @@ function css_estilos() {
   .close:hover { background: #00d9ff; }
 </style>
 <link rel="stylesheet" href="css/modal_js.css">
+</head>
 <?php
 }
 
@@ -405,7 +408,7 @@ $logo_admin='<i class="fa fa-user-circle-o fa-fw" aria-hidden="true"></i>';
 $logo_agente='<i class="fa fa-user fa-fw" aria-hidden="true"></i>';
 $rol_agente = ($_SESSION['rol']==4 || $_SESSION['rol']==5 ? true : false );
 $rol_logo = ($rol_agente ? $logo_agente : $logo_admin );
-$mostrar_usuario = $rol_logo.$_SESSION['usuario_valido'];
+$mostrar_usuario = $rol_logo.strtolower($_SESSION['usuario_valido']);
 ?>
 <body>
         <!--#949DA8 #4F84C4 #578CA9 #AF9483 #91A8D0 #55B4B0 #7FCDCD #45B8AC-->
@@ -420,6 +423,7 @@ $mostrar_usuario = $rol_logo.$_SESSION['usuario_valido'];
 <?php echo ($rol_agente ? '' : '          <li><a href=correo.php>Correos</a></li>' )?>
 <?php echo ($rol_agente ? '' : '          <li><a href=pagos.php>Pagos</a></li>' )?>
 <?php echo ($rol_agente ? '' : '          <li><a href=asignacion.php>Asignacion</a></li>' )?>
+<?php echo ($rol_agente ? '' : '          <li><a href=llamadas.php>Llamadas Manuales</a></li>' )?>
 <?php echo ($rol_agente ? '' : '          <li><a href=#gestion3>Paleta</a></li>' )?>
 <?php echo ($rol_agente ? '' : '          <li><a href=#gestion3>Base Cartera</a></li>' )?>
         </ul>
@@ -454,7 +458,42 @@ $mostrar_usuario = $rol_logo.$_SESSION['usuario_valido'];
 <?php
 }
 
-function footer_html() {
+function footer_htmlxx() {
+?>
+    <div id="output_js_errores">ff</div>
+  </div>
+</body>
+</html>
+<?php
+}
+
+
+function footer_html($html_final='', $js1=0, $js2=0) {
+// $html_final : variable con codigo html para divs adicionales
+// $js1,$js2, $js3 ... archivos javascript adicionales
+?>
+    <div id="output_js_errores">ff</div>
+  </div>
+
+<?php
+echo $html_final;
+
+for ($i = 1; $i < 3; $i++) {
+    //construimos $js1, $js2
+    $jscript = "js".$i;
+    if ($$jscript != '0' ) {
+        echo "\n";
+        echo '    <script src="js/'.$$jscript.'"></script>';
+    }
+}
+?>
+
+</body>
+</html>
+<?php
+}
+
+function footer_html2() {
 ?>
     <div id="output_js_errores">ff</div>
   </div>
@@ -469,6 +508,51 @@ function footer_html() {
   </div>
 
 </div>
+
+<?php
+
+$carga_modal = <<<Final
+<script type="text/javascript">
+    function prepareFrame() {
+    //    var ifrm = document.createElement("iframe");
+    //    ifrm.setAttribute("src", "modal_asigna_cartera.php?id_agente=12");
+    //    ifrm.style.width = "640px";
+    //    ifrm.style.height = "480px";
+    //    document.body.appendChild(ifrm);
+   //     var site = "insertar_pago.php";
+   // document.getElementById('modal_iframe').src = site;
+      modal.style.display = "block";
+      setTimeout(function() {modal.style.opacity = "1";}, 150);
+    }
+
+
+// Obtenemos el elemento modal
+var modal = document.getElementById("myModal");
+modal.style.opacity = 0;
+modal.style.transition = "opacity 0.6s";
+
+// Obtiene el elemento <span> que cierra el modal
+var span = document.getElementsByClassName("close_modal")[0];
+
+
+// Cuando el usuario hace click en <span> (x), cierra el modal
+span.onclick = function() {
+  modal.style.opacity = "0";
+  setTimeout(function() {modal.style.display = "none";}, 800);
+}
+
+// Cuando el usuario hace click fuera del modal, lo cierra
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+    modal.style.opacity = 0;
+  }
+}
+
+</script>
+Final;
+echo $carga_modal;
+?>
 </body>
 </html>
 <?php
@@ -543,7 +627,7 @@ function obtener_proveedores () {
   , PRV_NOMBRES
   FROM
   COBRANZA.GCC_PROVEEDOR WHERE PRV_ESTADO_REGISTRO='A';";
-  
+
   $result_query= sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
   if (!$result_query) {
     throw new Exception('No se pudo completar la consulta',2);

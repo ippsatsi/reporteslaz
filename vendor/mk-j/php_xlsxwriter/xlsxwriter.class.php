@@ -258,8 +258,8 @@ class XLSXWriter
             case 'P': //float decimal precio
                 $header[] = 'price';
                 break;
-            default:
-                $header[] = 'string';
+            default: //se cambio de string a GENERAL
+                $header[] = 'GENERAL';
                 break;
         }
           
