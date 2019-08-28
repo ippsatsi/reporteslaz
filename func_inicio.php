@@ -40,6 +40,9 @@ define('EXCEL_SHEET_NAME', 'Hoja1');
 // 'P' = 'price';
 // 'G' = 'general';
 
+// Texto para incluir js personalizados en una seccion script al final del html y despues de cargar todos los scripts
+$JS_CUSTOM_TXT = '';
+
 function login($user,$pass) {
 //  conectarse al Sql Server
   $conn = conectar_mssql();

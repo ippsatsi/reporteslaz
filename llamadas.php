@@ -60,25 +60,21 @@ header_html();
 $array = array(array('form_rango_fecha'));
 form_plantilla4($error_message, $num_formulario, "Reporte de detallado llamadas por cartera", "llamadas.php", "Consumos detallado por Cartera", $array, 1);
 
+//################################################################################
 
-function ctrl_select_subcartera_GENERAL($form_number) {
-  
-  $array = array(array("ID"=>10,"NOMBRE"=>"JUDICIAL"),array("ID"=>13,"NOMBRE"=>"CASTIGO"),array("ID"=>99,"NOMBRE"=>"TODOS"));
-  ctrl_lista_desplegable("SubCartera:", $array, "subcartera", $form_number );
-  
+function ctrl_mostrar($form_number) {
+?>
+              <div class="field_row_form">
+                <input id="downl" type="button" onclick="mostrar_tabla()" value="mostrar_2"/> 
+              </div>
+<?php
 }
-
 
 $array = array(array('form_rango_fecha'));
 form_plantilla4($error_message, $num_formulario, "Resumen de consumo por cartera", "llamadas.php", "Resume consumo por cartera", $array, 2, "altura_media");
-$actualizar_label = <<<Final
-<script>
-var label_fecha_id = document.getElementById('label_hasta2');
-label_fecha_id.innerHTML = 'Fecha';
-console.log(label_fecha_id.innerHTML);
-</script>
-Final;
-echo $actualizar_label;
+
+$array = array(array('form_rango_fecha'));
+form_plantilla4($error_message, $num_formulario, "Resumen de consumo por carteraxx", "llamadas.php", "Resume consumo por carteraxx", $array, 3, "altura_media");
 
 lib_js_reportes();
 footer_html();

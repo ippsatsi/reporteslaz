@@ -138,15 +138,6 @@ function ctrl_select_subcartera($form_number) {
 
 //################################################################################
 
-function ctrl_submit($form_number) {
-?>
-              <div class="field_row_form">
-                <input id="downl" type="button" href="busquedas.php?cartera=" target="_blank" onclick="busquedas('busquedas.php?cartera=', '_blank', 'width=700,height=400, top=300,left=300',<?php echo $form_number; ?>); return false;" value="reporte"/> 
-              </div>
-<?php
-}
-//################################################################################
-
 function lib_js_reportes() {
 //funcion para habilitar el datepucker
 ?>
@@ -160,39 +151,69 @@ function lib_js_reportes() {
 
 //####################################################################################
 
-function form_rango_fecha() {
-?>
-            <div id="row_form">
-              <div class="field_row_form">
-                <label for="datepicker_desde">Desde:</label>
-                <div class="input_fecha">
-                  <input type="text" id="datepicker_desde" name="fecha_desde" value="<?php echo date('d/m/Y');?>"><i class="fa fa-calendar" aria-hidden="true"></i>
-                </div>
-              </div>
-              <div class="field_row_form">
-                <label for="datepicker_hasta">Hasta:</label>
-                <div class="input_fecha">
-                  <input type="text" id="datepicker_hasta" name="fecha_hasta" value="<?php echo date('d/m/Y');?>"><i class="fa fa-calendar" aria-hidden="true"></i>
-                </div>
-              </div>
-            </div>
-<?php
-}
-
 function form_fecha($form_number) {
 ?>
             <div id="row_form">
               <div class="field_row_form" id="<?php echo "fecha_hasta".$form_number;?>">
                 <label for="datepicker_hasta" id="<?php echo "label_hasta".$form_number;?>">Hasta:</label>
                 <div class="input_fecha">
-                  <input type="text" id="datepicker_hasta" name="fecha_hasta" value="<?php echo date('d/m/Y');?>" ><i class="fa fa-calendar" aria-hidden="true"></i>
+                  <input type="text" class="fecha_input_css" id="datepicker_hasta" name="fecha_hasta" value="<?php echo date('d/m/Y');?>" ><label for="datepicker_hasta" ><i class="fa fa-calendar" aria-hidden="true"></i></label>
                 </div>
               </div>
             </div>
 <?php
 }
 
+function form_rango_fecha($form_number) {
+?>
 
+              <div class="field_row_form clearfix">
+                <label for="datepicker_desde<?php echo $form_number;?>">Desde:</label>
+                <div class="input_fecha">
+                  <input type="text" class="fecha_input_css" id="datepicker_desde<?php echo $form_number;?>" name="fecha_desde" value="<?php echo date('d/m/Y');?>"><label for="datepicker_desde<?php echo $form_number;?>" ><i class="fa fa-calendar" aria-hidden="true"></i></label>
+                </div>
+              </div>
+              <div class="field_row_form clearfix">
+                <label for="datepicker_hasta<?php echo $form_number;?>">Hasta:</label>
+                <div class="input_fecha">
+                  <input type="text" class="fecha_input_css" id="datepicker_hasta<?php echo $form_number;?>" name="fecha_hasta" value="<?php echo date('d/m/Y');?>"><label for="datepicker_hasta<?php echo $form_number;?>" ><i class="fa fa-calendar" aria-hidden="true"></i></label>
+                </div>
+              </div>
+
+<?php
+global $JS_CUSTOM_TXT;
+
+    $JS_CUSTOM_TXT .= "
+    \n
+    /* codigo para datepicker del formulario $form_number */
+    
+        var picker_d$form_number = new Pikaday({
+        field: document.getElementById('datepicker_desde$form_number'),
+        format: 'DD/MM/YYYY',
+        i18n: {
+    previousMonth : 'Mes Anterior',
+    nextMonth     : 'Mes Siguiente',
+    months        : ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Setiembre','Octubre','Noviembre','Diciembre'],
+    weekdays      : ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'],
+    weekdaysShort : ['Dom','Lun','Mar','Mie','Jue','Vie','Sab']
+}
+
+    });
+        var picker_h$form_number = new Pikaday({
+        field: document.getElementById('datepicker_hasta$form_number'),
+        format: 'DD/MM/YYYY',
+        keyboardInput: false,
+        i18n: {
+    previousMonth : 'Mes Anterior',
+    nextMonth     : 'Mes Siguiente',
+    months        : ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Setiembre','Octubre','Noviembre','Diciembre'],
+    weekdays      : ['Domingo','Lunes','Martes','Miercoles','Jueves','Viernes','Sabado'],
+    weekdaysShort : ['Dom','Lun','Mar','Mie','Jue','Vie','Sab']
+}
+
+    });
+    ";
+}
 
 
 ?>

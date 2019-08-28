@@ -46,6 +46,18 @@ require_once 'output_html.php';
 require_once 'func_reportes.php';
 css_estilos();
 header_html();
+
+
+//################################################################################
+
+function ctrl_submit($form_number) {
+?>
+              <div class="field_row_form">
+                <input id="downl" type="button" href="busquedas.php?cartera=" target="_blank" onclick="busquedas('busquedas.php?cartera=', '_blank', 'width=700,height=400, top=300,left=300',<?php echo $form_number; ?>); return false;" value="reporte"/> 
+              </div>
+<?php
+}
+
 $array = array(array('form_rango_fecha'),array('ctrl_select_cartera'));
 form_plantilla4($error_message, $num_formulario, "Reporte de Campo - Mejor Gestion por Direccion", "campo.php", "Reporte de Campo", $array, 1);
 $array = array(array('ctrl_submit','ctrl_select_cartera'));

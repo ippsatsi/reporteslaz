@@ -279,7 +279,7 @@ echo <<<Final
             <div class="field_row_form" id="fecha_llamada"><!-- ctrl_fecha_desde-->
               <label for="datepicker_desde" id="label_llamada">Fecha:</label>
               <div class="input_fecha">
-                <input type="text" id="datepicker_desde" name="fecha_llamada" value="$valor_fecha" ><i class="fa fa-calendar" aria-hidden="true"></i>
+                <input type="text" class="fecha_input_css" id="datepicker_desde" name="fecha_llamada" value="$valor_fecha" ><label for="datepicker_desde" ><i class="fa fa-calendar" aria-hidden="true"></i></label>
               </div>
             </div> <!-- ctrl_fecha_desde-->
 Final;
@@ -291,7 +291,7 @@ echo <<<Final
             <div class="field_row_form" id="fecha_llamada"><!-- ctrl_fecha_pago-->
               <label for="datepicker_pago" id="label_llamada">Fecha Pago:</label>
               <div class="input_fecha">
-                <input type="text" id="datepicker_pago" name="fecha_llamada" value="$valor_fecha" ><i class="fa fa-calendar" aria-hidden="true"></i>
+                <input type="text" class="fecha_input_css" id="datepicker_pago" name="fecha_llamada" value="$valor_fecha" ><label for="datepicker_pago" ><i class="fa fa-calendar" aria-hidden="true"></i></label>
               </div>
             </div> <!-- ctrl_fecha_pago-->
 Final;

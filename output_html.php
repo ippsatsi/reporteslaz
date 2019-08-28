@@ -31,6 +31,12 @@ function css_estilos() {
     counter-reset: rowacord;
     min-width: 1200px;
   }
+  .clearfix::before,
+  .clearfix::after {
+  content: "";
+  clear: both;
+  display: block;
+}
   nav {
     position: fixed;
     width: 100%;
@@ -194,21 +200,22 @@ function css_estilos() {
     min-height: 180px;
     justify-content: space-around;
   }
-  #datepicker_desde ,#datepicker_hasta {
-    margin: 0px;
+  
+  .fecha_input_css {
+    margin: 0px !important;
     box-sizing: border-box;
-    padding: .255rem .75rem;
+    padding: .255rem .75rem !important;
     font-size: 0.99rem;
     color: #495057;
     background-color: #fff;
     background-image: none;
     background-clip: padding-box;
-    border: 1px solid rgba(23, 13, 13, 0.4);
-    border-radius: 0.25rem;
-    height: 1.7rem;
-    width: 116px;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+    border: 1px solid rgba(23, 13, 13, 0.4) !important; 
+    border-radius: 0.25rem !important;
+    height: 1.9rem !important;
+    width: 116px !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
   }
   .fa-calendar {
@@ -229,9 +236,18 @@ function css_estilos() {
     border: 1px solid rgba(23, 13, 13, 0.4);
     border-radius: ;
   }
-  #datepicker_desde:focus, #datepicker_hasta:focus {
+  .fecha_input_css:focus {
     border-color: #7d1419;
     box-shadow: -1px -1px 6px 1px #a7665a ;
+  }
+   /* ajustar css  awesome font datepicker */
+  div.input_fecha > label {
+    float: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    text-shadow: none;
+    display: contents;
   }
   .row_accordeon  form {
     height: 0;
@@ -295,7 +311,7 @@ function css_estilos() {
   input:checked + label:hover {
     background: #c6e1ec url('images/arrow_up.png') no-repeat 98% 50%;
   }
-  input + label::before {
+  div.row_accordeon > input + label::before {
     counter-increment: rowacord;
     content: counter(rowacord) ".- ";
   }
@@ -487,6 +503,14 @@ for ($i = 1; $i < 3; $i++) {
     }
 }
 ?>
+
+<script>
+<?php
+global $JS_CUSTOM_TXT;
+//incluimos codigo script personalizados
+    echo $JS_CUSTOM_TXT;
+?>
+</script>
 
 </body>
 </html>

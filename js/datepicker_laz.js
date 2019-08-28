@@ -23,6 +23,7 @@
 }
 
     });
+
         var picker_h = new Pikaday({
         field: document.getElementById('datepicker_pago'),
         format: 'DD/MM/YYYY',
