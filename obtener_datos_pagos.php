@@ -5,7 +5,7 @@ if (isset($_GET['dni']))
 {
 
 $tabla_vacia = <<<Final
-            <div id="row_form" class="row_new">
+            <div class="row_form row_new">
               <div class="field_row_form">
                 <label>cuenta:</label>
                 <div class="select_input">
@@ -20,7 +20,7 @@ $tabla_vacia = <<<Final
               </div>
             </div>
           </div>
-          <div id="row_form" class="row_new">
+          <div class="row_form row_new">
            <table  class="tabla_cuenta"><!-- llenar tabla-->
               <thead>
                 <tr>
@@ -86,7 +86,7 @@ $plantilla = <<<Final
 Final;
 
 $plantilla_select =<<<Final
-            <div id="row_form" class="row_new">
+            <div class="row_form row_new">
               <div class="field_row_form">
                 <label>cuenta:</label>
                 <div class="select_input">
@@ -101,7 +101,7 @@ $plantilla_select =<<<Final
               </div>
             </div>
           </div>
-          <div id="row_form" class="row_new">
+          <div class="row_form row_new">
 Final;
 
 $plantilla_line_select = '<option value="||CUE_CODIGO||">||CUENTA||</option>';
@@ -165,7 +165,7 @@ CLI.CLI_DOCUMENTO_IDENTIDAD=(?)";
 
   }//if
   else {
-  //  echo ' <div id="row_form" class="row_new">              <div class="field_row_form" id="error">No se encuentra el cliente</div> </div>';
+  //  echo ' <div class="row_form row_new">              <div class="field_row_form" id="error">No se encuentra el cliente</div> </div>';
   //insertamos tabla vacia con mesnaje de no se encuentra el cliente
     echo $tabla_vacia;
   }

@@ -113,7 +113,7 @@ function css_estilos() {
     border-radius: 0.2em;
   }
   *:focus {
-    outline:0;
+  /*  outline:0;*/
   }
   input[type=date] {
     width: 130px;
@@ -126,7 +126,7 @@ function css_estilos() {
     float: right;
     display: flex;
 }
-  #row_form {
+  .row_form {
     display: flex;
   }
   .field_row_form {
@@ -151,7 +151,7 @@ function css_estilos() {
     #cursor: pointer;
     padding: 0px 7px 0px 7px;
   }
-  button#downl, button#add, input#add, input#downl, .bt_red {
+  button.downl, button#add, input#add, input.downl, .bt_red {
     border: 1px solid rgba(149, 19, 19, 0.98);
     font-size: 12px;
     background-color: #c0392e;
@@ -164,7 +164,7 @@ function css_estilos() {
     text-transform: uppercase;
     width: 100%;
   }
-  button#downl:hover, button#add:hover, input#add:hover, input#downl:hover, .bt_red:hover {
+  button.downl:hover, button#add:hover, input#add:hover, input.downl:hover, .bt_red:hover {
     background-color: rgba(149, 19, 19, 0.98);
     border: 1px solid #7a0b0b;
     # #e44133;
@@ -182,7 +182,7 @@ function css_estilos() {
     min-width: 150px;
   }
   select {
-    height: 1.7rem;
+    height: 1.8rem;
     width: 9.9rem;
     background: white url('images/arrow_down_select.png') no-repeat 81% 100%;
     border: 0px;
@@ -315,7 +315,7 @@ function css_estilos() {
     counter-increment: rowacord;
     content: counter(rowacord) ".- ";
   }
-  #row_form table {
+  .row_form table {
     border: 1px solid rgba(23, 13, 13, 0.4);
     border-radius: 0.25rem;
     width: 800px;
@@ -323,19 +323,19 @@ function css_estilos() {
     #border-spacing: 0;
     margin: 20px;
   }
-  #row_form td, #row_form th {
+  .row_form td, #row_form th {
     padding: 6px;
     border-left: 1px solid rgba(23, 13, 13, 0.4);
     border-top: 1px solid rgba(23, 13, 13, 0.4);
     font-size: 0.8rem;
   }
-  #row_form th {
+  .row_form th {
     font-weight: 500;
   }
-  #row_form tr {
+  .row_form tr {
     font-weight: 500;
   }
-  #row_form td {
+  .row_form td {
     text-align: center;
   }
   .only_form {
@@ -621,6 +621,41 @@ Final;
   }
   echo '            </table>';
 }
+
+//############################################################
+function ctrl_tabla() {
+
+  global $listar_tabla;
+  global $headers_tabla;
+  global $array_tabla;
+  $flag = $listar_tabla;
+  if ($flag) {
+    $headers = $headers_tabla;
+    $style = 'class="thintop_margin"';
+    $array = $array_tabla;
+    llenar_tabla($array, $headers, $style);  //si es asi muestra las cuentas
+  } else {
+    echo "\n";
+  }
+}
+
+//###################################################################
+
+function ctrl_tabla_sin_id() {
+
+  global $listar_tabla;
+  global $headers_tabla;
+  global $array_tabla;
+  $flag = $listar_tabla;
+  if ($flag) {
+    $headers = $headers_tabla;
+    $style = 'class="thintop_margin"';
+    $array = $array_tabla;
+    llenar_tabla_sin_id($array, $headers, $style);  //si es asi muestra las cuentas
+  }
+}
+
+//###################################################################
 
 function llenar_tabla_progresivo($array_input, $array_headers, $css_class) {
 $expandir = 'implode';

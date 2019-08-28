@@ -8,6 +8,7 @@ if (!isset($_SESSION['usuario_valido']))
 
 include_once(__DIR__."/vendor/mk-j/php_xlsxwriter/xlsxwriter.class.php");
 
+$listar_tabla = false;
 $num_formulario="0";// por si es la primera vez que cargamos el formulario
 if (isset($_POST['id_formulario'])) {
   $num_formulario = $_POST['id_formulario'];
@@ -24,13 +25,6 @@ if (isset($_POST['id_formulario'])) {
     $cabecera = $data['header']; //copia la porcion de los encabezados del resultado de la query a un array
     $writer->writeSheetHeaderFormated(EXCEL_SHEET_NAME, $cabecera, EXCEL_STYLE_ROW_HEADER);
     $fila = $data['resultado'];
-//    setlocale(LC_ALL, "en_US.UTF-8");
-//echo setlocale(LC_ALL, 0);
-//    echo setlocale(LC_ALL, 0);
-//    $locale_info = localeconv();
-//    print_r($locale_info);
-//    print_r($data['resultado']);
-//    exit;
     while ($fila2 = each($fila)) {//recorre todas las filas de resultados
       $writer->writeSheetRow(EXCEL_SHEET_NAME, $fila2[1],
                               $row_options = array_merge(EXCEL_STYLE_ROW_GENERAL, WHITE_FILL, LOW_ROW, WRAP_TRUE));
@@ -65,16 +59,24 @@ form_plantilla4($error_message, $num_formulario, "Reporte de detallado llamadas 
 function ctrl_mostrar($form_number) {
 ?>
               <div class="field_row_form">
-                <input id="downl" type="button" onclick="mostrar_tabla()" value="mostrar_2"/> 
+                <input class="downl" type="button" onclick="mostrar_tabla_llamada()" value="mostrar_2"/> 
               </div>
 <?php
 }
 
-$array = array(array('form_rango_fecha'));
+function div_llamadas_tabla() {
+
+echo <<<Final
+
+            <div id="tabla_llamada"><!-- llenar tabla-->
+            </div>
+
+Final;
+}
+
+$array = array(array('form_rango_fecha'),array('div_llamadas_tabla'));
 form_plantilla4($error_message, $num_formulario, "Resumen de consumo por cartera", "llamadas.php", "Resume consumo por cartera", $array, 2, "altura_media");
 
-$array = array(array('form_rango_fecha'));
-form_plantilla4($error_message, $num_formulario, "Resumen de consumo por carteraxx", "llamadas.php", "Resume consumo por carteraxx", $array, 3, "altura_media");
 
 lib_js_reportes();
 footer_html();

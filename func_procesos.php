@@ -10,12 +10,12 @@ function mostrar_tabla($legend, $array, $headers, $error) {
 <?php
 if ($error)
 {
-  echo '          <div id="row_form">'."\n";
+  echo '          <div class="row_form">'."\n";
   echo "            <label class=\"thintop_margin\">Error de consulta, revisar comentarios ocultos</label>"."\n";
   echo '          </div>'."\n";
 }
 ?>
-          <div id="row_form">
+          <div class="row_form">
 
 
 <?php
@@ -37,7 +37,7 @@ function mostrar_gestiones ($dni, $array_cuentas, $array_gestiones, $error) {
       <fieldset>
         <legend>Borrado de Gestiones</legend>
         <div class="div_form only_form">
-          <div id="row_form">
+          <div class="row_form">
             <div class="field_row_form">
               <label for="dni"> documento: </label>
 <?php
@@ -57,7 +57,7 @@ else {
 if ($dni && $array_cuentas) { //prueba si existe un dni con cuentas
 ?>
 
-          <div id="row_form">
+          <div class="row_form">
 <?php
 $headers = ["cuenta", "subcartera", "total", "capital"];//mostrar tabla cuentas
 $style = 'class="thintop_margin"';
@@ -70,7 +70,7 @@ llenar_tabla($array_cuentas, $headers, $style);  //si es asi muestra las cuentas
 if ($array_gestiones) //si tambien hay gestiones, las muestra
 {
 ?>
-          <div id="row_form">
+          <div class="row_form">
 <?php
 $headers = ['marcar', 'cuenta', 'observaciones', 'respuesta', 'solucion', 'fecha gestion', 'status'];
 $style = '';
@@ -78,9 +78,9 @@ llenar_tabla_sin_id($array_gestiones, $headers, $style);  //mostrar tabla gestio
 ?>
 
           </div>
-          <div id="row_form">
+          <div class="row_form">
             <div class="field_row_form">
-              <input id="downl" type="submit" value="borrar" name="borrar">
+              <input class="downl" type="submit" value="borrar" name="borrar">
             </div>
           </div>
         </div>
@@ -89,7 +89,7 @@ llenar_tabla_sin_id($array_gestiones, $headers, $style);  //mostrar tabla gestio
 }
 if ($error<>"")
 {
-  echo '          <div id="row_form">'."\n";
+  echo '          <div class="row_form">'."\n";
   echo "            <label class=\"thintop_margin\">$error</label>"."\n";
   echo '          </div>'."\n";
 }
@@ -108,12 +108,12 @@ function mostrar_migracion_progresivo2($array, $error) {
 <?php
 if ($error)
 {
-  echo '          <div id="row_form">'."\n";
+  echo '          <div class="row_form">'."\n";
   echo "            <label class=\"thintop_margin\">Error de consulta, revisar comentarios ocultos</label>"."\n";
   echo '          </div>'."\n";
 }
 ?>
-          <div id="row_form">
+          <div class="row_form">
 
 
 <?php
@@ -179,7 +179,7 @@ function mostrar_migracion_predictiva($mensaje) {
       <fieldset>
         <legend>Carga Gestiones del Predictivo</legend>
         <div class="div_form only_form">
-            <div id="row_form">
+            <div class="row_form">
               <div class="field_row_form width_div" id="fecha_llamada">
                 <label for="datepicker_hasta" id="label_llamada">Fecha Llamada:</label>
                 <div class="input_fecha">
@@ -187,12 +187,12 @@ function mostrar_migracion_predictiva($mensaje) {
                 </div>
               </div>
             </div>
-          <div id="row_form">
+          <div class="row_form">
             <div class="field_row_form  width_div">
               <input type="file" name="archivo_subido" id="archivo_subido">
             </div>
           </div>
-          <div id="row_form">
+          <div class="row_form">
             <div class="field_row_form width_div">
               <input type="submit" value="Subir archivo" name="subir">
             </div>
@@ -223,7 +223,7 @@ echo <<<Final
 
 Final;
 foreach ($array as $key => $row_value) {
-  echo '          <div id="row_form"> <!-- foreach-->
+  echo '          <div class="row_form"> <!-- foreach-->
 ';
   foreach ($row_value as $key => $field_value) {
     $field_value();
@@ -233,7 +233,7 @@ foreach ($array as $key => $row_value) {
 ';
 }
 ?>
-            <div id="row_form">
+            <div class="row_form">
               <div class="field_row_form" id="error"><?php if ( $mensaje )// variable $form_number
 {
   echo $mensaje;
@@ -252,7 +252,7 @@ Final;
 function ctrl_boton_submit() {
 ?>
             <div class="field_row_form">
-              <input id="downl" type="submit" value="buscar" name="buscar">
+              <input class="downl" type="submit" value="buscar" name="buscar">
             </div>
 <?php
 }
@@ -309,38 +309,10 @@ function carga_js_scripts() {
 <?php
 }
 
-function ctrl_tabla() {
-
-  global $listar_tabla;
-  global $headers_tabla;
-  global $array_tabla;
-  $flag = $listar_tabla;
-  if ($flag) {
-    $headers = $headers_tabla;
-    $style = 'class="thintop_margin"';
-    $array = $array_tabla;
-    llenar_tabla($array, $headers, $style);  //si es asi muestra las cuentas
-  }
-}
-
-function ctrl_tabla_sin_id() {
-
-  global $listar_tabla;
-  global $headers_tabla;
-  global $array_tabla;
-  $flag = $listar_tabla;
-  if ($flag) {
-    $headers = $headers_tabla;
-    $style = 'class="thintop_margin"';
-    $array = $array_tabla;
-    llenar_tabla_sin_id($array, $headers, $style);  //si es asi muestra las cuentas
-  }
-}
-
 function ctrl_boton_busqueda() {
 ?>
             <div class="field_row_form">
-              <input id="downl" type="button" value="buscar" name="buscar">
+              <input class="downl" type="button" value="buscar" name="buscar">
             </div>
 <?php
 }
@@ -504,7 +476,7 @@ function form_modal($error, $archivo_action, $legend, $array) {
 Final;
 
 foreach ($array as $key => $row_value) {
-  echo '            <div id="row_form">';
+  echo '            <div class="row_form">';
   foreach ($row_value as $key => $field_value) {
     $field_value();
   }
@@ -514,9 +486,9 @@ foreach ($array as $key => $row_value) {
 ?>
 
 
-            <div id="row_form">
+            <div class="row_form">
               <div class="field_row_form1">
-                <button id="downl" type="submit"><i class="fa fa-arrow-circle-o-down fa-fw" aria-hidden="true"></i>guardar</button>
+                <button class="downl" type="submit"><i class="fa fa-arrow-circle-o-down fa-fw" aria-hidden="true"></i>guardar</button>
               </div>
               <div class="field_row_form" id="error"><?php if ( $error )// variable $form_number
 {
@@ -542,12 +514,12 @@ function form_modal2($legend, $custom_function, $array, $headers, $error) {
 <?php
 if ($error)
 {
-  echo '          <div id="row_form">'."\n";
+  echo '          <div class="row_form">'."\n";
   echo "            <label class=\"thintop_margin\">Error de consulta, revisar comentarios ocultos</label>"."\n";
   echo '          </div>'."\n";
 }
 ?>
-          <div id="row_form">
+          <div class="row_form">
 
 
 <?php

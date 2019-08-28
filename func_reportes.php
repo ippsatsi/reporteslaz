@@ -58,7 +58,7 @@ if ($altura_form == '') {
 Final;
 
 foreach ($array as $key => $row_value) {
-  echo '            <div id="row_form">';
+  echo '            <div class="row_form">';
   foreach ($row_value as $key => $field_value) {
     $field_value($form_number);
     if ($field_value=='ctrl_submit') {
@@ -68,13 +68,13 @@ foreach ($array as $key => $row_value) {
   echo '            </div> <!-- row_form -->
 ';
 } // foreach
-echo '            <div id="row_form">';
+echo '            <div class="row_form">';
 
 if (!$submit) {
 ?>
 
               <div class="field_row_form">
-                <button id="downl" type="submit"><i class="fa fa-arrow-circle-o-down fa-fw" aria-hidden="true"></i>descarga</button>
+                <button class="downl" type="submit"><i class="fa fa-arrow-circle-o-down fa-fw" aria-hidden="true"></i>descarga</button>
               </div> <!-- field_row_form -->
 <?php
 }
@@ -153,7 +153,7 @@ function lib_js_reportes() {
 
 function form_fecha($form_number) {
 ?>
-            <div id="row_form">
+            <div class="row_form">
               <div class="field_row_form" id="<?php echo "fecha_hasta".$form_number;?>">
                 <label for="datepicker_hasta" id="<?php echo "label_hasta".$form_number;?>">Hasta:</label>
                 <div class="input_fecha">
@@ -167,13 +167,13 @@ function form_fecha($form_number) {
 function form_rango_fecha($form_number) {
 ?>
 
-              <div class="field_row_form clearfix">
+              <div class="field_row_form">
                 <label for="datepicker_desde<?php echo $form_number;?>">Desde:</label>
                 <div class="input_fecha">
                   <input type="text" class="fecha_input_css" id="datepicker_desde<?php echo $form_number;?>" name="fecha_desde" value="<?php echo date('d/m/Y');?>"><label for="datepicker_desde<?php echo $form_number;?>" ><i class="fa fa-calendar" aria-hidden="true"></i></label>
                 </div>
               </div>
-              <div class="field_row_form clearfix">
+              <div class="field_row_form">
                 <label for="datepicker_hasta<?php echo $form_number;?>">Hasta:</label>
                 <div class="input_fecha">
                   <input type="text" class="fecha_input_css" id="datepicker_hasta<?php echo $form_number;?>" name="fecha_hasta" value="<?php echo date('d/m/Y');?>"><label for="datepicker_hasta<?php echo $form_number;?>" ><i class="fa fa-calendar" aria-hidden="true"></i></label>

@@ -88,7 +88,7 @@ for ($i = 7; $i > -1; $i--) {
     counter-reset: rowacord;
     background-color: #ecf0f5;
   }
-  #row_form table {
+  .row_form table {
     border: 1px solid rgba(23, 13, 13, 0.4);
     border-radius: 0.25rem;
     width: 500px;
@@ -101,19 +101,19 @@ for ($i = 7; $i > -1; $i--) {
     border-radius: 6px;
     margin: 12px;
   }
-  #row_form td, #row_form th {
+  .row_form td, .row_form th {
     padding: 6px;
     border-left: 1px solid rgba(23, 13, 13, 0.4);
     border-top: 1px solid rgba(23, 13, 13, 0.4);
     font-size: 0.8rem;
   }
-  #row_form th {
+  .row_form th {
     font-weight: 600;
   }
-  #row_form tr {
+  .row_form tr {
     font-weight: 400;
   }
-  #row_form td {
+  .row_form td {
     text-align: center;
   }
   .only_form {

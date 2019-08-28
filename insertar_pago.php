@@ -155,7 +155,7 @@ function css_estilos() {
     float: right;
     display: flex;
 }
-  #row_form {
+  .row_form {
     display: flex;
   }
   .field_row_form {
@@ -180,7 +180,7 @@ function css_estilos() {
     #cursor: pointer;
     padding: 0px 7px 0px 7px;
   }
-  button#downl, button#add, input#add, input#downl {
+  button.downl, button#add, input#add, input.downl {
     border: 1px solid rgba(149, 19, 19, 0.98);
     font-size: 12px;
     background-color: #c0392e;
@@ -193,7 +193,7 @@ function css_estilos() {
     text-transform: uppercase;
     width: 100%;
   }
-  button#downl:hover, button#add:hover, input#add:hover, input#downl:hover {
+  button.downl:hover, button#add:hover, input#add:hover, input.downl:hover {
     background-color: rgba(149, 19, 19, 0.98);
     border: 1px solid #7a0b0b;
     # #e44133;
@@ -211,7 +211,7 @@ function css_estilos() {
     min-width: 150px;
   }
   select {
-    height: 1.7rem;
+    height: 1.8rem;
     width: 15.4rem;
     background: white url('images/arrow_down_select.png') no-repeat 81% 100%;
     border: 0px;
@@ -341,7 +341,7 @@ function css_estilos() {
     counter-increment: rowacord;
     content: counter(rowacord) ".- ";
   }
-  #row_form table {
+  .row_form table {
     border: 1px solid rgba(23, 13, 13, 0.4);
     border-radius: 0.25rem;
     width: 800px;
@@ -349,19 +349,19 @@ function css_estilos() {
     #border-spacing: 0;
     margin: 20px;
   }
-  #row_form td, #row_form th {
+  .row_form td, .row_form th {
     padding: 6px;
     border-left: 1px solid rgba(23, 13, 13, 0.4);
     border-top: 1px solid rgba(23, 13, 13, 0.4);
     font-size: 0.8rem;
   }
-  #row_form th {
+  .row_form th {
     font-weight: 500;
   }
-  #row_form tr {
+  .row_form tr {
     font-weight: 500;
   }
-  #row_form td {
+  .row_form td {
     text-align: center;
   }
   .only_form {
@@ -438,6 +438,7 @@ function css_estilos() {
 
   .close:hover { background: #00d9ff; }
 </style>
+</head>
 <?php
 }
 
@@ -531,7 +532,7 @@ function js_script() {
 <script>
 
 window.onload = function() {
-  var tabla_vacia = '            <div id="row_form" class="row_new">\
+  var tabla_vacia = '            <div class="row_form row_new">\
               <div class="field_row_form">\
                 <label>cuenta:</label>\
                 <div class="select_input">\
@@ -542,7 +543,7 @@ window.onload = function() {
               </div>\
             </div>\
           </div>\
-          <div id="row_form" class="row_new">\
+          <div class="row_form row_new">\
            <table  class="tabla_cuenta"  ><!-- llenar tabla-->\
               <thead>\
                 <tr>\
@@ -572,7 +573,7 @@ window.onload = function() {
                </tr>\
             </table>            </div>';
             
-  var select_row_form = document.querySelectorAll('#row_form');
+  var select_row_form = document.querySelectorAll('.row_form');
   select_row_form[0].insertAdjacentHTML('afterend',tabla_vacia);//insertamos el html recibido despues del
   console.log('listo');
 };
@@ -654,7 +655,7 @@ function buscar_datos_dni() {
   myRequest.onreadystatechange = function () {
     if (myRequest.readyState === 4 ) {
       
-      var select_row_form = document.querySelectorAll('#row_form');
+      var select_row_form = document.querySelectorAll('.row_form');
       select_row_form[0].insertAdjacentHTML('afterend',myRequest.responseText);//insertamos el html recibido despues del
       var tablas = document.getElementsByClassName("tabla_cuenta");//primer row_form
       tablas[0].style.display = "inline-table"; //activamos la primera tabla
@@ -667,8 +668,8 @@ function buscar_datos_dni() {
 //console.log(dni_text);
 }
 
-var enigma = document.querySelectorAll('input[id="downl"]')[0].addEventListener("click",buscar_datos_dni);
-var enigma2 = document.querySelectorAll('button[id="downl"]')[0].addEventListener("click",insertar);
+var enigma = document.querySelectorAll('input[class="downl"]')[0].addEventListener("click",buscar_datos_dni);
+var enigma2 = document.querySelectorAll('button[class="downl"]')[0].addEventListener("click",insertar);
 //boton de busqueda de dni
 </script>
 <?php
