@@ -323,7 +323,7 @@ function css_estilos() {
     #border-spacing: 0;
     margin: 20px;
   }
-  .row_form td, #row_form th {
+  .row_form td, .row_form th {
     padding: 6px;
     border-left: 1px solid rgba(23, 13, 13, 0.4);
     border-top: 1px solid rgba(23, 13, 13, 0.4);
