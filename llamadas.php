@@ -56,10 +56,10 @@ form_plantilla4($error_message, $num_formulario, "Reporte de detallado llamadas 
 
 //################################################################################
 
-function ctrl_mostrar($form_number) {
+function ctrl_submit($form_number) {
 ?>
               <div class="field_row_form">
-                <input class="downl" type="button" onclick="mostrar_tabla_llamada()" value="mostrar_2"/> 
+                <input class="downl" type="button" onclick="mostrar_tabla_llamada()" value="mostrar"/> 
               </div>
 <?php
 }
@@ -73,9 +73,35 @@ echo <<<Final
 
 Final;
 }
+// codigo js para mostrar la tabla
+global $JS_CUSTOM_TXT;
+$JS_CUSTOM_TXT .= "
+\n
+/* Codigo para mostrar tabla via ajax */
 
-$array = array(array('form_rango_fecha'),array('div_llamadas_tabla'));
-form_plantilla4($error_message, $num_formulario, "Resumen de consumo por cartera", "llamadas.php", "Resume consumo por cartera", $array, 2, "altura_media");
+    var myRequest = new XMLHttpRequest();
+
+    function mostrar_tabla_llamada() {
+        var fecha_desde = document.getElementById(\"datepicker_desde2\").value;
+        var fecha_hasta = document.getElementById(\"datepicker_hasta2\").value;
+        console.log(fecha_desde);
+        console.log(fecha_hasta);
+        myRequest.open('GET', 'querys/q_llamadas.php?fecha_desde='+fecha_desde+'&fecha_hasta='+fecha_hasta+'&rpt=2',true);
+        myRequest.onreadystatechange = function () {
+          if (myRequest.readyState === 4) {
+       //     selectSubCartera.innerHTML += myRequest.responseText;
+            var tabla_llamada = document.getElementById('tabla_llamada');
+            tabla_llamada.innerHTML = myRequest.responseText;
+         //  console.log(myRequest.responseText);
+          }
+        };
+        myRequest.send();
+      }
+";
+
+
+$array = array(array('form_rango_fecha'),array('div_llamadas_tabla'),array('ctrl_submit'));
+form_plantilla4($error_message, $num_formulario, "Resumen de consumo por cartera", "llamadas.php", "Resume consumo por cartera", $array, 2, "altura_maxima");
 
 
 lib_js_reportes();

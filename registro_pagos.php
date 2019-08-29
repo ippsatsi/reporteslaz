@@ -99,13 +99,14 @@ Final;
 
 $array = array(array('ctrl_boton_submit','ctrl_select_carteras', 'ctrl_fecha_desde'),array('ctrl_boton_add', 'ctrl_mensaje_recaudo'),array('ctrl_tabla_sin_id'));
 
+/*
 function form2() {
 $error_message=false;
 $num_formulario=1;
 $array = array(array('ctrl_input_doc','ctrl_boton_busqueda'),array('ctrl_select_cuenta'),array('div_tabla'),array('ctrl_input_doc','ctrl_fecha_pago'),array('ctrl_input_doc','ctrl_boton_busqueda'));
 form_modal($error_message, "registro_pagos.php", "Registro de pagos", $array);
 }
-
+*/
 function form3() {
 echo <<<Final
  <iframe id="modal_iframe" src="insertar_pago.php" height="500" width="900" frameBorder="0">xxx</iframe> 
