@@ -28,7 +28,7 @@ Final;
 //| sed 's/$/|/g'  coloca palote al final de la linea
 
     $camp_pred =<<<'Final'
-wget -qO- --load-cookies cookies.txt --no-check-certificate https://predictivo.ucatel.com:44443/mi_reporte/campanas_out.php | grep -A 2 '" href="campana_out.php?idcampana=' | grep -a -v '<td>' | grep -a -v '\-\-' | sed 's/\t//g' | sed 's/$/|/g' | tr  '\n' ' ' | sed -e 's/| <a/| \n<a/g' | sed -e 's@a=\|"><b>\|</b> &nbsp;&nbsp;</a></td>| \|</td>| @|@g'
+wget -qO- --load-cookies cookies.txt --no-check-certificate https://predictivo.ucatel.com:44443/mi_reporte/campanas_out.php | grep -A 2 '" href="campana_out.php?idcampana=' | grep -a -v '<td>' | grep -a -v '^\-\-' | sed 's/\t//g' | sed 's/$/|/g' | tr  '\n' ' ' | sed -e 's/| <a/| \n<a/g' | sed -e 's@a=\|"><b>\|</b> &nbsp;&nbsp;</a></td>| \|</td>| @|@g'
 Final;
 
 //descargamos la lista de campañas y separamos columnas por palotes|

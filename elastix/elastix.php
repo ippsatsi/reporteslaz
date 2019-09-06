@@ -95,7 +95,7 @@ WHERE
 cdrt.disposition='ANSWERED'
 AND cdrt.dcontext='from-internal'
 AND cdrt.calldate BETWEEN '".$fecha."T00:00:00.OOO' AND '".$fecha."T23:59:59.000'
-AND (cdrt.dstchannel LIKE '%fravatel%' OR cdrt.dstchannel LIKE '%thinkip%' OR cdrt.dstchannel LIKE '%ipbusiness%')
+AND (cdrt.dstchannel LIKE '%fravatel%' OR cdrt.dstchannel LIKE '%thinkip%' OR cdrt.dstchannel LIKE '%ipbusiness%' OR cdrt.dstchannel LIKE '%itelvox%')
 ORDER BY cdrt.calldate DESC";
 
   $result_query = $conn->query($query);
@@ -116,7 +116,7 @@ ORDER BY cdrt.calldate DESC";
 
 
 $fecha = date('Y-m-d');
-//$fecha = '2019-08-21';
+//$fecha = '2019-09-05';
 $array_llamadas = listar_cdr($fecha);
 //css_estilos();
 
