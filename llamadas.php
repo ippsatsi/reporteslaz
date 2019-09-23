@@ -16,7 +16,7 @@ if (isset($_POST['id_formulario'])) {
   try {
     require_once 'func_inicio.php';
     require_once 'querys/q_llamadas.php';
-    
+
     $funcion_name = "reporte_".$num_formulario;
     $data =$funcion_name();
     $writer = new XLSXWriter();
@@ -51,11 +51,13 @@ require_once 'output_html.php';
 require_once 'func_reportes.php';
 css_estilos();
 header_html();
+// FORMULARIO 1
 $array = array(array('form_rango_fecha'));
 form_plantilla4($error_message, $num_formulario, "Reporte de detallado llamadas por cartera", "llamadas.php", "Consumos detallado por Cartera", $array, 1);
 
 //################################################################################
 
+// FORMULARIO 2 -- CUADRO
 function ctrl_submit($form_number) {
 ?>
               <div class="field_row_form">
@@ -103,7 +105,10 @@ $JS_CUSTOM_TXT .= "
 $array = array(array('form_rango_fecha'),array('div_llamadas_tabla'),array('ctrl_submit'));
 form_plantilla4($error_message, $num_formulario, "Resumen de consumo por cartera", "llamadas.php", "Resume consumo por cartera", $array, 2, "altura_maxima");
 
+// FORMULARIO 3
 
+$array = array(array('form_rango_fecha'));
+form_plantilla4($error_message, $num_formulario, "Estadistica de tipificacion por agente", "llamadas.php", "Reporte de tipificaciones", $array, 3);
 lib_js_reportes();
 footer_html();
 ?>

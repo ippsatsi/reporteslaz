@@ -84,7 +84,7 @@ DATE(cdrt.calldate) AS FECHA
 	WHEN POSITION('/' IN cdrt.channel)=6 THEN MID(cdrt.channel,7,POSITION('@' IN cdrt.channel)-7)
 	ELSE MID(cdrt.channel,5,POSITION('-' IN cdrt.channel)-5) END AS ANEXO
 , CASE
-	WHEN POSITION('/' IN cdrt.dstchannel)=6 THEN MID(cdrt.dstchannel,7,POSITION('@' IN cdrt.dstchannel)-7)
+	WHEN POSITION('_' IN cdrt.dstchannel)=8 THEN MID(cdrt.dstchannel,9,POSITION('-' IN cdrt.dstchannel)-9)
 	ELSE MID(cdrt.dstchannel,5,POSITION('-' IN cdrt.dstchannel)-5) END AS PROVEEDOR
 , CASE
 	WHEN cdrt.billsec=0 THEN 1
@@ -94,8 +94,9 @@ cdr  cdrt
 WHERE
 cdrt.disposition='ANSWERED'
 AND cdrt.dcontext='from-internal'
+AND cdrt.dstchannel <> ''
 AND cdrt.calldate BETWEEN '".$fecha."T00:00:00.OOO' AND '".$fecha."T23:59:59.000'
-AND (cdrt.dstchannel LIKE '%fravatel%' OR cdrt.dstchannel LIKE '%thinkip%' OR cdrt.dstchannel LIKE '%ipbusiness%' OR cdrt.dstchannel LIKE '%itelvox%')
+AND LENGTH(cdrt.lastdata) > 18
 ORDER BY cdrt.calldate DESC";
 
   $result_query = $conn->query($query);
