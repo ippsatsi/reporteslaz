@@ -299,7 +299,7 @@ Final;
 
 
 function carga_js_scripts() {
-//funcion para habilitar el datepucker
+//funcion para habilitar el datepicker
 ?>
     <script src="js/moment.min.js"></script>
     <script src="js/pikaday.js"></script>

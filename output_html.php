@@ -200,7 +200,7 @@ function css_estilos() {
     min-height: 180px;
     justify-content: space-around;
   }
-  
+
   .fecha_input_css {
     margin: 0px !important;
     box-sizing: border-box;
@@ -210,7 +210,7 @@ function css_estilos() {
     background-color: #fff;
     background-image: none;
     background-clip: padding-box;
-    border: 1px solid rgba(23, 13, 13, 0.4) !important; 
+    border: 1px solid rgba(23, 13, 13, 0.4) !important;
     border-radius: 0.25rem !important;
     height: 1.9rem !important;
     width: 116px !important;
@@ -441,7 +441,6 @@ $mostrar_usuario = $rol_logo.strtolower($_SESSION['usuario_valido']);
 <?php echo ($rol_agente ? '' : '          <li><a href=asignacion.php>Asignacion</a></li>' )?>
 <?php echo ($rol_agente ? '' : '          <li><a href=llamadas.php>Llamadas Manuales</a></li>' )?>
 <?php echo ($rol_agente ? '' : '          <li><a href=#gestion3>Paleta</a></li>' )?>
-<?php echo ($rol_agente ? '' : '          <li><a href=#gestion3>Base Cartera</a></li>' )?>
         </ul>
       </li>
       <li><a href=#compromisos>Procesos</a>

@@ -14,19 +14,19 @@ const WRAP_FALSE = array('wrap_text'=>false);
 const HIGH_ROW = array('height'=>30);
 const LOW_ROW = array();
 
-define('EXCEL_STYLE_ROW_HEADER',  array( 'font'=>'Arial','font-size'=>10, 'fill'=>'#06f', 
+define('EXCEL_STYLE_ROW_HEADER',  array( 'font'=>'Arial','font-size'=>10, 'fill'=>'#06f',
                         'color'=>'#fff', 'halign'=>'center', 'valign'=>'center',
                         'border'=>'left,right,top,bottom', 'border-style'=>'thin', 'height'=>36,'wrap_text'=>true));
 define('EXCEL_STYLE_ROW_ODD', array( 'font'=>'Arial','font-size'=>10, 'fill'=>'#fff',
-                         'color'=>'#000', 'halign'=>'center', 'valign'=>'center', 
+                         'color'=>'#000', 'halign'=>'center', 'valign'=>'center',
                          'border'=>'left,right,top,bottom', 'height'=>30));
-define('EXCEL_STYLE_ROW_EVEN', array( 'font'=>'Arial','font-size'=>10, 'fill'=>'#ddd', 
+define('EXCEL_STYLE_ROW_EVEN', array( 'font'=>'Arial','font-size'=>10, 'fill'=>'#ddd',
                           'color'=>'#000', 'halign'=>'center', 'valign'=>'center', 'border'=>'left,right,top,bottom','height'=>30));
 
 define('EXCEL_STYLE_ROW_ODD_WRAP', array( 'font'=>'Arial','font-size'=>10, 'fill'=>'#fff',
-                         'color'=>'#000', 'halign'=>'center', 'valign'=>'center', 
+                         'color'=>'#000', 'halign'=>'center', 'valign'=>'center',
                          'border'=>'left,right,top,bottom', 'wrap_text'=>true));
-define('EXCEL_STYLE_ROW_EVEN_WRAP', array( 'font'=>'Arial','font-size'=>10, 'fill'=>'#ddd', 
+define('EXCEL_STYLE_ROW_EVEN_WRAP', array( 'font'=>'Arial','font-size'=>10, 'fill'=>'#ddd',
                           'color'=>'#000', 'halign'=>'center', 'valign'=>'center', 'border'=>'left,right,top,bottom', 'wrap_text'=>true));
 define('EXCEL_SHEET_NAME', 'Hoja1');
 
@@ -56,7 +56,7 @@ function login($user,$pass) {
   WHERE
   USU.USU_ESTADO_REGISTRO='A' AND USU_LOGIN='".$user.
   "' AND USU_CLAVE='".$pass."';";
-  
+
   $options_mssql_query = array("Scrollable" => SQLSRV_CURSOR_CLIENT_BUFFERED);
 
     $result_query= sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
@@ -103,7 +103,7 @@ function run_select_query_sqlser($query) {
   //conectarse al Sql Server
   //sqlsrv_configure("LogSubsystems", SQLSRV_LOG_SYSTEM_ALL);
   //sqlsrv_configure("LogSeverity", SQLSRV_LOG_SEVERITY_ALL);
-  ini_set('memory_limit','2048M'); 
+  ini_set('memory_limit','2048M');
   ini_set('sqlsrv.ClientBufferMaxKBSize','2048288');
   $conn = conectar_mssql();
 
@@ -135,7 +135,7 @@ function run_select_query_sqlser_ucadesa($query) {
   //conectarse al Sql Server
   //sqlsrv_configure("LogSubsystems", SQLSRV_LOG_SYSTEM_ALL);
   //sqlsrv_configure("LogSeverity", SQLSRV_LOG_SEVERITY_ALL);
-  ini_set('memory_limit','2048M'); 
+  ini_set('memory_limit','2048M');
   ini_set('sqlsrv.ClientBufferMaxKBSize','2048288');
   $conn = conectar_ucadesa_mssql();
 
@@ -160,14 +160,28 @@ function run_select_query_sqlser_ucadesa($query) {
  // print_r($array_query_result);
   sqlsrv_free_stmt($result_query);
   return $array_query_result;
-}
+} //endfunction
+
+
+function run_insert_query_sqlserv_ucadesa($query) {
+    $conn = conectar_ucadesa_mssql();
+    $result_query = sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
+    si_es_excepcion($result_query, $query);
+}//endfunction
+
+function run_insert_query_sqlserv($query) {
+    $conn = conectar_mssql();
+    $result_query = sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
+    si_es_excepcion($result_query, $query);
+}//endfunction
+
 
 function run_select_query_sqlser_one_column_ucadesa($query) {
 
   //conectarse al Sql Server
   //sqlsrv_configure("LogSubsystems", SQLSRV_LOG_SYSTEM_ALL);
   //sqlsrv_configure("LogSeverity", SQLSRV_LOG_SEVERITY_ALL);
-  ini_set('memory_limit','2048M'); 
+  ini_set('memory_limit','2048M');
   ini_set('sqlsrv.ClientBufferMaxKBSize','2048288');
   $conn = conectar_ucadesa_mssql();
 
@@ -192,7 +206,7 @@ function run_select_query_param_sqlser($query, $array) {
   //conectarse al Sql Server
   //sqlsrv_configure("LogSubsystems", SQLSRV_LOG_SYSTEM_ALL);
   //sqlsrv_configure("LogSeverity", SQLSRV_LOG_SEVERITY_ALL);
-  ini_set('memory_limit','2048M'); 
+  ini_set('memory_limit','2048M');
   ini_set('sqlsrv.ClientBufferMaxKBSize','2048288');
   $conn = conectar_mssql();
 
@@ -220,10 +234,10 @@ function run_select_query_param_sqlser($query, $array) {
 }
 
 function run_upd_del_query_param_sqlserv($query,$array) {
-  ini_set('memory_limit','2048M'); 
+  ini_set('memory_limit','2048M');
   ini_set('sqlsrv.ClientBufferMaxKBSize','2048288');
   $conn = conectar_mssql();
-  
+
   $result_query = sqlsrv_query( $conn, $query, $array, array());
   si_es_excepcion($result_query, $query);
   $rows_affected = sqlsrv_rows_affected($result_query);
@@ -237,5 +251,5 @@ function procesar_excepcion($e) {
     $error_message = 'Revisar error en comentarios';
   }
   return $error_message;
-} 
+}
 ?>

@@ -13,7 +13,7 @@
     font-family: 'Open Sans', sans-serif;
     font-size: 1rem;
     counter-reset: rowacord;
-    background-color: #ecf0f5;
+    /*background-color: #ecf0f5; */
   }
   #row_form table {
     border: 1px solid rgba(23, 13, 13, 0.4);
