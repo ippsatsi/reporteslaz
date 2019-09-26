@@ -100,7 +100,7 @@ label_fecha_id.innerHTML = 'Fecha';
 console.log(label_fecha_id.innerHTML);
 </script>
 Final;
-echo $actualizar_label;
+//echo $actualizar_label;
 
 lib_js_reportes();
 footer_html();

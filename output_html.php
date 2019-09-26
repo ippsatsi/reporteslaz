@@ -460,7 +460,7 @@ $mostrar_usuario = $rol_logo.strtolower($_SESSION['usuario_valido']);
       </li>
       <li><a href=#usuarios>Usuarios</a>
         <ul id="drop">
-        <?php echo ($_SESSION['usuario_codigo']=="3052" ? '          <li><a href=asig_cartera.php>Asignacion Carteras</a></li>' : '' )?>
+        <?php echo ($rol_agente ? '' : '          <li><a href=asig_cartera.php>Asignacion Carteras</a></li>' )?>
         </ul>
       </li>
       <li class="menu_right"><a href="logout.php"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>Salir</a>
@@ -580,6 +580,31 @@ echo $carga_modal;
 </html>
 <?php
 }
+
+function oh_crear_tabla_ajax($array_input, $array_headers, $css_class) {
+$expandir = 'implode';
+$output = <<<Final
+            <table  $css_class><!-- llenar tabla-->
+              <thead>
+                <tr>
+                  <th>{$expandir("</th>\n                  <th>", $array_headers)}</th>
+                </tr>
+              </thead>
+            <tbody>
+
+Final;
+
+  foreach ($array_input as $table_row) {
+
+    $output .= "                <tr id=\"row_".current($table_row)."\">\n                  <td>";//jala el primer elemento del array,para formar id
+    $output .= implode("</td>\n                  <td>",$table_row);
+    $output .= "</td>\n                </tr>\n";
+  }
+  $output .= '              </tbody>';
+  $output .= '            </table>';
+  return $output;
+}
+
 
 function llenar_tabla($array_input, $array_headers, $css_class) {
 $expandir = 'implode';

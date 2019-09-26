@@ -1,5 +1,18 @@
 <?php
 require_once 'conectar.php';
+//Directorio
+// function login($user,$pass)
+// function si_es_excepcion($result_query, $query)
+// function si_es_excepcion_mysql11($conn, $result_query, $query)
+// function run_select_query_sqlser($query)
+// function run_select_query_sqlser_ucadesa($query)
+// function run_insert_query_sqlserv_ucadesa($query)
+// function run_insert_query_sqlserv($query)
+// function run_select_query_sqlser_one_column_ucadesa($query)
+// function run_select_query_param_sqlser($query, $array)
+// function run_upd_del_query_param_sqlserv($query,$array)
+// function fi_run_upd_del_query_sqlserv($query)
+// function procesar_excepcion($e)
 
 date_default_timezone_set('America/Lima'); //para que la hora de la funcion date corresponda a local
 
@@ -42,6 +55,8 @@ define('EXCEL_SHEET_NAME', 'Hoja1');
 
 // Texto para incluir js personalizados en una seccion script al final del html y despues de cargar todos los scripts
 $JS_CUSTOM_TXT = '';
+// variable para respuestas ajax genericas
+$fi_respuesta_ajax = array('resultado'=> false, 'error'=> false);
 
 function login($user,$pass) {
 //  conectarse al Sql Server
@@ -243,6 +258,29 @@ function run_upd_del_query_param_sqlserv($query,$array) {
   $rows_affected = sqlsrv_rows_affected($result_query);
   return $rows_affected;
 }
+
+function fi_run_upd_del_query_sqlserv_ucadesa($query) {
+  ini_set('memory_limit','2048M');
+  ini_set('sqlsrv.ClientBufferMaxKBSize','2048288');
+  $conn = conectar_ucadesa_mssql();
+  //sin 'OPTIONS_MSSQL_QUERY, sino no siempre da false sqlsrv_rows_affected
+  $result_query = sqlsrv_query( $conn, $query,PARAMS_MSSQL_QUERY);
+  si_es_excepcion($result_query, $query);
+  $rows_affected = sqlsrv_rows_affected($result_query);
+  return $rows_affected;
+}
+
+function fi_run_upd_del_query_sqlserv($query) {
+  ini_set('memory_limit','2048M');
+  ini_set('sqlsrv.ClientBufferMaxKBSize','2048288');
+  $conn = conectar_mssql();
+  //sin 'OPTIONS_MSSQL_QUERY, sino no siempre da false sqlsrv_rows_affected
+  $result_query = sqlsrv_query( $conn, $query,PARAMS_MSSQL_QUERY);
+  si_es_excepcion($result_query, $query);
+  $rows_affected = sqlsrv_rows_affected($result_query);
+  return $rows_affected;
+}
+
 function procesar_excepcion($e) {
   $error_message = $e->getMessage();
   $error_code = $e->getCode();

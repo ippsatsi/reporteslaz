@@ -2,25 +2,61 @@
 
 require_once 'func_inicio.php';
 
-function GetAsignacionProveedor($rol) {
+//dir
+//qac_GetAsignacionProveedor($rol) : array
+//qac_SetAsignacionByUser() : boolean
+//qac_Del_AllAsignacionByUser($usuario) : boolean
+//qac_GetAsignacionByUser($agente) : array
+//qac_GetNameAgente($id_agente) :array
 
+function qac_GetAsignacionProveedor($rol) {
+  //query para encontrar todos los proveedores activos
+  // y armar las SELECT con cada proveedor encontrado
+  // Una vez tengamos los select por provedor, los usamos en la siguiente query
+  $query = "
+  SELECT
+    CONCAT('CASE TASC.[',PRV.PRV_CODBANCO,'] WHEN 1 THEN ''<i class=\"fa fa-check-circle\"></i>'' ELSE '''' END AS '''
+               ,PRV.PRV_CODBANCO,'''') AS SELECT1
+    , CONCAT('SUM(CASE WHEN AUP.PRV_CODIGO=',PRV.PRV_CODIGO,' THEN 1 ELSE 0 END) AS ''',PRV.PRV_CODBANCO,'''') AS SELECT2
+    FROM
+    COBRANZA.GCC_PROVEEDOR PRV
+    WHERE
+    PRV.PRV_ESTADO_REGISTRO='A'";
+
+  $array_query_result = run_select_query_sqlser($query);
+  //si hay carteras activas
+  if ( isset($array_query_result['resultado']) ) {
+      //Ej de Select1: CASE TASC.[4K] WHEN 1 THEN '<i class="fa fa-check-circle"></i>' ELSE '' END AS '4K'
+      $select1 = '';
+      //Ej de select2: SUM(CASE WHEN AUP.PRV_CODIGO=2 THEN 1 ELSE 0 END) AS '4K'
+      $select2 = '';
+      $array = $array_query_result['resultado'];
+
+      foreach ($array as $value) {
+          foreach ($value as $key => $value) {
+              if ($key == 0) {
+                  $select1 .= ", ".$value;
+                  $select1 .= "\n";
+              }else {
+                  $select2 .= ", ".$value;
+                  $select2 .= "\n";
+              }//if..else
+          }//foreach
+      }//foreach
+  }//if
+
+//Query para encontrar/mostrar las asignaciones por proveedor de cada agente
   $query = "
 SELECT
-TASC.USU_LOGIN
-, CASE TASC.[4K] WHEN 1 THEN 'A' ELSE '' END AS '4K'
-, CASE TASC.[CNCTA] WHEN 1 THEN 'A' ELSE '' END AS 'CNCTA'
-, CASE TASC.[MAF] WHEN 1 THEN 'A' ELSE '' END AS 'MAF'
-, CONCAT('<input type=\"button\" value=\"editar\" onclick=\"prepareFrame(',TASC.USU_CODIGO,')\" >')
---prepareFrame()
---, CONCAT('<input type=\"button\" value=\"editar\" onclick=\"prepareFrame()\" >','<!-- ffg -->')
+TASC.USU_LOGIN AS AGENTE
+".$select1."
+, CONCAT('<input type=\"button\" value=\"editar\" onclick=\"prepareFrame(',TASC.USU_CODIGO,')\" >') AS 'MODIFICAR'
 FROM
 (SELECT
 USU.USU_LOGIN
 , USU.USU_CODIGO
 , USU.USU_FECHA_REGISTRO
-, SUM(CASE WHEN AUP.PRV_CODIGO=2 THEN 1 ELSE 0 END) AS '4K'
-, SUM(CASE WHEN AUP.PRV_CODIGO=3 THEN 1 ELSE 0 END) AS 'CNCTA'
-, SUM(CASE WHEN AUP.PRV_CODIGO=4 THEN 1 ELSE 0 END) AS 'MAF'
+".$select2."
 FROM
 COBRANZA.GCC_ASIGNACION_USUARIO_PROVEEDOR AUP
 RIGHT JOIN COBRANZA.GCC_USUARIO USU ON USU.USU_CODIGO=AUP.USU_CODIGO
@@ -32,11 +68,11 @@ AND USU.USU_ESTADO_REGISTRO='A'
 GROUP BY USU.USU_LOGIN, USU.USU_CODIGO, USU.USU_FECHA_REGISTRO) TASC
 ORDER BY TASC.USU_FECHA_REGISTRO DESC;";
 
-  $array_query_result = run_select_query_sqlser_ucadesa($query);
+  $array_query_result = run_select_query_sqlser($query);
   return $array_query_result;
-}//endfunction
+}//endfunction GetAsignacionProveedor
 
-function SetAsignacionByUser($usuario, $id_asigna, $array_carteras) {
+function qac_SetAsignacionByUser($usuario, $id_asigna, $array_carteras) {
   $inserciones = false;
   $eliminados = false;
 
@@ -68,7 +104,7 @@ function SetAsignacionByUser($usuario, $id_asigna, $array_carteras) {
         AND AUP.AUP_ESTADO_REGISTRO='A')
       ";
 
-  $array_query_result = run_select_query_sqlser_ucadesa($query);
+  $array_query_result = run_select_query_sqlser($query);
 
 // si hay nueva asignacion, habra array resultado
   if (isset($array_query_result['resultado'])) {
@@ -100,7 +136,7 @@ function SetAsignacionByUser($usuario, $id_asigna, $array_carteras) {
         AND AUP.AUP_ESTADO_REGISTRO='A')
       ";
     //insertamos la nueva asignacion
-      run_insert_query_sqlserv_ucadesa($query);
+      run_insert_query_sqlserv($query);
       $inserciones = true;
   }
 
@@ -115,9 +151,9 @@ function SetAsignacionByUser($usuario, $id_asigna, $array_carteras) {
   AND AUP.AUP_ESTADO_REGISTRO='A'
   AND AUP.PRV_CODIGO NOT IN (".$array_carteras.")";
 
-  $array_query_result = run_select_query_sqlser_ucadesa($query);
+  $array_query_result = run_select_query_sqlser($query);
 
-  // si hay nueva asignacion, habra array resultado
+  // si hay carteras a eliminar, habra array resultado
   if (isset($array_query_result['resultado'])) {
       $query = "
       DELETE AUP
@@ -128,7 +164,7 @@ function SetAsignacionByUser($usuario, $id_asigna, $array_carteras) {
       AND AUP.AUP_ESTADO_REGISTRO='A'
       AND AUP.PRV_CODIGO NOT IN (".$array_carteras.")";
       //insertamos la nueva asignacion
-      run_select_query_sqlser_ucadesa($query);
+      run_select_query_sqlser($query);
       $eliminados = true;
     }
 
@@ -137,11 +173,29 @@ function SetAsignacionByUser($usuario, $id_asigna, $array_carteras) {
   }else {
     return false;
   }
+}//endfunction SetAsignacionByUser
 
+//funcion para eliminar todas las carteras
+function qac_Del_AllAsignacionByUser($usuario){
 
-}//endfunction
+    $query = "
+      DELETE AUP
+      FROM
+      COBRANZA.GCC_ASIGNACION_USUARIO_PROVEEDOR AUP
+      WHERE
+      AUP.USU_CODIGO=".$usuario."
+      AND AUP.AUP_ESTADO_REGISTRO='A'";
+      //insertamos la nueva asignacion
+      $num_de_eliminados = fi_run_upd_del_query_sqlserv($query);
 
-function GetAsignacionByUser($agente) {
+      if ($num_de_eliminados > 0 ) {
+        return true;
+      }else {
+        return false;
+      }
+} //endfunction q_ac_Del_AllAsignacionByUser
+
+function qac_GetAsignacionByUser($agente) {
 
     $query = "
     SELECT
@@ -163,11 +217,11 @@ WHERE
 PRV.PRV_ESTADO_REGISTRO='A'
 ORDER BY PRV.PRV_CODIGO ASC";
 
-    $array_query_result = run_select_query_sqlser_ucadesa($query);
+    $array_query_result = run_select_query_sqlser($query);
     return $array_query_result;
-}//endfunction
+}//endfunction GetAsignacionByUser
 
-function GetNameAgente($id_agente)  {
+function qac_GetNameAgente($id_agente)  {
 
     $query = "
     SELECT
@@ -178,7 +232,7 @@ function GetNameAgente($id_agente)  {
     USU.USU_CODIGO=".$id_agente."
     ";
 
-    $array_query_result = run_select_query_sqlser_one_column_ucadesa($query);
+    $array_query_result = run_select_query_sqlser($query);
     return $array_query_result;
-} //endfunction
+} //endfunction GetNameAgente
 ?>
