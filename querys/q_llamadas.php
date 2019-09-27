@@ -12,7 +12,8 @@ if (isset($_GET['rpt'])) {
         $cuadro = reporte_cuadro_2();
         if ($cuadro) {
             $cabecera = $cuadro['header'];
-            $tabla = $cuadro['resultado'];
+            //para limpiar errores en log cuando no hay resultados
+            $tabla = isset($cuadro['resultado']) ? $cuadro['resultado'] : array();
             llenar_tabla_sin_id($tabla, $cabecera, 'thintop_margin');
         }
     }

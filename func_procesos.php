@@ -1,4 +1,25 @@
 <?php
+//function mostrar_tabla($legend, $array, $headers, $error)
+//function mostrar_gestiones ($dni, $array_cuentas, $array_gestiones, $error)
+//function mostrar_migracion_progresivo2($array, $error)
+//function mostrar_migracion_predictiva($mensaje)
+//function form_proceso($legend, $array, $mensaje , $tipo_form='')
+//function ctrl_boton_submit()
+//function ctrl_boton_carga()
+//function ctrl_input_doc()
+//function ctrl_boton_examinar()
+//function ctrl_select_cuenta()
+//function ctrl_fecha_desde()
+//function ctrl_fecha_pago()
+//function carga_js_scripts()
+//function ctrl_boton_busqueda()
+//function modal_form($funcion)
+//function ctrl_select_test($label, $array, $control, $js_function ='', $default_option_label='--seleccione--', $default_option_value=0)
+//function ctrl_select($label, $array, $control, $js_function ='', $default_option_label='--seleccione--', $default_option_value=0)
+//function ctrl_select2($label, $array, $control,$selected_value, $js_function ='',  $default_option_label='--seleccione--', $default_option_value=0)
+//function ctrl_wide_select($label, $array, $control, $js_function ='', $default_option_label='--seleccione--', $default_option_value=0)
+//function form_modal($error, $archivo_action, $legend, $array)
+//function form_modal2($legend, $custom_function, $array, $headers, $error)
 
 setlocale(LC_ALL,"es_ES.utf8");
 function mostrar_tabla($legend, $array, $headers, $error) {
@@ -72,9 +93,11 @@ if ($array_gestiones) //si tambien hay gestiones, las muestra
 ?>
           <div class="row_form">
 <?php
-$headers = ['marcar', 'cuenta', 'observaciones', 'respuesta', 'solucion', 'fecha gestion', 'status'];
+//$headers = ['marcar', 'cuenta', 'observaciones', 'respuesta', 'solucion', 'fecha gestion', 'status'];
+$headers = $array_gestiones['header'];
+$resultado = $array_gestiones['resultado'];
 $style = '';
-llenar_tabla_sin_id($array_gestiones, $headers, $style);  //mostrar tabla gestiones
+llenar_tabla_sin_id($resultado, $headers, $style);  //mostrar tabla gestiones
 ?>
 
           </div>
@@ -130,11 +153,11 @@ llenar_tabla_progresivo($array, $headers, $style);
     var myRequest = new XMLHttpRequest();
 
     function procesar_fecha(str) {
-      
+
       var usuario = document.querySelectorAll('a[href="#login"]')[0].innerText;
       var peticion = str+'&'+'usuario='+usuario;
       myRequest.open('GET', 'migracion_call_pred.php?fecha='+peticion, true);
-      
+
       var selectRowFecha= document.getElementById(str);
       var field = selectRowFecha.getElementsByTagName("td");
       //extraemos los campos mostrados en la pagina hacia variables
@@ -257,6 +280,15 @@ function ctrl_boton_submit() {
 <?php
 }
 
+function ctrl_boton_carga() {
+?>
+            <div class="field_row_form">
+              <input class="downl" id="carga_archivo" type="submit" value="cargar archivo" name="carga">
+            </div>
+<?php
+}
+
+
 function ctrl_input_doc() {
 ?>
             <div class="field_row_form">
@@ -265,15 +297,25 @@ function ctrl_input_doc() {
 <?php
 }
 
+function ctrl_boton_examinar(){
+  ?>
+  <div id="row_form">
+    <div class="field_row_form  width_div">
+      <input type="file" name="archivo_subido" id="archivo_subido">
+    </div>
+  </div>
+  <?php
+}
+
 function ctrl_select_cuenta() {
-  
+
   $array = array();
   ctrl_select("cuenta:", $array, "cuenta" );
-  
+
 }
 
 
-function ctrl_fecha_desde () {
+function ctrl_fecha_desde() {
 $valor_fecha = (isset($_POST['fecha_llamada'])?$_POST['fecha_llamada']:date('d/m/Y'));
 echo <<<Final
             <div class="field_row_form" id="fecha_llamada"><!-- ctrl_fecha_desde-->
@@ -285,7 +327,7 @@ echo <<<Final
 Final;
 }
 
-function ctrl_fecha_pago () {
+function ctrl_fecha_pago() {
 $valor_fecha = (isset($_POST['fecha_llamada'])?$_POST['fecha_llamada']:date('d/m/Y'));
 echo <<<Final
             <div class="field_row_form" id="fecha_llamada"><!-- ctrl_fecha_pago-->
@@ -465,13 +507,13 @@ function form_modal($error, $archivo_action, $legend, $array) {
 
      <?php echo <<<Final
 
-      
+
       <form action="$archivo_action" method="post"> <!-- variable archivo_action-->
         <fieldset>
           <legend>$legend</legend> <!-- variable legend-->
           <div class="div_form1">
             <input id="consulta" name="id_formulario" type="hidden" value="consulta">
-            
+
 
 Final;
 

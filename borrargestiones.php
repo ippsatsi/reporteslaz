@@ -13,30 +13,40 @@ if (isset($_POST['borrar']))// comprueba si se envio formulario
 {
   $borrar=$_POST['borrar'];
   try {
-// primero verificamos si existe un pedido de borrado 
+    $usuario_borrador = $_SESSION['usuario_valido'];
+    require_once 'func_inicio.php';
+    require_once 'querys/q_borrargestiones.php';
+// primero verificamos si existe un pedido de borrado
     if ($borrar=="borrar")
     {
       if (isset($_POST['check_list']))
       {////borrar antes de buscar gestiones
-        require_once 'func_inicio.php';
-        require_once 'querys_borrargestiones.php';
         $str_gestiones = implode(',',$_POST['check_list']);
-        borrar_gestiones($str_gestiones);
+        borrar_gestiones($str_gestiones, $usuario_borrador);
       }
     }// si no fue borrado, entonces fue busqueda de dni, igual siempre buscamos el dni, para mostrar datos
     $dni=$_POST['dni'];
     $array_cuentas = array();
-    require_once 'func_inicio.php';
-    require_once 'querys_borrargestiones.php';
-    $array_cuentas=buscar_dni($dni);//si el dni es valido dara las cuentas
+
+    $array_cuentas = buscar_dni($dni);//si el dni es valido dara las cuentas
     if (!$array_cuentas)
     {
       throw new Exception('No se encontraron cuentas');
     }
     $array_gestiones = array();
-    $array_gestiones = buscar_gestiones($dni, $usuario);
-    if (!$array_gestiones) //si no hay gestiones
+    $usuario_rol = $_SESSION['rol'];
+
+    // permite busqueda general de gestiones de todos
+    if ( strtolower($usuario_borrador) == 'laguilar' ) {
+        $array_gestiones = buscar_gestiones_admin($dni);
+    }else{
+        $array_gestiones = buscar_gestiones($dni, $usuario);
+    }
+
+    if ( !isset($array_gestiones['resultado']) ) //si no hay gestiones
     {
+      //eliminamos errores en el log cuando no hay resultados
+      $array_gestiones['resultado'] = array();
       throw new Exception('No se encontraron gestiones del dia de este usuario');
     }
   }
