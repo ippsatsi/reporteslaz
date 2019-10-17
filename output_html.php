@@ -26,6 +26,7 @@ $logo_agente='<i class="fa fa-user fa-fw" aria-hidden="true"></i>';
 $rol_agente = ($_SESSION['rol']==4 || $_SESSION['rol']==5 ? true : false );
 $rol_logo = ($rol_agente ? $logo_agente : $logo_admin );
 $mostrar_usuario = $rol_logo.strtolower($_SESSION['usuario_valido']);
+$usuario_soporte = ($_SESSION['usuario_codigo']==3052 ? true : false);
 ?>
 <body>
         <!--#949DA8 #4F84C4 #578CA9 #AF9483 #91A8D0 #55B4B0 #7FCDCD #45B8AC-->
@@ -49,8 +50,8 @@ $mostrar_usuario = $rol_logo.strtolower($_SESSION['usuario_valido']);
           <li><a href=borrargestiones.php>Borrar Gestiones</a></li>
           <li><a href=registro_pagos.php>Registro Pagos</a></li>
 <?php echo ($rol_agente ? '' : '          <li><a href=predictivo_web.php>Gestiones Predictivo WEB</a></li>' )?>
-<?php echo ($rol_agente ? '' : '          <li><a href=carga_cuadros.php>Actualizar Cuadros</a></li>' )?>
-<?php echo ($rol_agente ? '' : '          <li><a href=update_cuadros.php>Administracion Cuadros</a></li>' )?>
+<?php echo (!$usuario_soporte ? '' : '          <li><a href=carga_cuadros.php>Actualizar Cuadros</a></li>' )?>
+<?php echo (!$usuario_soporte ? '' : '          <li><a href=update_cuadros.php>Administracion Cuadros</a></li>' )?>
         </ul>
       </li>
       <li><a href=#convenios>Gestiones</a>
@@ -61,7 +62,7 @@ $mostrar_usuario = $rol_logo.strtolower($_SESSION['usuario_valido']);
       </li>
       <li><a href=#usuarios>Usuarios</a>
         <ul id="drop">
-        <?php echo ($rol_agente ? '' : '          <li><a href=asig_cartera.php>Asignacion Carteras</a></li>' )?>
+        <?php echo (!$usuario_soporte ? '' : '          <li><a href=asig_cartera.php>Asignacion Carteras</a></li>' )?>
         </ul>
       </li>
       <li class="menu_right"><a href="logout.php"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>Salir</a>
