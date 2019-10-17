@@ -42,6 +42,7 @@ if ( isset($_GET['id_agente']) && isset($_SESSION['usuario_valido']) ) {
 <title>Editar</title>
 <meta charset="UTF-8" />
 <link rel="stylesheet" href="css/frame_modal.css">
+<script src="js/globales_navegador.js"></script>
 </head>
 <body>
 <div>
@@ -64,7 +65,7 @@ function form_asigna_cartera($id_agente,$array_asignados, $style) {
         }
 ?>
         <br>
-        <input type="submit" value="grabar" onclick="run_asigna()" />
+        <input type="button" value="grabar" onclick="run_asigna()" />
         <div id="error">
 
         </div>
@@ -100,7 +101,9 @@ function result_ajax(data){
 
 //al hacer click en grabar
 function run_asigna(){
-  event.preventDefault();
+  if (!navegador_antiguo) {
+      event.preventDefault();
+  }
   //datos del formulario
   var form_datos = new FormData(form_obj);
   // hacemos el request Ajax

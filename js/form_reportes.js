@@ -1,5 +1,6 @@
 //Globales para mensajes de error
 var div_error = document.getElementById('error');
+var spinner = document.getElementById('spinner');
 
 function limpiar_mensaje(form_number) {
  //alert("The form was submitted");
@@ -17,8 +18,12 @@ function ajaxRequest(url, callback) {
 
     myRequest.open('GET',url,true);
     myRequest.onreadystatechange = function () {
-        if (myRequest.readyState == 4 && myRequest.status == 200 ) {
+        if ( myRequest.readyState == 4 ) {
+            if ( myRequest.status == 200 ) {
             callback(myRequest.responseText);
+          } else {
+            console.log('error:ajax');
+          }
         }
     };
     myRequest.send();
@@ -44,12 +49,26 @@ function fr_ajaxRequestPost(url, data, callback){
 //callback: funcion que recibira y manejara el resultado del request
 function fr_newAjax(url, data, callback){
   var xhr = new XMLHttpRequest();
+  //solo si existe spinner, lo activamos
+  if (spinner) {
+        spinner.style.display = 'flex';
+  }
 
   xhr.open("POST", url, true);
   xhr.onreadystatechange = function () {
-      if (xhr.readyState == 4 && xhr.status == 200 ) {
-          callback(xhr.responseText);
-      }
+      if ( xhr.readyState == 4 ) {
+          if ( xhr.status == 200 ) {
+              callback(xhr.responseText);
+                //solo si existe spinner, lo desactivamos
+              if (spinner) {
+                  spinner.style.display = 'none';
+              }//if spinner
+          }else {
+              if (spinner) {
+                  spinner.style.display = 'none';
+              }//if spinner
+          }//if =200
+      }//if ==4
   };
   xhr.setRequestHeader('X-Requested-with','XMLHttpRequest');
   //xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

@@ -13,6 +13,7 @@ function css_estilos() {
 <link rel="stylesheet" href="css/pikaday.css">
 <link rel="stylesheet" href="css/modal_js.css">
 <link rel="stylesheet" href="css/estilos_generales.css">
+<script src="js/globales_navegador.js"></script>
 </head>
 <?php
 }
@@ -70,6 +71,9 @@ $mostrar_usuario = $rol_logo.strtolower($_SESSION['usuario_valido']);
     </ul>
   </nav>
   <div style="padding-top:2.2rem;margin-top:0;background-color:#ecf0f5;min-height:600px;">
+    <div id="spinner">
+    <img src="images/ajax-loader.gif" alt="Loading..." />
+  </div>
 <?php
 }
 
@@ -304,30 +308,7 @@ Final;
   echo '            </table>';
 }
 
-//####################################################################
-function obtener_proveedores () {
-  //conectarse al Sql Server
-  $conn = conectar_mssql();
-  $query = "
-  SELECT
-  PRV_CODIGO
-  , PRV_NOMBRES
-  FROM
-  COBRANZA.GCC_PROVEEDOR WHERE PRV_ESTADO_REGISTRO='A';";
 
-  $result_query= sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
-  if (!$result_query) {
-    throw new Exception('No se pudo completar la consulta',2);
-  }
-  $array_return = array();
-  //for ($count = 1; $)
-  while( $row = sqlsrv_fetch_array($result_query) ) {
-    $array_return[] = array('ID'=>$row['PRV_CODIGO'], 'NOMBRE'=>$row['PRV_NOMBRES']);
-//    $array_return['cartera'][] = $row['CAR_CODIGO'];
-//    $array_return['descripcion'][] = $row['CAR_DESCRIPCION'];
-  }
-  return $array_return;
-}
 
 function oh_inputs_ocultos() {
   ?>
@@ -335,5 +316,9 @@ function oh_inputs_ocultos() {
         <input type="hidden" name="usu_login" value="<?php echo $_SESSION['usuario_valido'] ?>">
         <input type="hidden" name="rol" value="<?php echo $_SESSION['rol'] ?>">
   <?php
+}
+
+function oh_ctrl_vacio() {
+  echo "\n";
 }
 ?>

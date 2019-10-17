@@ -12,7 +12,7 @@ $carga_js_borrado = false;
 $remote_addr = $_SERVER['REMOTE_ADDR'];
 
   // $conn2 = conectar_ucadesa_mssql();//UCADESA
- 
+
 if (isset($_POST['buscar'])){// comprueba si se envio formulario
   try {
     require_once 'func_inicio.php';
@@ -43,7 +43,7 @@ if (isset($_POST['buscar'])){// comprueba si se envio formulario
         $array_tabla = array();//colocamos un array vacio para evitar warnings
       }
   //    $array_tabla = $array_tabla['resultado'];
-             
+
     //    $array_tabla = array();
    //   if (count($array_tabla)>0) {
     //    $carga_js_borrado = true;//flag para cargar el codigo js de borrado, solo cuando mostramos pagos
@@ -59,13 +59,13 @@ if (isset($_POST['buscar'])){// comprueba si se envio formulario
 require_once 'output_html.php';
 require_once 'func_procesos.php';
 require_once 'func_inicio.php';
-
+require_once 'querys/q_basicas.php';
 
 function ctrl_boton_add() {
 ?>
             <div class="field_row_form">
               <a style="text-decoration:none;" href="#openModal"><input id="add" type="button" value="añadir" name="add" ></a>
-              <a style="text-decoration:none;"><input id="delete1" type="button" value="borrar" name="delete" class="bt_red" onclick="borrar_id()"></a> 
+              <a style="text-decoration:none;"><input id="delete1" type="button" value="borrar" name="delete" class="bt_red" onclick="borrar_id()"></a>
               <input type="hidden" name="buscar" value="buscar">
             </div>
 <?php
@@ -74,10 +74,9 @@ function ctrl_boton_add() {
 //$carteras = array(array(2,'4K'),array(7,'BCP'),array(8,'LFT'));
 $carteras = obtener_proveedores();
 
-
 function ctrl_select_carteras() {
   global $carteras;
- 
+
  // $array = array(array('ID'=>$carteras[1][0],'NOMBRE'=>$carteras[1][1]));
   ctrl_select("Proveedor:", $carteras, "cartera", '','','');
 }
@@ -109,7 +108,7 @@ form_modal($error_message, "registro_pagos.php", "Registro de pagos", $array);
 */
 function form3() {
 echo <<<Final
- <iframe id="modal_iframe" src="insertar_pago.php" height="500" width="900" frameBorder="0">xxx</iframe> 
+ <iframe id="modal_iframe" src="insertar_pago.php" height="500" width="900" frameBorder="0">xxx</iframe>
 Final;
 }
 
@@ -152,7 +151,7 @@ function borrar_id() {
         if (myRequest.readyState === 4) {
           if (myRequest.responseText == '1') {
             alert('Pago borrado correctamente');
-            document.getElementById("form_pago").submit(); 
+            document.getElementById("form_pago").submit();
           }
         }
       }

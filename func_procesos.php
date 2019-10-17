@@ -354,7 +354,7 @@ function carga_js_scripts() {
 function ctrl_boton_busqueda() {
 ?>
             <div class="field_row_form">
-              <input class="downl" type="button" value="buscar" name="buscar">
+              <input class="downl" id="btn_busqueda" type="button" value="buscar" name="buscar">
             </div>
 <?php
 }

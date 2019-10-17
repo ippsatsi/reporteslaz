@@ -99,19 +99,22 @@ LEFT JOIN COBRANZA.GCC_TIPO_RESULTADO_TAB RTAB ON RTAB.TAB_CODIGO=GES.SOL_CODIGO
 WHERE
 CLI.CLI_DOCUMENTO_IDENTIDAD='".$dni."'
 --AND CONVERT(VARCHAR,GES.GES_FECHA,103)=CONVERT(VARCHAR,GETDATE(),103)
-ORDER BY 1 DESC;";
+ORDER BY GES.GES_CODIGO DESC;";
 
   $array_query_result = run_select_query_sqlser($query);
   return $array_query_result;
 }
 
 function borrar_gestiones($str_gestiones, $usuario_borrador) {
+  $ip = $_SERVER['REMOTE_ADDR'];
+  $ip_array = explode(".",$ip);
+  $ip_basico = $ip_array[3];
   $conn = conectar_mssql();
   $query = "
     UPDATE GES
     SET
     GES.GES_ESTADO_REGISTRO='I'
-    , GES.TXMOTIVOBAJA='IP:".$_SERVER['REMOTE_ADDR'].", USUARIO: ".$usuario_borrador."'
+    , GES.TXMOTIVOBAJA='{\"I\":\"".$ip_basico."\", \"U\": \"".$usuario_borrador."\",\"M\":\"NOIMPLEMENTADO\"}'
     , FEBAJA=GETDATE()
     FROM
     COBRANZA.GCC_GESTIONES GES

@@ -1,7 +1,7 @@
 <?php
 
 function reporte_1() {
-//reporte telefonos progresivo
+//reporte ULTIMA GESTION
   $cartera = $_POST['cartera'];
 //  $subcartera = $_POST['subcartera'];
   if ( $cartera == 0 ) {
@@ -125,15 +125,15 @@ SET @CAMPO = CONCAT('\"','IDCLIENTE', '\":\"')
 }
 
 function reporte_3() {
-//reporte telefonos progresivo
+//reporte de base
 
   $cartera = $_POST['cartera'];
   $subcartera = $_POST['subcartera'];
   $opciones = $_POST['opciones'];
 //  $subcartera = $_POST['subcartera'];
-  if ( $cartera == 0 ) {
-      throw new Exception('Seleccione una cartera', 1);
-  }
+//  if ( $cartera == 0 ) {
+//      throw new Exception('Seleccione una cartera', 1);
+//  }
 
   if ($opciones == "0") {
       $query = "
@@ -146,6 +146,7 @@ function reporte_3() {
       , cue.CUE_NROCUENTA AS 'S25|CUENTA'
       , CLI.CLI_NOMBRE_COMPLETO AS 'S45|NOMBRE'
       , SCA.SCA_DESCRIPCION AS 'S15|SUBCARTERA'
+      , PRV.PRV_NOMBRES AS 'S15|PROVEEDOR'
       , BDE.BAD_DEUDA_SALDO AS 'P12|DEUDA TOTAL'
       , BDE.BAD_DEUDA_MONTO_CAPITAL AS 'P12|CAPITAL'
       , CLI.CLI_CODIGO AS 'N10|CLI_CODIGO'
@@ -156,9 +157,11 @@ function reporte_3() {
       INNER JOIN COBRANZA.GCC_BASEDET BDE ON BDE.CUE_CODIGO=CUE.CUE_CODIGO AND BDE.BAD_ESTADO_CUENTA='A' --OR BDE.BAD_ESTADO_CUENTA='C'
       INNER JOIN COBRANZA.GCC_BASE BAS ON BAS.BAS_CODIGO=BDE.BAS_CODIGO
       INNER JOIN COBRANZA.GCC_SUBCARTERAS SCA ON SCA.SCA_CODIGO=BAS.SCA_CODIGO
+      INNER JOIN COBRANZA.GCC_PROVEEDOR PRV ON PRV.PRV_CODIGO=BAS.PRV_CODIGO AND PRV.PRV_ESTADO_REGISTRO='A'
       INNER JOIN COBRANZA.GCC_CLIENTE CLI ON CLI.CLI_CODIGO=CUE.CLI_CODIGO
       WHERE
-      BAS.CAR_CODIGO=".$cartera." AND (@SUBCARTERA=0 OR BAS.SCA_CODIGO=@SUBCARTERA)
+      ".$cartera."=0 OR
+      (BAS.CAR_CODIGO=".$cartera." AND (@SUBCARTERA=0 OR BAS.SCA_CODIGO=@SUBCARTERA))
       ORDER BY 1 ASC;";
   } else {
       $query = "
@@ -174,8 +177,10 @@ function reporte_3() {
       INNER JOIN COBRANZA.GCC_CUENTAS CUE ON CUE.CLI_CODIGO=CLI.CLI_CODIGO
       INNER JOIN COBRANZA.GCC_BASEDET BDE ON BDE.CUE_CODIGO=CUE.CUE_CODIGO AND BDE.BAD_ESTADO_CUENTA='A'
       INNER JOIN COBRANZA.GCC_BASE BAS ON BAS.BAS_CODIGO=BDE.BAS_CODIGO
+      INNER JOIN COBRANZA.GCC_PROVEEDOR PRV ON PRV.PRV_CODIGO=BAS.PRV_CODIGO AND PRV.PRV_ESTADO_REGISTRO='A'
       WHERE
-      BAS.CAR_CODIGO=".$cartera." AND (@SUBCARTERA=0 OR BAS.SCA_CODIGO=@SUBCARTERA)
+      ".$cartera."=0 OR
+      (BAS.CAR_CODIGO=".$cartera." AND (@SUBCARTERA=0 OR BAS.SCA_CODIGO=@SUBCARTERA))
       GROUP BY CLI.CLI_DOCUMENTO_IDENTIDAD
       ORDER BY 2 DESC;";
   }

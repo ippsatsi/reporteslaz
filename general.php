@@ -32,9 +32,22 @@ if (isset($_POST['id_formulario'])) {
 
       fclose($out);
       exit(0);
-
     } */
 
+    switch ($num_formulario) {
+      case '1':
+        $nombre_archivo = "reporte_ult_gestion";
+        break;
+      case '2':
+        $nombre_archivo = "reporte_de gestiones_maf";
+        break;
+      case '3':
+        $nombre_archivo = "reporte_de base";
+        break;
+      default:
+        $nombre_archivo = "reporte";
+        break;
+    }
     $writer = new XLSXWriter();
 
     $cabecera = $data['header']; //copia la porcion de los encabezados del resultado de la query a un array
@@ -51,7 +64,7 @@ if (isset($_POST['id_formulario'])) {
         break;
       }//else
     }//while
-    $writer->outputToBrowser("Reporte_ult_gestion".$num_formulario);
+    $writer->outputToBrowser($nombre_archivo.$num_formulario);
     exit(0);
   }
 
