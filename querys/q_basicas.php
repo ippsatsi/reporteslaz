@@ -2,7 +2,7 @@
 //function obtener_proveedores ()
 
 //####################################################################
-function obtener_proveedores () {
+function qb_obtener_proveedores () {
     //conectarse al Sql Server
     $conn = conectar_mssql();
     $query = "

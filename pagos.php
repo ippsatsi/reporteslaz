@@ -4,7 +4,7 @@ $error_message = "";
 if (!isset($_SESSION['usuario_valido']))
 {
   header("Location:index.php");
-}  
+}
 include_once(__DIR__."/vendor/mk-j/php_xlsxwriter/xlsxwriter.class.php");
 
 $num_formulario="0";// por si es la primera vez que cargamos el formulario
@@ -23,7 +23,7 @@ if (isset($_POST['id_formulario'])) {
     $writer->writeSheetHeaderFormated(EXCEL_SHEET_NAME, $cabecera, EXCEL_STYLE_ROW_HEADER);
     if (array_key_exists('resultado',$data)) {
        $fila = $data['resultado'];
-    } 
+    }
     else {
       $fila = array();
     }
@@ -50,9 +50,9 @@ require_once 'func_inicio.php';
 require_once 'output_html.php';
 require_once 'func_reportes.php';
 require_once 'func_procesos.php';
+require_once 'querys/q_basicas.php';
 
-$carteras = array(array(7,'BCP'),array(0,'TODOS'));
-$carteras = obtener_proveedores();
+$carteras = qb_obtener_proveedores();
 function ctrl_select_carteras() {
   global $carteras;
  // $array = array(array('ID'=>7,'NOMBRE'=>'BCP'),array('ID'=>0,'NOMBRE'=>'TODOS'));

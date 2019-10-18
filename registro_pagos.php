@@ -72,7 +72,7 @@ function ctrl_boton_add() {
 }
 
 //$carteras = array(array(2,'4K'),array(7,'BCP'),array(8,'LFT'));
-$carteras = obtener_proveedores();
+$carteras = qb_obtener_proveedores();
 
 function ctrl_select_carteras() {
   global $carteras;

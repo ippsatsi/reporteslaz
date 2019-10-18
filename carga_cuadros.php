@@ -15,7 +15,7 @@ require_once 'querys/q_basicas.php';
 css_estilos();
 header_html();
 
-$carteras = obtener_proveedores();
+$carteras = qb_obtener_proveedores();
 
 function ctrl_select_carteras() {
     global $carteras;
