@@ -13,7 +13,7 @@
     font-family: 'Open Sans', sans-serif;
     font-size: 1rem;
     counter-reset: rowacord;
-    min-width: 1200px;
+    min-width: 2200px;
   }
   .clearfix::before,
   .clearfix::after {
@@ -314,10 +314,10 @@
     font-size: 0.8rem;
   }
   .row_form th {
-    font-weight: 500;
+    font-weight: 600;
   }
   .row_form tr {
-    font-weight: 500;
+    font-weight: 400;
   }
   .row_form td {
     text-align: center;
@@ -405,4 +405,11 @@
   display: none;
   justify-content: center;
   align-items: center;
+}
+p.celda_inactiva {
+  color:red;
+}
+p.columna_campo {
+	background-color: #9194a4;
+}
 }
