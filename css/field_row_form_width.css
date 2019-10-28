@@ -4,3 +4,7 @@
 input[type=text] {
   width: 120px;
 }
+
+  body {
+    min-width: 700px;
+  }

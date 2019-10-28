@@ -37,7 +37,7 @@ function footer_html() {
 ?>
     <div id="output_js_errores"></div>
   </div>
-  <script src="js/insertar_pagos.js"></script>';
+  <script src="js/insertar_pagos.js"></script>
 </body>
 </html>
 <?php
