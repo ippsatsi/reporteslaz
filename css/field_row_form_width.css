@@ -1,0 +1,6 @@
+.field_row_form {
+  width: 20rem;
+}
+input[type=text] {
+  width: 120px;
+}

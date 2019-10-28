@@ -8,8 +8,8 @@ $tabla_vacia = <<<Final
             <div class="row_form row_new">
               <div class="field_row_form">
                 <label>cuenta:</label>
-                <div class="select_input">
-                  <select id="cuenta" name="cuenta" disabled>
+                <div style="width: 13.2rem" class="select_input">
+                  <select style="width: 15.4rem" id="cuenta" name="cuenta" disabled>
               <!--      <option value="0">--seleccione--</option> -->
 
                   </select>
@@ -71,7 +71,7 @@ $plantilla = <<<Final
                   <th>deuda total</th>
                   <th>portafolio</th>
                   <th>usuario asignado</th>
-                  <th>compromiso</th>
+                  <th>status</th>
                 </tr>
               </thead>
                 <tr>
@@ -89,8 +89,8 @@ $plantilla_select =<<<Final
             <div class="row_form row_new">
               <div class="field_row_form">
                 <label>cuenta:</label>
-                <div class="select_input">
-                  <select id="cuenta" name="cuenta" onchange="enable_tabla()">
+                <div style="width: 13.2rem" class="select_input">
+                  <select style="width: 15.4rem" id="cuenta" name="cuenta" onchange="enable_tabla()">
               <!--      <option value="0">--seleccione--</option> -->
                     ||CUENTAS||
                   </select>
@@ -109,20 +109,29 @@ $plantilla_line_select = '<option value="||CUE_CODIGO||">||CUENTA||</option>';
   $conn = conectar_mssql();
 // QUERY BUSQUEDA DATOS EN FUNCION DEL DNI
   $query = "
+  DECLARE
+  @INACTIVA VARCHAR(30)
+  SET
+  @INACTIVA= '<p class=\"celda_inactiva\">'
+
 SELECT
-CLI.CLI_NOMBRE_COMPLETO AS 'NC'
+ CASE BDE.BAD_ESTADO_CUENTA
+  WHEN 'A' THEN CLI.CLI_NOMBRE_COMPLETO
+  ELSE @INACTIVA + CLI.CLI_NOMBRE_COMPLETO END AS 'NC'
 , CUE.CUE_NROCUENTA AS CUENTA
 , BDE.BAD_DEUDA_MONTO_CAPITAL AS CAPITAL
 , BDE.BAD_DEUDA_SALDO AS TOTAL
 , SCA.SCA_DESCRIPCION AS PORTAFOLIO
 , ISNULL(UCAL.USU_LOGIN, 'SIN ASIGNAR') AS USUARIO
-, CASE WHEN BDE.BAD_ESTADO_CUENTA = 'C' THEN '<strong>CANCELADO</strong>'
-      ELSE '' END AS COMPROMISO
+, CASE BDE.BAD_ESTADO_CUENTA
+      WHEN 'C' THEN '<strong>CANCELADO</strong>'
+      WHEN 'R' THEN '<p class=\"celda_inactiva\">RETIRADO</p>'
+      ELSE 'ACTIVO' END AS COMPROMISO
 , CUE.CUE_CODIGO AS CUE_CODIGO
 FROM
 COBRANZA.GCC_CLIENTE CLI
 INNER JOIN COBRANZA.GCC_CUENTAS CUE ON CUE.CLI_CODIGO=CLI.CLI_CODIGO
-INNER JOIN COBRANZA.GCC_BASEDET BDE ON BDE.CUE_CODIGO=CUE.CUE_CODIGO AND BDE.BAD_ESTADO_CUENTA IN ('A', 'C')
+INNER JOIN COBRANZA.GCC_BASEDET BDE ON BDE.CUE_CODIGO=CUE.CUE_CODIGO -- AND BDE.BAD_ESTADO_CUENTA IN ('A', 'C')
 INNER JOIN COBRANZA.GCC_BASE BAS ON BAS.BAS_CODIGO=BDE.BAS_CODIGO
 INNER JOIN COBRANZA.GCC_SUBCARTERAS SCA ON SCA.SCA_CODIGO=BAS.SCA_CODIGO
 LEFT JOIN COBRANZA.GCC_ASIGNACION ASI ON ASI.CUE_CODIGO=CUE.CUE_CODIGO AND ASI.ASI_ESTADO=1 AND ASI.ROL_CODIGO=4
