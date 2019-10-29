@@ -9,7 +9,7 @@ function obtener_carteras () {
   , CAR_DESCRIPCION
   FROM
   COBRANZA.GCC_CARTERAS WHERE CAR_ESTADO_REGISTRO='A';";
-  
+
   $result_query= sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
   if (!$result_query) {
     throw new Exception('No se pudo completar la consulta',2);
@@ -53,7 +53,7 @@ if ($altura_form == '') {
           <legend>$legend</legend> <!-- variable legend-->
           <div class="div_form">
             <input id="consulta" name="id_formulario" type="hidden" value="$form_number">
-            
+
 
 Final;
 
@@ -123,17 +123,17 @@ foreach ($array as $row)
 //############################################################################
 
 function ctrl_select_cartera($form_number) {
-  
+
   $array = obtener_carteras();
   ctrl_lista_desplegable("Cartera:", $array, "cartera", $form_number, ' onchange="getCarteras('.$form_number.')"');
-  
+
 }
 
 function ctrl_select_subcartera($form_number) {
-  
+
   $array = array();
   ctrl_lista_desplegable("SubCartera:", $array, "subcartera", $form_number );
-  
+
 }
 
 //################################################################################
@@ -180,13 +180,14 @@ function form_rango_fecha($form_number) {
                 </div>
               </div>
 
-<?php
+<?php //toma la variable global y va acumulando js personalizado
 global $JS_CUSTOM_TXT;
-
+//por cada control de fecha que se va agregando a los formularios
+//y el footer() lo cargara al final
     $JS_CUSTOM_TXT .= "
     \n
     /* codigo para datepicker del formulario $form_number */
-    
+
         var picker_d$form_number = new Pikaday({
         field: document.getElementById('datepicker_desde$form_number'),
         format: 'DD/MM/YYYY',

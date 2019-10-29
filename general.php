@@ -18,6 +18,7 @@ if (isset($_POST['id_formulario'])) {
 
     $funcion_name = "reporte_".$num_formulario;
     $data =$funcion_name();
+
     /* CODIGO ESPECIFICO PARA QUE DETERMINADO REPORTE SEA EN CSV
     if ($num_formulario=="33") {
       header('Content-type: text/csv; charset=utf-8');
@@ -42,6 +43,9 @@ if (isset($_POST['id_formulario'])) {
         $nombre_archivo = "reporte_de gestiones_maf";
         break;
       case '3':
+          $nombre_archivo = "reporte_mensual";
+          break;
+      case '4':
         $nombre_archivo = "reporte_de base";
         break;
       default:
@@ -77,6 +81,8 @@ if (isset($_POST['id_formulario'])) {
 require_once 'func_inicio.php';
 require_once 'output_html.php';
 require_once 'func_reportes.php';
+require_once 'querys/q_basicas.php';
+
 css_estilos();
 header_html();
 // fORMULARIO 1
@@ -96,6 +102,21 @@ form_plantilla4($error_message, $num_formulario, "Reporte de Gestiones MAF", "ge
 
 // fORMULARIO 3
 
+
+function ctrl_select_proveedor($form_number) {
+
+  $array = qb_obtener_proveedores();
+  ctrl_lista_desplegable("Cliente:", $array, "proveedor", $form_number);
+
+}
+
+$array = array(array('ctrl_select_proveedor','form_fecha'));
+form_plantilla4($error_message, $num_formulario, "Reporte de Gestiones por Mes", "general.php", "Reportes de Gestiones Mensuales ", $array, 3);
+
+
+
+// fORMULARIO 4
+
 function ctrl_select_CUSTOM($form_number) {
 
   $array = array(array("ID"=>0,"NOMBRE"=>"COMPLETA"),array("ID"=>1,"NOMBRE"=>"DNI UNICO"));
@@ -104,7 +125,7 @@ function ctrl_select_CUSTOM($form_number) {
 }
 
 $array = array(array('ctrl_select_cartera', 'ctrl_select_subcartera'),array('ctrl_select_CUSTOM'));
-form_plantilla4($error_message, $num_formulario, "Reporte de Base de Cartera", "general.php", "Reportes de base de cartera ", $array, 3);
+form_plantilla4($error_message, $num_formulario, "Reporte de Base de Cartera", "general.php", "Reportes de base de cartera ", $array, 4);
 
 $actualizar_label = <<<Final
 <script>
