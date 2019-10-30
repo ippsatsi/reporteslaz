@@ -43,7 +43,7 @@ $usuario_soporte = ($_SESSION['usuario_codigo']==3052 ? true : false);
 <?php echo ($rol_agente ? '' : '          <li><a href=pagos.php>Pagos</a></li>' )?>
 <?php echo ($rol_agente ? '' : '          <li><a href=asignacion.php>Asignacion</a></li>' )?>
 <?php echo ($rol_agente ? '' : '          <li><a href=llamadas.php>Llamadas Manuales</a></li>' )?>
-<?php echo ($rol_agente ? '' : '          <li><a href=#gestion3>Paleta</a></li>' )?>
+<?php echo ($rol_agente ? '' : '          <li><a href=paleta.php>Paleta</a></li>' )?>
         </ul>
       </li>
       <li><a href=#compromisos>Procesos</a>
