@@ -17,6 +17,7 @@ function qac_get_cuadros($proveedor){
     ', CASE
     WHEN CHARINDEX(''BAD_'', SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.DESC_CAM_VC ) = 1 AND SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.TIPO_SI =1 THEN @CLS_COLUMNA + SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.DESC_CAM_VC
    WHEN CHARINDEX(''BAD_'',SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.DESC_CAM_VC ) = 0 AND SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.TIPO_SI =2 THEN @CLS_COLUMNA + SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.DESC_CAM_VC
+   WHEN SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.DESC_CAM_VC IS NULL THEN @BUTTON_CREAR+ CAST(CORD.ORD_CAM_SI AS varchar(2))+@COMA +'''+CAST(SCA.SCA_CODIGO AS VARCHAR)+''' +@FIN_BUTTON_CREAR
  ELSE @INACTIVA +SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.DESC_CAM_VC END AS ''IDCOL '+SCA.SCA_DESCRIPCION+'''
  , CASE
  WHEN CHARINDEX(''BAD_'', SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.DESC_CAM_VC ) = 1 AND SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.TIPO_SI =1 THEN SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.COL_CAM_VC
@@ -27,6 +28,7 @@ function qac_get_cuadros($proveedor){
     , DESC_CAM_VC
     , COL_CAM_VC
     , TIPO_SI
+    , ID_SUB_CART_SI
     FROM
     COBRANZA.GCC_CUENTA_ORDEN CORD
     WHERE
@@ -85,9 +87,15 @@ function qac_get_cuadros($proveedor){
     DECLARE
     @INACTIVA VARCHAR(30)
     , @CLS_COLUMNA VARCHAR(30)
+    , @BUTTON_CREAR VARCHAR(80)
+    , @FIN_BUTTON_CREAR VARCHAR(10)
+    , @COMA VARCHAR(1)
 
     SET @INACTIVA='<p class=\"celda_inactiva\">'
     SET @CLS_COLUMNA ='<p class=\"columna_campo\">'
+    SET @BUTTON_CREAR = '<input  type=\"button\" value=\"crear\" onclick=\"crear_campo('
+    SET @FIN_BUTTON_CREAR = ')\" >'
+    SET @COMA = ','
 
         SELECT
     CORD.ORD_CAM_SI AS ORDEN
@@ -115,4 +123,79 @@ function qac_get_cuadros($proveedor){
     $array_query_result = run_select_query_sqlser($query);
     return $array_query_result;
 }
+
+//FUNCIONES MODAL
+  function qac_get_cuadros_select($subcartera) {
+    $conn = conectar_mssql();
+    $query = "
+    SELECT
+        MEM.SCA_CODIGO AS subcartera
+        , MEM.MEM_CODIGO AS codigo
+        , CASE
+          WHEN MEM.INDICE = 25 THEN 'BAD_FECHA_ULTIMO_PAGO'
+          WHEN MEM.INDICE = 22 THEN 'BAD_FECHA_INICIO_MORA'
+          WHEN MEM.INDICE = 23 THEN 'BAD_FECHA_VENCIMIENTO'
+          WHEN MEM.INDICE = 43 THEN 'BAD_DIAS_VENCIMIENTO'
+          ELSE MEM.CAMPO END AS valor
+          , MEM.CAMPO AS nombre
+        , COL.MCO_TIPO AS tipo
+        FROM
+        COBRANZA.GCC_MEMORIA MEM
+        LEFT JOIN COBRANZA.GCC_MEMORIA_COL COL ON COL.MCO_INT=MEM.INDICE AND COL.MCO_TIPO=3 AND MEM.INDICE IN (25,22,23,43)
+        WHERE
+        MEM.SCA_CODIGO=$subcartera
+        AND ((MEM.ELIMINAR=0
+        AND MEM.INDICE=0)
+        OR  COL.MCO_TIPO IS NOT NULL)
+        ORDER BY COL.MCO_TIPO DESC";
+
+    $result_query = sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
+    $array_resultado = array();
+    while( $row = sqlsrv_fetch_array($result_query, SQLSRV_FETCH_ASSOC) ):
+        $array_resultado[] = $row;
+    endwhile;
+    sqlsrv_free_stmt($result_query);
+    sqlsrv_close($conn);
+    return $array_resultado;
+  }//endfunction
+
+  function qac_insert_campo($subcartera, $orden, $campo, $activado, $titulo) {
+    $conn = conectar_mssql();
+    $query = "INSERT INTO [COBRANZA].[GCC_CUENTA_ORDEN]
+                     ([ID_SUB_CART_SI]
+                     ,[ORD_CAM_SI]
+                     ,[DESC_CAM_VC]
+                     ,[TIPO_SI]
+                     ,[COL_CAM_VC])
+               VALUES
+                    ($subcartera,
+                    $orden,
+                    '$campo',
+                    $activado,
+                    '$titulo')";
+
+    $result_query = sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
+    si_es_excepcion($result_query, $query);
+    if ($result_query) {
+        $resultado = true;
+    } else {
+        $resultado= false;
+    }
+    sqlsrv_free_stmt($result_query);
+    sqlsrv_close($conn);
+    return $resultado;
+  }//endfunction
+
+  function qac_nombre_subcartera($subcartera) {
+    $conn = conectar_mssql();
+    $query = "SELECT
+                SCA.SCA_DESCRIPCION
+                FROM
+                COBRANZA.GCC_SUBCARTERAS SCA
+                WHERE
+                SCA.SCA_CODIGO=$subcartera;";
+
+    $array_result = run_select_query_sqlser($query);
+    return $array_result;
+  }//endfunction
  ?>

@@ -1,5 +1,16 @@
 <?php
 require_once 'branch.php';
+//css_estilos()
+//header_html()
+//footer_html()
+//oh_crear_tabla_ajax()
+//llenar_tabla()
+//llenar_tabla_sin_id()
+//ctrl_tabla()
+//ctrl_tabla_sin_id()
+//llenar_tabla_progresivo()
+//oh_inputs_ocultos()
+//oh_ctrl_vacio()
 
 function css_estilos() {
 ?>
@@ -78,7 +89,7 @@ $usuario_soporte = ($_SESSION['usuario_codigo']==3052 ? true : false);
   </div>
 <?php
 }
-
+/*
 function footer_htmlxx() {
 ?>
     <div id="output_js_errores">ff</div>
@@ -87,9 +98,9 @@ function footer_htmlxx() {
 </html>
 <?php
 }
+*/
 
-
-function footer_html($html_final='', $js1=0, $js2=0) {
+function footer_html($html_final='', $js1=0, $js2=0, $js3=0, $js4=0) {
 // $html_final : variable con codigo html para divs adicionales
 // $js1,$js2, $js3 ... archivos javascript adicionales
 ?>
@@ -99,7 +110,7 @@ function footer_html($html_final='', $js1=0, $js2=0) {
 <?php
 echo $html_final;
 
-for ($i = 1; $i < 3; $i++) {
+for ($i = 1; $i < 5; $i++) {
     //construimos $js1, $js2
     $jscript = "js".$i;
     if ($$jscript != '0' ) {
@@ -121,7 +132,7 @@ global $JS_CUSTOM_TXT;
 </html>
 <?php
 }
-
+/*
 function footer_html2() {
 ?>
     <div id="output_js_errores">ff</div>
@@ -186,7 +197,7 @@ echo $carga_modal;
 </html>
 <?php
 }
-
+*/
 function oh_crear_tabla_ajax($array_input, $array_headers, $css_class) {
 $expandir = 'implode';
 $output = <<<Final

@@ -1,3 +1,4 @@
+
 var btBusquedaCuadro = document.getElementById('btn_busqueda');
 btBusquedaCuadro.addEventListener('click', carga_cuadros);
 var form_obj = document.querySelectorAll('form')[0];
@@ -19,6 +20,15 @@ function result_ajax_cuadros(data){
      }
 }//endfuncion
 
+//establecemos tamño del modal
+modal_size(630,255);
+
+//funcion que abre el modal
+function crear_campo(orden, cartera) {
+    //alert(orden + ' cartera:' + cartera);
+    iframe_ventana.setAttribute("src","modales/modal_update_cuadros.php?orden="+orden+'&subcartera='+cartera+'&tipo=crear')
+    show_modal();
+}
 //funcion para obtener todos lo cuadros disponilbes en la cartera especificada
 function carga_cuadros(){
     var form_datos = new FormData(form_obj);

@@ -9,10 +9,6 @@ html = template.innerHTML;
 modal.innerHTML = html;
 iframe_ventana = document.getElementById("modal_iframe");
 
-
-//modal.style.opacity = 0;
-//modal.style.transition = "opacity 0.6s";
-
 // Obtiene el elemento <span> que cierra el modal
 var span = document.getElementById("close_modal");
 

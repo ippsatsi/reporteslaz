@@ -12,6 +12,7 @@
     margin: 0;
     font-family: 'Open Sans', sans-serif;
     font-size: 1rem;
+    min-width: 0; /*reseteamos el valor de estilos generales*/
     counter-reset: rowacord;
     /*background-color: #ecf0f5; */
   }
@@ -53,4 +54,8 @@
     margin-top: 10px;
   }
 
+  div > label > input {
+    vertical-align: middle;
+    margin-right: 10px;
+  }
 </style>

@@ -51,7 +51,7 @@ Final;
 // usuario que modifica
 $id_user = $_SESSION['usuario_codigo'];
 
-//funcion que reelena el contenido del form
+//funcion que rellena el contenido del form
 function form_asigna_cartera($id_agente,$array_asignados, $style) {
   global $id_user;
   oh_inputs_ocultos();

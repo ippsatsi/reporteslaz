@@ -62,8 +62,11 @@ function qcc_actualiza_cuadro( $cartera, $cuadro, $id_user ) {
     INNER JOIN COBRANZA.GCC_BASEDET BDE ON BDE.CUE_CODIGO=CUE.CUE_CODIGO AND BDE.BAD_ESTADO_CUENTA='A'
     INNER JOIN COBRANZA.GCC_BASE BAS ON BAS.BAS_CODIGO=BDE.BAS_CODIGO
     WHERE BAS.PRV_CODIGO=$cartera
-    AND PRB.usuario_carga=$id_user;";
-    
+    AND PRB.usuario_carga=$id_user
+    -- AND CHARINDEX(@CAMPO,CUE.DATOS)<>0 ES PARA SOLO ACTUALIZAR CUANDO EXISTA
+    -- EL CAMPO EN CUE_DATOS, SINO VA A CORROMPER ESA COLUMNA
+    AND CHARINDEX(@CAMPO,CUE.DATOS)<>0;";
+
     $rows_affected = fi_run_upd_del_query_sqlserv($query);
 
     return $rows_affected;

@@ -31,5 +31,8 @@ $array = array(array('ctrl_boton_busqueda', 'ctrl_select_carteras')
 form_proceso('Resumen de cuadros informativos', $array, $mensaje, 'id="form_pago"');
 
 require_once "html/templates_html.php";
-footer_html($field_row_form_html, "form_reportes.js", 'adm_cuadros.js');
+//habilitamos codigo para cajas modales
+require_once "html/modal_html.php";
+$html_final = $modal_html."\n".$field_row_form_html;
+footer_html($modal_html, "form_reportes.js",'modal_box.js', 'adm_cuadros.js');
 ?>
