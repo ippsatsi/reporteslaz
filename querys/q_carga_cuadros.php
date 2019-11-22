@@ -42,7 +42,11 @@ function qcc_borrado_cargas_previas($id_user) {
     return $rows_affected;
 }
 
-function qcc_actualiza_cuadro( $cartera, $cuadro, $id_user ) {
+function qcc_actualiza_cuadro( $cartera, $cuadro, $id_user, $tipo_upd ) {
+
+    //$tipo_upd puede ser:
+    //  INNER : para actualizar solo las cuentas cargadas
+    //  LEFT : para actualizar toda la cartera
 
     $query = "
     DECLARE
@@ -58,14 +62,14 @@ function qcc_actualiza_cuadro( $cartera, $cuadro, $id_user ) {
      RIGHT(CUE.DATOS,(LEN(CUE.DATOS)-CASE (CHARINDEX('\",',CUE.DATOS, CHARINDEX(@CAMPO,CUE.DATOS))) WHEN 0 THEN (CHARINDEX('\"}',CUE.DATOS, CHARINDEX(@CAMPO,CUE.DATOS))) ELSE (CHARINDEX('\",',CUE.DATOS, CHARINDEX(@CAMPO,CUE.DATOS))) END)+1))
     FROM
     COBRANZA.GCC_CUENTAS CUE
-    LEFT JOIN COBRANZA.GCC_CAMPOS_DATOS PRB ON PRB.cuenta=CUE.CUE_NROCUENTA
+    $tipo_upd JOIN COBRANZA.GCC_CAMPOS_DATOS PRB ON PRB.cuenta=CUE.CUE_NROCUENTA AND PRB.usuario_carga=$id_user
     INNER JOIN COBRANZA.GCC_BASEDET BDE ON BDE.CUE_CODIGO=CUE.CUE_CODIGO AND BDE.BAD_ESTADO_CUENTA='A'
     INNER JOIN COBRANZA.GCC_BASE BAS ON BAS.BAS_CODIGO=BDE.BAS_CODIGO
     WHERE BAS.PRV_CODIGO=$cartera
-    AND PRB.usuario_carga=$id_user
+    AND CHARINDEX(@CAMPO,CUE.DATOS)<>0
     -- AND CHARINDEX(@CAMPO,CUE.DATOS)<>0 ES PARA SOLO ACTUALIZAR CUANDO EXISTA
     -- EL CAMPO EN CUE_DATOS, SINO VA A CORROMPER ESA COLUMNA
-    AND CHARINDEX(@CAMPO,CUE.DATOS)<>0;";
+    ;";
 
     $rows_affected = fi_run_upd_del_query_sqlserv($query);
 

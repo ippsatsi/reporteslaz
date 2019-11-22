@@ -60,6 +60,11 @@ function result_ajax_procesar(data) {
 
 //funcion que envia el archivo para que sea subido al SISCOB
 function ProcesarArchivo(){
+    //validamos que se haya seleccionado algun tipo de validacion
+    if (!document.querySelector('input[name=tipoUpd]:checked')) {
+        alert('Debe selecionar algun tipo de actualizacion');
+        return false;
+    }
     var form_datos = new FormData(form_obj);
     for ([key, value] of form_datos) {
      console.log(key + ':' + value);
@@ -92,6 +97,43 @@ function mostrarNumeroRegistros(numero, errores_validacion){
     divForm.insertBefore(divNumeroRegistros,divForm.childNodes[17]);
 }//endfuncion
 
+//agregar checkboxes para cuentas especificas o todas las cuentas
+function agregarCheckboxesTipoActualizacion() {
+    // creamos el div row_form
+    var divRowTA = document.createElement('DIV');
+    divRowTA.classList.add('row_form');
+    //creamos el fieldset con su legend que iran dentro del row_form
+    var divFieldTA = document.createElement('FIELDSET');
+    var elemLegend = document.createElement('LEGEND');
+    elemLegend.innerText = 'Tipo de Actualizacion';
+    divFieldTA.appendChild(elemLegend);
+
+    var SaltoLinea = document.createElement('BR');
+
+    divFieldTA.setAttribute('id','field_tipo_upd');
+    //creamos el primer checkbox
+    //<input type="radio" name="tipoUpd" value="INNER" >Actualizar solo cuentas cargadas<br>
+    var CheckBoxEspecific = document.createElement('INPUT');
+    CheckBoxEspecific.setAttribute('type', 'radio');
+    CheckBoxEspecific.setAttribute('name', 'tipoUpd');
+    CheckBoxEspecific.setAttribute('value', 'INNER');
+    divFieldTA.appendChild(CheckBoxEspecific);
+    var txtEspecific = document.createTextNode('Actualizar solo cuentas cargadas');
+    divFieldTA.appendChild(txtEspecific);
+    divFieldTA.appendChild(SaltoLinea);
+    //creamos el segundo checkbox
+    var CheckBoxTodasCuentas = document.createElement('INPUT');
+    CheckBoxTodasCuentas.setAttribute('type', 'radio');
+    CheckBoxTodasCuentas.setAttribute('name', 'tipoUpd');
+    CheckBoxTodasCuentas.setAttribute('value', 'LEFT');
+    divFieldTA.appendChild(CheckBoxTodasCuentas);
+    var txtTodasCuentas = document.createTextNode('Actualizar todas las cuentas');
+    divFieldTA.appendChild(txtTodasCuentas);
+    //inseramos el campo(field_tipo_upd) en la fila (row_form)
+    divRowTA.appendChild(divFieldTA);
+    //insertamos el row_form en el formulario
+    divForm.insertBefore(divRowTA,divForm.childNodes[22]);
+}
 //Carga y muestra el boton de carga definitiva
 function agregarBtnCargaDefinitiva(){
     //creamos div container
@@ -104,7 +146,7 @@ function agregarBtnCargaDefinitiva(){
     // lo inserta en el contenedor div
     divCargaFinal.innerHTML = html;
     //lo inserta en el formulario
-    divForm.insertBefore(divCargaFinal, divForm.childNodes[22]);
+    divForm.insertBefore(divCargaFinal, divForm.childNodes[23]);
     var btnProcesar = document.getElementById('procesar');
     btnProcesar.addEventListener('click', ProcesarArchivo);
 }//enfuncion
@@ -126,6 +168,7 @@ function result_ajax(data){
          mostrarNumeroRegistros(json.numero_registros, json.errores_validacion);
          //si no hay errores y cumple con las validaciones, mostramos el boton
          if (mostrarBtnProcesar) {
+            agregarCheckboxesTipoActualizacion();
             agregarBtnCargaDefinitiva();
          }
      }

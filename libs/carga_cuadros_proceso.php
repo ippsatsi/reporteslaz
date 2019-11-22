@@ -76,6 +76,11 @@ if (isset($_FILES['archivo_subido'])) {
     //si ya se valido el archivo, la variable procesar indica que se cargue ese archivo
     if ( isset($_GET['procesar']) && $_GET['procesar'] == true ) {
         $fi_respuesta_ajax['procesar'] = true;
+        if ( isset($_POST['tipoUpd']) && strlen($_POST['tipoUpd']) < 6 ) {
+            $tipo_upd = $_POST['tipoUpd'];
+        }else {
+            throw new Exception('El parametro tipoUpd esta ausente o es incorrecto',1);
+        }
 
         //borramos cualquier registro cargado anteriormente por este usuario
         $num_registros_borrados = qcc_borrado_cargas_previas($id_user);
@@ -115,7 +120,7 @@ if (isset($_FILES['archivo_subido'])) {
          }//endif RESTO
          //actualizamos los cuadros con la info cargada
          //en GCC_CAMPOS_DATOS
-         $filas_actualizadas = qcc_actualiza_cuadro($proveedor, $cuadro, $id_user);
+         $filas_actualizadas = qcc_actualiza_cuadro($proveedor, $cuadro, $id_user, $tipo_upd);
          $fi_respuesta_ajax['registros_actualizados'] = $filas_actualizadas;
     }else {
       $fi_respuesta_ajax['errores_validacion'] = array($validacion_cabecera,$validacion_columnas, $validacion_apostrofe);
