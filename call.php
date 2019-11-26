@@ -4,7 +4,8 @@ $error_message = "";
 if (!isset($_SESSION['usuario_valido']))
 {
   header("Location:index.php");
-}  
+  exit;
+}
 include_once(__DIR__."/vendor/mk-j/php_xlsxwriter/xlsxwriter.class.php");
 
 $num_formulario="0";// por si es la primera vez que cargamos el formulario
@@ -58,9 +59,9 @@ function ctrl_select_tipo_mg($form_number) {
               , array('ID'=>'2', 'NOMBRE'=>'MES ANTERIOR')
               , array('ID'=>'3', 'NOMBRE'=>'MES ACTUAL')
               , array('ID'=>'4', 'NOMBRE'=>'DEL DIA'));
-              
+
   ctrl_lista_desplegable("Reporte:", $array, "tipo_reporte", $form_number, ' onchange="CambioFecha('.$form_number.')"');
-} 
+}
 
 $array = array(array('ctrl_select_tipo_mg','form_fecha'), array('ctrl_select_cartera'));
 form_plantilla4($error_message, $num_formulario, "Reporte de Mejor Gestion Call", "call.php", "Reporte de Mejor Gestion", $array, 2);

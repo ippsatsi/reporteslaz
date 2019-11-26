@@ -10,7 +10,7 @@ function result_ajax_cuadros(data){
     let json = JSON.parse(data);
      if (json.error) {
          div_error.innerHTML = "Error en consulta";
-         console.log('err0r:' + json.error);
+         console.log('error:' + json.error);
      }
      if (json.resultado) {
        //limpiamos cualquier mensaje de error anterior
@@ -24,6 +24,13 @@ function result_ajax_cuadros(data){
 modal_size(630,255);
 
 //funcion que abre el modal
+function editar_campo(orden, cartera) {
+    //alert(orden + ' cartera:' + cartera);
+    iframe_ventana.setAttribute("src","modales/modal_update_cuadros.php?orden="+orden+'&subcartera='+cartera+'&tipo=editar')
+    show_modal();
+}
+
+//funcion que abre el modal
 function crear_campo(orden, cartera) {
     //alert(orden + ' cartera:' + cartera);
     iframe_ventana.setAttribute("src","modales/modal_update_cuadros.php?orden="+orden+'&subcartera='+cartera+'&tipo=crear')
@@ -32,8 +39,6 @@ function crear_campo(orden, cartera) {
 //funcion para obtener todos lo cuadros disponilbes en la cartera especificada
 function carga_cuadros(){
     var form_datos = new FormData(form_obj);
-    //eliminanos el archivo a subir de los datos del id_formulario
-    //solo queremos hacer consulta de cartera
     // for ([key, value] of form_datos) {
     //  console.log(key + ':' + value);
     // }

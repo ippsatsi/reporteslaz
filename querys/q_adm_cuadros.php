@@ -1,126 +1,102 @@
 <?php
 
-function qac_get_cuadros($proveedor){
+//
+function qac_update_campo($subcartera, $orden, $campo, $activado, $nombre) {
 
-    //primera query para obtener todas las carteras activas
-    // Ej de salida:
-    // , CASE
-    //  WHEN CHARINDEX('BAD_', SCA13.DESC_CAM_VC ) = 1 AND SCA13.TIPO_SI =1 THEN SCA13.DESC_CAM_VC --ACTIVO
-    //    WHEN CHARINDEX('BAD_',SCA13.DESC_CAM_VC ) = 0 AND SCA13.TIPO_SI =2 THEN SCA13.DESC_CAM_VC  --ACTIVO
-	  //  ELSE @INACTIVA +SCA13.DESC_CAM_VC END AS 'IDCOL CASTIGO' --INACTIVO
-	  //  , CASE
-    //  WHEN CHARINDEX('BAD_', SCA13.DESC_CAM_VC ) = 1 AND SCA13.TIPO_SI =1 THEN SCA13.COL_CAM_VC
-    //    WHEN CHARINDEX('BAD_',SCA13.DESC_CAM_VC ) = 0 AND SCA13.TIPO_SI =2 THEN SCA13.COL_CAM_VC
-	  //  ELSE @INACTIVA +SCA13.COL_CAM_VC END AS 'NOMB CASTIGO'
+    $query = "
+        UPDATE CORD
+            SET CORD.DESC_CAM_VC=?
+            , CORD.TIPO_SI = ?
+            , CORD.COL_CAM_VC=?
+            FROM
+            COBRANZA.GCC_CUENTA_ORDEN CORD
+            WHERE
+            CORD.ID_SUB_CART_SI=?
+            AND CORD.ORD_CAM_SI=?;";
+
+    $array = array($campo, $activado, $nombre, $subcartera, $orden);
+    $filas_afectadas = run_upd_del_query_param_sqlserv($query,$array);
+    return $filas_afectadas;
+  //var_dump($array);
+}//endfunction
+
+//funcion para obtener los datos de un campo al momento de querer editarlo
+function q_adm_obtener_datos_cuadro( $orden, $subcartera ){
+
     $query = "
     SELECT
-    ', CASE
-    WHEN CHARINDEX(''BAD_'', SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.DESC_CAM_VC ) = 1 AND SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.TIPO_SI =1 THEN @CLS_COLUMNA + SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.DESC_CAM_VC
-   WHEN CHARINDEX(''BAD_'',SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.DESC_CAM_VC ) = 0 AND SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.TIPO_SI =2 THEN @CLS_COLUMNA + SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.DESC_CAM_VC
-   WHEN SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.DESC_CAM_VC IS NULL THEN @BUTTON_CREAR+ CAST(CORD.ORD_CAM_SI AS varchar(2))+@COMA +'''+CAST(SCA.SCA_CODIGO AS VARCHAR)+''' +@FIN_BUTTON_CREAR
- ELSE @INACTIVA +SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.DESC_CAM_VC END AS ''IDCOL '+SCA.SCA_DESCRIPCION+'''
- , CASE
- WHEN CHARINDEX(''BAD_'', SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.DESC_CAM_VC ) = 1 AND SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.TIPO_SI =1 THEN SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.COL_CAM_VC
-   WHEN CHARINDEX(''BAD_'',SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.DESC_CAM_VC ) = 0 AND SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.TIPO_SI =2 THEN SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.COL_CAM_VC
- ELSE @INACTIVA +SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR) +'.COL_CAM_VC END AS ''NOMB '+SCA.SCA_DESCRIPCION+''''  AS COL_DISPLAY
-    , 'LEFT JOIN (SELECT
-    ORD_CAM_SI
-    , DESC_CAM_VC
-    , COL_CAM_VC
-    , TIPO_SI
-    , ID_SUB_CART_SI
-    FROM
-    COBRANZA.GCC_CUENTA_ORDEN CORD
-    WHERE
-    CORD.ID_SUB_CART_SI='+CAST(SCA.SCA_CODIGO AS VARCHAR)+') SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR)+' ON CORD.ORD_CAM_SI=SCA'+CAST(SCA.SCA_CODIGO AS VARCHAR)+'.ORD_CAM_SI' AS COL_JOIN
-    , LAG(SCA.SCA_DESCRIPCION,1, 99) OVER(ORDER BY SCA.SCA_CODIGO) AS FILA1  --obtenemos el nombre de la primera cartera
-    FROM
-    COBRANZA.GCC_PROVEEDOR PRV
-    INNER JOIN COBRANZA.GCC_CARTERAS CAR ON CAR.PRV_CODIGO=PRV.PRV_CODIGO AND CAR.CAR_ESTADO_REGISTRO='A'
-    INNER JOIN COBRANZA.GCC_SUBCARTERAS SCA ON SCA.CAR_CODIGO=CAR.CAR_CODIGO AND SCA.SCA_ESTADO_REGISTRO='A'
-    WHERE
-    PRV.PRV_ESTADO_REGISTRO='A'
-    AND PRV.PRV_CODIGO=$proveedor
-    ORDER BY SCA_CODIGO
-    OFFSET 1 ROWS
-    ";
+        CORD.ORD_CAM_SI AS ORDEN
+        , CORD.DESC_CAM_VC AS CAMPO
+        , CASE WHEN CHARINDEX('BAD_', CORD.DESC_CAM_VC ) = 1 AND CORD.TIPO_SI =1 THEN 'ACTIVO'
+            WHEN CHARINDEX('BAD_', CORD.DESC_CAM_VC ) = 0 AND CORD.TIPO_SI =2 THEN 'ACTIVO'
+	          ELSE 'INACTIVO' END AS ESTADO
+        , CORD.COL_CAM_VC AS NOMBRE
+        FROM
+        COBRANZA.GCC_CUENTA_ORDEN CORD
+        WHERE
+        CORD.ID_SUB_CART_SI=$subcartera
+        AND CORD.ORD_CAM_SI=$orden";
 
     $array_query_result = run_select_query_sqlser($query);
 
-    //si hay carteras activas
-    if ( isset($array_query_result['resultado']) ) {
-        //Ej de Select1:     , SCA11.DESC_CAM_VC AS 'IDCOL 4K 6COMPRA'
-        //                    , SCA11.COL_CAM_VC AS 'NOMB 4K 6COMPRA'
+    return $array_query_result;
+}//endfunction
+
+function qac_get_cuadros($proveedor) {
+    $query="
+    SELECT
+      '     , ISNULL(MIN(Case WHEN CORD.ID_SUB_CART_SI='+ CAST(SCA.SCA_CODIGO AS VARCHAR)+' THEN CORD.TIPO_SI END), '+CAST(SCA.SCA_CODIGO AS VARCHAR)+') AS [FLAG '+SCA.SCA_DESCRIPCION+']
+       , '+CAST(SCA.SCA_CODIGO AS VARCHAR)+' AS [FLAG CARTERA'+SCA.SCA_DESCRIPCION+']
+       , MIN(Case WHEN CORD.ID_SUB_CART_SI='+ CAST(SCA.SCA_CODIGO AS VARCHAR)+' THEN CORD.DESC_CAM_VC END) AS [ID_COL '+SCA.SCA_DESCRIPCION+']
+      , MIN(Case WHEN CORD.ID_SUB_CART_SI='+ CAST(SCA.SCA_CODIGO AS VARCHAR)+' THEN CORD.COL_CAM_VC END) AS [NOMB '+SCA.SCA_DESCRIPCION+']' AS COL_TIPO
+       , ', NULL,'+CAST(SCA.SCA_CODIGO AS VARCHAR)+',NULL,NULL'AS COLUMNA_UNION
+      FROM
+      COBRANZA.GCC_PROVEEDOR PRV
+      INNER JOIN COBRANZA.GCC_CARTERAS CAR ON CAR.PRV_CODIGO=PRV.PRV_CODIGO AND CAR.CAR_ESTADO_REGISTRO='A'
+      INNER JOIN COBRANZA.GCC_SUBCARTERAS SCA ON SCA.CAR_CODIGO=CAR.CAR_CODIGO AND SCA.SCA_ESTADO_REGISTRO='A'
+      WHERE
+      PRV.PRV_ESTADO_REGISTRO='A'
+      AND PRV.PRV_CODIGO=$proveedor
+      ORDER BY SCA_CODIGO";
+
+    $array_query_result = run_select_query_sqlser($query);
+    //TODO: SSi no hay resultado ¿q hacemos?
+    if ( isset($array_query_result['resultado']) ) :
         $select1 = '';
-        //Ej de select2: LEFT JOIN (SELECT
-        //                ORD_CAM_SI
-        //                , DESC_CAM_VC
-        //                , COL_CAM_VC
-        //                FROM
-        //                COBRANZA.GCC_CUENTA_ORDEN CORD
-        //                WHERE
-        //                CORD.ID_SUB_CART_SI=11) SCA11 ON CORD.ORD_CAM_SI=SCA11.ORD_CAM_SI
         $select2 = '';
-        //la primera cartera no tiene left join,
-        // todas las carteras hacen left join de la primera
-        // la query genera select para todas menos para la primera cartera
-        //Y necesitamos el nombre de la primera cartera para usarlo como nombre de COLUMNA
-        //en la query
 
         $array = $array_query_result['resultado'];
-        $primera_cartera = $array[0][2];
         foreach ($array as $value) { //VALUE = FILA
-            foreach ($value as $key => $value) {//KEY = COLUMNA
-                if ($key == 0) {// PRIMERA COLUMNA
-                    $select1 .= $value;
-                    $select1 .= "\n";
-                }elseif ( $key == 1 ) { //SEGUNDA COLUMNA
-                    $select2 .= $value;
-                    $select2 .= "\n";
-                }//if..else
-            }//foreach de cada columna
+            //cada fila es un array del cual tomamos el primer y unico valor
+            $select1 .= $value[0];
+            $select1 .= "\n";
+            $select2 .= $value[1];
+
         }//foreach de cada fila
-    }//if
-    //QUERY que reune los select necesarios para segun las
-    // carteras que tienen cada proveedor
+    endif;
+
     $query = "
-    DECLARE
-    @INACTIVA VARCHAR(30)
-    , @CLS_COLUMNA VARCHAR(30)
-    , @BUTTON_CREAR VARCHAR(80)
-    , @FIN_BUTTON_CREAR VARCHAR(10)
-    , @COMA VARCHAR(1)
+    WITH CAMPO_COLUMNAS AS
+(
+SELECT CORD.*
+FROM COBRANZA.GCC_CUENTA_ORDEN CORD
+INNER JOIN COBRANZA.GCC_SUBCARTERAS SCA ON SCA.SCA_CODIGO=CORD.ID_SUB_CART_SI AND SCA.SCA_ESTADO_REGISTRO='A'
+INNER JOIN COBRANZA.GCC_BASE BAS ON BAS.SCA_CODIGO=SCA.SCA_CODIGO
+INNER JOIN COBRANZA.GCC_PROVEEDOR PRV ON PRV.PRV_CODIGO=BAS.PRV_CODIGO
+WHERE
+PRV.PRV_ESTADO_REGISTRO='A'
+AND PRV.PRV_CODIGO=$proveedor
+)
+	SELECT
+	CORD.ORD_CAM_SI AS ORDEN
+$select1
+FROM CAMPO_COLUMNAS CORD
+GROUP BY CORD.ORD_CAM_SI
+UNION ALL
+SELECT (SELECT MAX(ORD_CAM_SI)+1 FROM CAMPO_COLUMNAS) $select2";
 
-    SET @INACTIVA='<p class=\"celda_inactiva\">'
-    SET @CLS_COLUMNA ='<p class=\"columna_campo\">'
-    SET @BUTTON_CREAR = '<input  type=\"button\" value=\"crear\" onclick=\"crear_campo('
-    SET @FIN_BUTTON_CREAR = ')\" >'
-    SET @COMA = ','
-
-        SELECT
-    CORD.ORD_CAM_SI AS ORDEN
-     , CASE WHEN CHARINDEX('BAD_', CORD.DESC_CAM_VC ) = 1 AND CORD.TIPO_SI =1 THEN @CLS_COLUMNA+CORD.DESC_CAM_VC
-        WHEN CHARINDEX('BAD_',CORD.DESC_CAM_VC ) = 0 AND CORD.TIPO_SI =2 THEN @CLS_COLUMNA+CORD.DESC_CAM_VC
-      ELSE @INACTIVA +CORD.DESC_CAM_VC END AS 'IDCOL_$primera_cartera'
-      , CASE WHEN CHARINDEX('BAD_', CORD.DESC_CAM_VC ) = 1 AND CORD.TIPO_SI =1 THEN CORD.COL_CAM_VC
-        WHEN CHARINDEX('BAD_',CORD.DESC_CAM_VC ) = 0 AND CORD.TIPO_SI =2 THEN CORD.COL_CAM_VC
-      ELSE @INACTIVA +CORD.COL_CAM_VC END AS 'NOMB_$primera_cartera'
-  --  , CORD.DESC_CAM_VC AS 'IDCOL_$primera_cartera'
-  --  , CORD.COL_CAM_VC AS 'NOMB_$primera_cartera'
-    $select1  FROM
-    COBRANZA.GCC_CUENTA_ORDEN CORD
-    $select2   WHERE
-    CORD.ID_SUB_CART_SI=(SELECT TOP 1
-    SCA.SCA_CODIGO
-    FROM
-    COBRANZA.GCC_PROVEEDOR PRV
-    INNER JOIN COBRANZA.GCC_CARTERAS CAR ON CAR.PRV_CODIGO=PRV.PRV_CODIGO AND CAR.CAR_ESTADO_REGISTRO='A'
-    INNER JOIN COBRANZA.GCC_SUBCARTERAS SCA ON SCA.CAR_CODIGO=CAR.CAR_CODIGO AND SCA.SCA_ESTADO_REGISTRO='A'
-    WHERE
-    PRV.PRV_ESTADO_REGISTRO='A'
-    AND PRV.PRV_CODIGO=$proveedor)
-    ORDER BY CORD.ORD_CAM_SI";
     $array_query_result = run_select_query_sqlser($query);
+
     return $array_query_result;
 }
 

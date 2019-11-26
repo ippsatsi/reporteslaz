@@ -4,6 +4,7 @@ $error_message = false;
 if (!isset($_SESSION['usuario_valido']))
 {
   header("Location:index.php");
+  exit;
 }
 
 //global $listar_tabla;
@@ -13,7 +14,7 @@ if (isset($_POST['buscar'])){// comprueba si se envio formulario
   try {
     require_once 'func_inicio.php';
     require_once 'querys_predictivo.php';
-    
+
     $usuario = $_SESSION['usuario_valido'];
   // $conn2 = conectar_ucadesa_mssql();//UCADESA
     $conn2 = conectar_mssql();//GCC
@@ -38,7 +39,7 @@ $result_web = shell_exec($camp_pred);
 //exit;
 $array_campana = array();
 $enlineas = explode(PHP_EOL, $result_web); // SEPARAR POR LINEAS
-foreach ($enlineas as $linea) { 
+foreach ($enlineas as $linea) {
   $line = explode("|", $linea);
  // echo " v1:".$line[1]." v2:".$line[2]."-- v3:".$line[3]; //depuracion
   $line[3]=date("d-m-Y",strtotime($line[3])); //convirtiendo el formato 18 Jun a 18-06-2019
@@ -50,9 +51,9 @@ foreach ($enlineas as $linea) {
     if ($consulta_tabla[9]!=='-') {//comprobamos que no exista campaña subida para activar el boton de carga
         $boton = 'CARGADO';
     }
-    $array_campana[] = array('id'=>$line[1], 
-                      'nombre'=>$line[2], 
-                      'fecha'=>$line[3], 
+    $array_campana[] = array('id'=>$line[1],
+                      'nombre'=>$line[2],
+                      'fecha'=>$line[3],
 //                      'estado'=>'<input type="button" value="por procesar" onclick="procesar_campana('.$line[1].',\''.$line[2].'\' ,\''.$usuario.'\', \''.$line[3].'\')" >',
                       'estado'=>$boton,
                       'con gestion'=>$consulta_tabla[3],

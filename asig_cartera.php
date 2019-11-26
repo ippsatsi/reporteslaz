@@ -4,6 +4,7 @@ $error_message = "";
 if (!isset($_SESSION['usuario_valido']))
 {
   header("Location:index.php");
+  exit;
 }
 // archivo principal de muestra y edicion de asignacion y se consulta asi mismo por ajax
 date_default_timezone_set('America/Lima');

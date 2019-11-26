@@ -4,7 +4,8 @@ $error_message = "";
 if (!isset($_SESSION['usuario_valido']))
 {
   header("Location:index.php");
-}  
+  exit;
+}
 include_once(__DIR__."/vendor/mk-j/php_xlsxwriter/xlsxwriter.class.php");
 
 $num_formulario="0";// por si es la primera vez que cargamos el formulario
@@ -53,7 +54,7 @@ header_html();
 function ctrl_submit($form_number) {
 ?>
               <div class="field_row_form">
-                <input class="downl" type="button" href="busquedas.php?cartera=" target="_blank" onclick="busquedas('busquedas.php?cartera=', '_blank', 'width=700,height=400, top=300,left=300',<?php echo $form_number; ?>); return false;" value="reporte"/> 
+                <input class="downl" type="button" href="busquedas.php?cartera=" target="_blank" onclick="busquedas('busquedas.php?cartera=', '_blank', 'width=700,height=400, top=300,left=300',<?php echo $form_number; ?>); return false;" value="reporte"/>
               </div>
 <?php
 }

@@ -4,7 +4,8 @@ $error_message = "";
 if (!isset($_SESSION['usuario_valido']))
 {
   header("Location:index.php");
-}  
+  exit;
+}
 
 include_once(__DIR__."/vendor/mk-j/php_xlsxwriter/xlsxwriter.class.php");
 
@@ -61,7 +62,7 @@ form_plantilla4($error_message, $num_formulario, "Reporte de detallado llamadas 
 function ctrl_submit($form_number) {
 ?>
               <div class="field_row_form">
-                <input class="downl" type="button" onclick="mostrar_tabla_llamada()" value="mostrar"/> 
+                <input class="downl" type="button" onclick="mostrar_tabla_llamada()" value="mostrar"/>
               </div>
 <?php
 }

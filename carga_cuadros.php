@@ -4,6 +4,7 @@ $error_message = false;
 if (!isset($_SESSION['usuario_valido']))
 {
   header("Location:index.php");
+  exit;
 }
 $mensaje = false;
 

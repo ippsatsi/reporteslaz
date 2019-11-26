@@ -82,9 +82,11 @@ function login($user,$pass) {
   if(sqlsrv_num_rows($result_query)>0) {
     $fila = sqlsrv_fetch_array($result_query);
     sqlsrv_free_stmt($result_query);
+    sqlsrv_close($conn);
     return $fila;// retornar el rol del usuario
   } else {
     sqlsrv_free_stmt($result_query);
+    sqlsrv_close($conn);
     throw new Exception('Usuario o Contraseña incorrectos',3);
   }
 }
@@ -142,6 +144,7 @@ function run_select_query_sqlser($query) {
   }
  // print_r($array_query_result);
   sqlsrv_free_stmt($result_query);
+  sqlsrv_close($conn);
   return $array_query_result;
 }
 
@@ -174,6 +177,7 @@ function run_select_query_sqlser_ucadesa($query) {
   }
  // print_r($array_query_result);
   sqlsrv_free_stmt($result_query);
+  sqlsrv_close($conn);
   return $array_query_result;
 } //endfunction
 
@@ -182,12 +186,16 @@ function run_insert_query_sqlserv_ucadesa($query) {
     $conn = conectar_ucadesa_mssql();
     $result_query = sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
     si_es_excepcion($result_query, $query);
+    sqlsrv_free_stmt($result_query);
+    sqlsrv_close($conn);
 }//endfunction
 
 function run_insert_query_sqlserv($query) {
     $conn = conectar_mssql();
     $result_query = sqlsrv_query( $conn, $query, PARAMS_MSSQL_QUERY, OPTIONS_MSSQL_QUERY );
     si_es_excepcion($result_query, $query);
+    sqlsrv_free_stmt($result_query);
+    sqlsrv_close($conn);
 }//endfunction
 
 
@@ -212,6 +220,7 @@ function run_select_query_sqlser_one_column_ucadesa($query) {
   }
  // print_r($array_query_result);
   sqlsrv_free_stmt($result_query);
+  sqlsrv_close($conn);
   return $array_query_result;
 }
 
@@ -245,6 +254,7 @@ function run_select_query_param_sqlser($query, $array) {
   }
  // print_r($array_query_result);
   sqlsrv_free_stmt($result_query);
+  sqlsrv_close($conn);
   return $array_query_result;
 }
 
@@ -256,6 +266,8 @@ function run_upd_del_query_param_sqlserv($query,$array) {
   $result_query = sqlsrv_query( $conn, $query, $array, array());
   si_es_excepcion($result_query, $query);
   $rows_affected = sqlsrv_rows_affected($result_query);
+  sqlsrv_free_stmt($result_query);
+  sqlsrv_close($conn);
   return $rows_affected;
 }
 
@@ -267,6 +279,8 @@ function fi_run_upd_del_query_sqlserv_ucadesa($query) {
   $result_query = sqlsrv_query( $conn, $query,PARAMS_MSSQL_QUERY);
   si_es_excepcion($result_query, $query);
   $rows_affected = sqlsrv_rows_affected($result_query);
+  sqlsrv_free_stmt($result_query);
+  sqlsrv_close($conn);
   return $rows_affected;
 }
 
@@ -278,6 +292,8 @@ function fi_run_upd_del_query_sqlserv($query) {
   $result_query = sqlsrv_query( $conn, $query,PARAMS_MSSQL_QUERY);
   si_es_excepcion($result_query, $query);
   $rows_affected = sqlsrv_rows_affected($result_query);
+  sqlsrv_free_stmt($result_query);
+  sqlsrv_close($conn);
   return $rows_affected;
 }
 

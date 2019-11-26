@@ -132,72 +132,7 @@ global $JS_CUSTOM_TXT;
 </html>
 <?php
 }
-/*
-function footer_html2() {
-?>
-    <div id="output_js_errores">ff</div>
-  </div>
-  <!-- The Modal -->
-<div id="myModal" class="modal">
 
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close_modal">X</span>
-     <!-- <iframe id="modal_iframe" src="insertar_pago.php" height="500" width="900" frameBorder="0">xxx</iframe> -->
-    <!-- <iframe id="modal_iframe"  height="500" width="900" frameBorder="0">xxx</iframe> -->
-  </div>
-
-</div>
-
-<?php
-
-$carga_modal = <<<Final
-<script type="text/javascript">
-    function prepareFrame() {
-    //    var ifrm = document.createElement("iframe");
-    //    ifrm.setAttribute("src", "modal_asigna_cartera.php?id_agente=12");
-    //    ifrm.style.width = "640px";
-    //    ifrm.style.height = "480px";
-    //    document.body.appendChild(ifrm);
-   //     var site = "insertar_pago.php";
-   // document.getElementById('modal_iframe').src = site;
-      modal.style.display = "block";
-      setTimeout(function() {modal.style.opacity = "1";}, 150);
-    }
-
-
-// Obtenemos el elemento modal
-var modal = document.getElementById("myModal");
-modal.style.opacity = 0;
-modal.style.transition = "opacity 0.6s";
-
-// Obtiene el elemento <span> que cierra el modal
-var span = document.getElementsByClassName("close_modal")[0];
-
-
-// Cuando el usuario hace click en <span> (x), cierra el modal
-span.onclick = function() {
-  modal.style.opacity = "0";
-  setTimeout(function() {modal.style.display = "none";}, 800);
-}
-
-// Cuando el usuario hace click fuera del modal, lo cierra
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-    modal.style.opacity = 0;
-  }
-}
-
-</script>
-Final;
-echo $carga_modal;
-?>
-</body>
-</html>
-<?php
-}
-*/
 function oh_crear_tabla_ajax($array_input, $array_headers, $css_class) {
 $expandir = 'implode';
 $output = <<<Final

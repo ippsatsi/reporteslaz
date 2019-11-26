@@ -4,7 +4,9 @@ $error_message = "";
 if (!isset($_SESSION['usuario_valido']))
 {
   header("Location:index.php");
+  exit;
 }
+
 $num_formulario="0";// por si es la primera vez que cargamos el formulario
 $mensaje = false;
 

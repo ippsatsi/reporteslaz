@@ -4,6 +4,7 @@ session_start();
 if (!isset($_SESSION['usuario_valido']))
 {
   header("Location:index.php");
+  exit;
 }
 
 require_once 'func_procesos.php';

@@ -4,6 +4,7 @@ $error_message = "";
 if (!isset($_SESSION['usuario_valido']))
 {
   header("Location:index.php");
+  exit;
 }
 $dni=false;  //carga primera vez sin parametros
 $array_cuentas=false;

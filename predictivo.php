@@ -4,6 +4,7 @@ $error_message = "";
 if (!isset($_SESSION['usuario_valido']))
 {
   header("Location:index.php");
+  exit;
 }
 
 $mensaje = false;
@@ -13,7 +14,7 @@ if (isset($_POST['subir'])){// comprueba si se envio formulario
     $usuario = $_SESSION['usuario_valido'];
     require_once 'func_inicio.php';
     require_once 'querys_predictivo.php';
-  
+
     date_default_timezone_set('America/Lima');
 
 //    $carpeta_destino = "uploads/";
@@ -57,7 +58,7 @@ if (isset($_POST['subir'])){// comprueba si se envio formulario
       }
     }//while
     fclose($file);
-    
+
     $migracion_result = migrar_gestiones_predictivas($conn2, $fecha_hora_carga, $usuario);//Aqui migramos lo importado
     if ($migracion_result==false) { //cuando lo importado es cero
       $mensaje = "La campaña ".$filename_campana." no tiene registros a importar";
