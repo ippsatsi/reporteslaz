@@ -19,6 +19,10 @@
     margin: 0;
     padding: 0;
   }
+.lnk_sin_decorar {
+  	text-decoration: none;
+  	color: white;
+}
   .clearfix::before,
   .clearfix::after {
   content: "";

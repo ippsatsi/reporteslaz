@@ -11,7 +11,7 @@ require_once 'branch.php';
 //llenar_tabla_progresivo()
 //oh_inputs_ocultos()
 //oh_ctrl_vacio()
-
+//oh_dashboard()
 function css_estilos() {
 ?>
 <!DOCTYPE html>
@@ -25,6 +25,7 @@ function css_estilos() {
 <link rel="stylesheet" href="css/pikaday.css">
 <link rel="stylesheet" href="css/modal_js.css">
 <link rel="stylesheet" href="css/estilos_generales.css">
+<link rel="stylesheet" type="text/css" href="css/chartjs/Chart.min.css">
 <script src="js/globales_navegador.js"></script>
 </head>
 <?php
@@ -43,7 +44,7 @@ $usuario_soporte = ($_SESSION['usuario_codigo']==3052 ? true : false);
 <body>
         <!--#949DA8 #4F84C4 #578CA9 #AF9483 #91A8D0 #55B4B0 #7FCDCD #45B8AC-->
   <nav>
-    <p><?php echo TITULO_HTML; ?></p>
+    <p><a href=inicio.php class="lnk_sin_decorar" ><?php echo TITULO_HTML; ?></a></p>
     <ul id="menu">
       <li id="gestionm"><a href=#gestion>Reportes</a>
         <ul id="drop">
@@ -268,5 +269,161 @@ function oh_inputs_ocultos() {
 
 function oh_ctrl_vacio() {
   echo "\n";
+}//endfunction
+
+function oh_dashboard() {
+  ?>
+  <script src="js/moment.min.js"></script>
+<script src="js/chartjs/Chart.min.js"></script>
+<script src="js/chartjs/utils.js"></script>
+<style>
+canvas {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
+</style>
+<div style="width: 35%">
+		<canvas id="canvas"></canvas>
+	</div>
+	<button id="randomizeData">Randomize Data</button>
+  <div class="output">
+      <?php
+        $colores = array("red","orange","yellow","green","blue", "purple",  "grey");
+        $colores = array('rgba(255, 99, 132)',    //red
+                          'rgba(54, 162, 235)',   //blue
+                          'rgba(255, 206, 86)',   //yellow
+                          'rgba(75, 192, 192)',   //green
+                          'rgba(153, 102, 255)',  //purple
+                          'rgba(255, 159, 64)',  //orange
+                          'rgba(201, 203, 207)');//grey
+        //funcion para eliminar los null y
+        //convertir los segundos en minutos
+        function format_celda($valor) {
+            if ( $valor == null ) {
+                return $alor = 0;
+            }else {
+                return $valor = round($valor/60);
+            }//endif_else
+
+        }//endfuntion
+        $query = "
+          EXEC COBRANZA.SP_INDICADOR_MINUTOS_PROVEEDOR '01/11/2019', '30/11/2019'";
+
+        $result_query = run_select_query_sqlser($query);
+        si_es_excepcion($result_query, $query);
+
+        $labels = $result_query['header'];
+        //eliminamos la primera columna de los headers. por que es PROVEEDOR
+        $cabecera_eliminada = array_shift($labels);
+        $datasets = array();
+        $resultado = $result_query['resultado'];
+        //fila por fila
+        foreach ($resultado as $key => $fila) :
+            //el primer elemento de la fila es el proveedor
+            //tomamos ese valor y lo eliminamos del array
+            //para solo quedarnos con los minutos
+            $label = array_shift($fila);
+            //aplicamos la funcion para eliminar los null y
+            //convertir los segundos en minutos
+            $dataset = array_map("format_celda", $fila);
+            //formamos el dataset qu requiere chartjs
+            $datasets[] = array('label' => $label, 'backgroundColor' => current($colores), "data"=>$dataset);
+            //cambiamos de color para el siguiente dataset, si es que hay
+            next($colores);
+        endforeach;
+        //agregamos todos los datasets generados por cada fila del resultado sql
+        $chart_data = array('labels' => $labels, 'datasets'=> $datasets);
+
+       ?>
+  </div>
+	<script>
+  //barChartData.labels= resultado['headers']
+  //barChartData.datasets[0].label = resultado['resultado'][0][0]='Fravatel'
+  //barChartData.datasets[0].backgroundColor: next(array de colores)
+  //barChartData.datasets[0].data = array(row)
+  var barChartData = JSON.parse('<?php echo json_encode($chart_data);?>');
+  
+		var barChartData2 = {
+			labels: ['Vie 1', 'Lun 04', 'Mar 05', 'Mie 06', 'Jue 07', 'Vie 08', 'Sab 09'],
+			datasets: [{
+				label: 'Fravatel',
+				backgroundColor: window.chartColors.red,
+				data: [
+					0,
+					430,
+					386,
+					459,
+					422,
+					0,
+					0
+				]
+			}, {
+				label: 'IPBusiness',
+				backgroundColor: window.chartColors.blue,
+				data: [
+					0,
+					0,
+					0,
+					0,
+					389,
+					738,
+					260
+				]
+			}, {
+				label: 'ThinkIP',
+				backgroundColor: window.chartColors.green,
+				data: [
+					0,
+					0,
+					0,
+					0,
+					1,
+					0,
+					0
+				]
+			}]
+
+		};
+		window.onload = function() {
+			var ctx = document.getElementById('canvas').getContext('2d');
+			window.myBar = new Chart(ctx, {
+				type: 'bar',
+				data: barChartData,
+				options: {
+					title: {
+						display: true,
+						text: 'Consumo minutos por proveedor/dia'
+					},
+					tooltips: {
+						mode: 'index',
+						intersect: false
+					},
+					responsive: true,
+					scales: {
+						xAxes: [{
+							stacked: true,
+						}],
+						yAxes: [{
+							stacked: true
+						}]
+					}
+				}
+			});
+		};
+
+		document.getElementById('randomizeData').addEventListener('click', function() {
+			barChartData.datasets.forEach(function(dataset) {
+				dataset.data = dataset.data.map(function() {
+					return randomScalingFactor();
+				});
+			});
+			window.myBar.update();
+		});
+	</script>
+<?php
+
+}//endfunction
+
+
 ?>
