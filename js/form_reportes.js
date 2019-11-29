@@ -76,6 +76,39 @@ function fr_newAjax(url, data, callback){
   xhr.send(data);
 }
 
+// Con GET
+// Ajax con FormData
+//url: pagina a donde va el request
+//callback: funcion que recibira y manejara el resultado del request
+function fr_newAjax_GET(url, callback){
+  var xhr = new XMLHttpRequest();
+  //solo si existe spinner, lo activamos
+  if (spinner) {
+        spinner.style.display = 'flex';
+  }
+
+  xhr.open("GET", url, true);
+  xhr.onreadystatechange = function () {
+      if ( xhr.readyState == 4 ) {
+          if ( xhr.status == 200 ) {
+              callback(xhr.responseText);
+                //solo si existe spinner, lo desactivamos
+              if (spinner) {
+                  spinner.style.display = 'none';
+              }//if spinner
+          }else {
+              if (spinner) {
+                  spinner.style.display = 'none';
+              }//if spinner
+          }//if =200
+      }//if ==4
+  };
+  xhr.setRequestHeader('X-Requested-with','XMLHttpRequest');
+  //xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  //xhr.send("fname=Henry&lname=Ford");
+  xhr.send();
+}
+
 //funcion modelo para usar fr_newAjax
 //function run_asigna(){
 //  event.preventDefault();
