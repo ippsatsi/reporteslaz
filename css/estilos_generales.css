@@ -429,3 +429,41 @@ td a.celda_link {
     vertical-align: text-top;
     margin-right: 10px;
 }
+.dasboard_row {
+  width: 1200px;
+}
+.dashboard_box {
+  border: 1px solid #7996B3 /*#2C3E50*/;
+  margin: 20px;
+}
+
+.box_title_dashb {
+	border: 1px solid #4E7499/*#2C3E50*/;
+	background-color: #4E7499/*#2C3E50*/;
+	color: white;
+}
+.ancho_20p {
+  width: 20%;
+}
+.ancho_30p {
+  width: 30%;
+}
+.ancho_40p {
+  width: 40%;
+}
+.ancho_50p {
+  width: 50%;
+}
+.ancho_60p {
+  width: 60%;
+}
+.ancho_70p {
+  width: 70%;
+}
+.box_title_dashb > h4 {
+  margin: 0 10px;
+  font-weight: lighter;
+}
+.chart_inside {
+  padding: 0 15px;
+}

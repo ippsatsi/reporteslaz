@@ -12,6 +12,7 @@ require_once 'branch.php';
 //oh_inputs_ocultos()
 //oh_ctrl_vacio()
 //oh_dashboard()
+
 function css_estilos() {
 ?>
 <!DOCTYPE html>
@@ -283,11 +284,18 @@ canvas {
   -ms-user-select: none;
 }
 </style>
-<div style="width: 35%">
-		<canvas id="canvas"></canvas>
-	</div>
-	<button id="randomizeData">Randomize Data</button>
-  <div class="output">
+<div class="dasboard_row">
+  <div class="dashboard_box ancho_60p">
+    <div class="box_title_dashb">
+      <h4>Consumo llamadas</h4>
+    </div>
+      <div class="chart_inside">
+    		  <canvas id="canvas"></canvas>
+    	</div>
+  </div>
+</div>
+
+
       <?php
         $colores = array("red","orange","yellow","green","blue", "purple",  "grey");
         $colores = array('rgba(255, 99, 132)',    //red
@@ -308,7 +316,7 @@ canvas {
 
         }//endfuntion
         $query = "
-          EXEC COBRANZA.SP_INDICADOR_MINUTOS_PROVEEDOR '01/11/2019', '30/11/2019'";
+          EXEC COBRANZA.SP_INDICADOR_MINUTOS_PROVEEDOR_MENSUAL";
 
         $result_query = run_select_query_sqlser($query);
         si_es_excepcion($result_query, $query);
@@ -324,7 +332,7 @@ canvas {
             //tomamos ese valor y lo eliminamos del array
             //para solo quedarnos con los minutos
             $label = array_shift($fila);
-            //aplicamos la funcion para eliminar los null y
+            //aplicamos la funcion format_celda para eliminar los null y
             //convertir los segundos en minutos
             $dataset = array_map("format_celda", $fila);
             //formamos el dataset qu requiere chartjs
@@ -336,15 +344,15 @@ canvas {
         $chart_data = array('labels' => $labels, 'datasets'=> $datasets);
 
        ?>
-  </div>
+
 	<script>
   //barChartData.labels= resultado['headers']
   //barChartData.datasets[0].label = resultado['resultado'][0][0]='Fravatel'
   //barChartData.datasets[0].backgroundColor: next(array de colores)
   //barChartData.datasets[0].data = array(row)
   var barChartData = JSON.parse('<?php echo json_encode($chart_data);?>');
-  
-		var barChartData2 = {
+
+	/*	var barChartData2 = {
 			labels: ['Vie 1', 'Lun 04', 'Mar 05', 'Mie 06', 'Jue 07', 'Vie 08', 'Sab 09'],
 			datasets: [{
 				label: 'Fravatel',
@@ -384,7 +392,7 @@ canvas {
 				]
 			}]
 
-		};
+		};*/
 		window.onload = function() {
 			var ctx = document.getElementById('canvas').getContext('2d');
 			window.myBar = new Chart(ctx, {
@@ -396,30 +404,51 @@ canvas {
 						text: 'Consumo minutos por proveedor/dia'
 					},
 					tooltips: {
-						mode: 'index',
-						intersect: false
-					},
+  						mode: 'index',
+  						intersect: false,
+              callbacks: {
+                  afterTitle: function() {
+                    window.total = 0;//inicializamos variable que mostrara el total
+                  },//afterTitle
+                  title: function (tooltipItem, data) {
+                    return "Día " + data.labels[tooltipItem[0].index];
+                  },//title
+                  afterLabel: function(tooltipItems, data) {
+                    /*return "Total: " + tooltipItems.value + ' €';*/
+                    /*convertimos a entero y procedemos a sumar todos los items*/
+                    window.total += parseInt(tooltipItems.value);
+                  },//afterLabel
+                  footer: function (tooltipItem, data) {
+                    /*console.log(tooltipItem);*/
+                    return "Total: "+ window.total; }
+              }//callbacks
+					},//tooltips
 					responsive: true,
 					scales: {
 						xAxes: [{
 							stacked: true,
 						}],
 						yAxes: [{
-							stacked: true
+							stacked: true,
+              ticks: {
+                callback: function(value, index, values) {
+                  return value + ' min';
+                }
+              }
 						}]
 					}
 				}
 			});
 		};
 
-		document.getElementById('randomizeData').addEventListener('click', function() {
+/*		document.getElementById('randomizeData').addEventListener('click', function() {
 			barChartData.datasets.forEach(function(dataset) {
 				dataset.data = dataset.data.map(function() {
 					return randomScalingFactor();
 				});
 			});
 			window.myBar.update();
-		});
+		});*/
 	</script>
 <?php
 
