@@ -18,7 +18,7 @@ header_html();
 oh_carga_scripts_chartjs();
 
 $usuario_soporte = ($_SESSION['usuario_codigo']==3052 ? true : false);
-if ( $usuario_soporte ) :
+if ( !$rol_agente ) :
     libs_d_dashboard_row1();
     libs_d_dashboard_row2();
 endif;
