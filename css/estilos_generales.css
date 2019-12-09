@@ -430,7 +430,8 @@ td a.celda_link {
     margin-right: 10px;
 }
 .dasboard_row {
-  width: 1200px;
+  width: 1400px;
+  display: flex;
 }
 .dashboard_box {
   border: 1px solid #7996B3 /*#2C3E50*/;
@@ -450,6 +451,8 @@ td a.celda_link {
 }
 .ancho_40p {
   width: 40%;
+  //  height: 200px;
+
 }
 .ancho_50p {
   width: 50%;
@@ -459,6 +462,15 @@ td a.celda_link {
 }
 .ancho_70p {
   width: 70%;
+}
+.ancho_80p {
+  width: 80%;
+}
+.ancho_90p {
+  width: 90%;
+}
+.ancho_100p {
+  width: 100%;
 }
 .box_title_dashb > h4 {
   margin: 0 10px;

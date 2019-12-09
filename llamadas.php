@@ -59,7 +59,7 @@ form_plantilla4($error_message, $num_formulario, "Reporte de detallado llamadas 
 //################################################################################
 function ctrl_select_CUSTOM($form_number) {
 //select con dos opciones: CARTERA, PROVEEDOR
-  $array = array(array("ID"=>0,"NOMBRE"=>"CARTERA"),array("ID"=>1,"NOMBRE"=>"PROVEEDOR"));
+  $array = array(array("ID"=>0,"NOMBRE"=>"CARTERA"),array("ID"=>1,"NOMBRE"=>"PROVEEDOR"),array("ID"=>2,"NOMBRE"=>"AMBAS"));
   ctrl_lista_desplegable("Segun:", $array, "segun", $form_number );
 
 }
@@ -83,7 +83,7 @@ Final;
 }
 
 $array = array(array('form_rango_fecha'),array('ctrl_select_CUSTOM'),array('div_llamadas_tabla'),array('ctrl_submit'));
-form_plantilla4($error_message, $num_formulario, "Resumen de consumo por cartera", "llamadas.php", "Resume consumo por cartera", $array, 2, "altura_maxima");
+form_plantilla4($error_message, $num_formulario, "Resumen de consumo por cartera", "llamadas.php", "Resume consumo por cartera", $array, 2);
 
 // FORMULARIO 3
 

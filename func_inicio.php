@@ -55,8 +55,20 @@ define('EXCEL_SHEET_NAME', 'Hoja1');
 
 // Texto para incluir js personalizados en una seccion script al final del html y despues de cargar todos los scripts
 $JS_CUSTOM_TXT = '';
+// Texto para incluir js personalizados en una seccion script al final del html y antes de cargar todos los scripts
+$JS_CUSTOM_TXT_PREV = '';
 // variable para respuestas ajax genericas
 $fi_respuesta_ajax = array('resultado'=> false, 'error'=> false);
+
+//Constante de colores para CHARTJS
+define('FI_COLORES_CHARTJS', array('rgba(255, 99, 132)',    //red
+                  'rgba(54, 162, 235)',   //blue
+                  'rgba(255, 206, 86)',   //yellow
+                  'rgba(75, 192, 192)',   //green
+                  'rgba(153, 102, 255)',  //purple
+                  'rgba(255, 159, 64)',  //orange
+                  'rgba(201, 203, 207)'));//grey
+
 
 function login($user,$pass) {
 //  conectarse al Sql Server
@@ -91,6 +103,10 @@ function login($user,$pass) {
   }
 }
 
+//recoge las excepciones del sql server
+//si_es_excepcion($result_query, $query)
+//$result_query mandamos el resultado de la query
+//$query mandamos la query, para que la muestre en el mensaje de la excepcion
 function si_es_excepcion($result_query, $query) {
 //excepciones para sql server
   $error = 'error::';

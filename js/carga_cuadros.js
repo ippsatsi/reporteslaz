@@ -102,6 +102,7 @@ function agregarCheckboxesTipoActualizacion() {
     // creamos el div row_form
     var divRowTA = document.createElement('DIV');
     divRowTA.classList.add('row_form');
+    divRowTA.setAttribute('id','div_tipo_upd');
     //creamos el fieldset con su legend que iran dentro del row_form
     var divFieldTA = document.createElement('FIELDSET');
     var elemLegend = document.createElement('LEGEND');
@@ -183,11 +184,16 @@ function carga_archivo(){
     //limpiamos el div, por si es nuestro 2do intento de carga
     //primero la tabla
     div_tabla.innerHTML = '';
-    //2do eliminamos el div de datos de validacion
+    //2do eliminamos el div de datos de validacion, el q muestra  la cantidad de
+    // registros leidos del excel
     if (existDiv = document.getElementById('datos_preview')) {
         existDiv.parentNode.removeChild(existDiv);
     }
-    //3ro eliminamos el div con el boton procesar
+    //3ero eliminamos el div de tipo de actualizacion
+    if (existDiv = document.getElementById('div_tipo_upd')) {
+        existDiv.parentNode.removeChild(existDiv);
+    }
+    //4to eliminamos el div con el boton procesar
     if (existBtProcesar = document.querySelectorAll('.boton_template')[0]) {
         existBtProcesar.parentNode.removeChild(existBtProcesar);
     }

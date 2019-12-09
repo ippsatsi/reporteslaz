@@ -11,7 +11,7 @@ require_once 'branch.php';
 //llenar_tabla_progresivo()
 //oh_inputs_ocultos()
 //oh_ctrl_vacio()
-//oh_dashboard()
+//oh_carga_scripts_chartjs()
 
 function css_estilos() {
 ?>
@@ -90,28 +90,35 @@ $usuario_soporte = ($_SESSION['usuario_codigo']==3052 ? true : false);
     <img src="images/ajax-loader.gif" alt="Loading..." />
   </div>
 <?php
-}
-/*
-function footer_htmlxx() {
-?>
-    <div id="output_js_errores">ff</div>
-  </div>
-</body>
-</html>
-<?php
-}
-*/
+}//endfunction
 
+//footer_html($html_final='', $js1=0, $js2=0, $js3=0, $js4=0)
+//$html_final: codigo html adicional (modales por ej)
+//$js1: scripts adicionales
+//$js2: scripts adicionales
+//$js3: scripts adicionales
+//$js4: scripts adicionales
 function footer_html($html_final='', $js1=0, $js2=0, $js3=0, $js4=0) {
 // $html_final : variable con codigo html para divs adicionales
 // $js1,$js2, $js3 ... archivos javascript adicionales
+    global $JS_CUSTOM_TXT_PREV;
+    global $JS_CUSTOM_TXT;
 ?>
+    <!--inicio footer_html-->
     <div id="output_js_errores">ff</div>
-  </div>
+    </div>
 
+    <!--html cargado en footer_html()-->
+      <?php  echo $html_final; ?>
+    <!--html final-->
+      <script>
+      <!-- incluimos codigo script personalizados previo a la carga de archivo js-->
+        <?php  echo $JS_CUSTOM_TXT_PREV;?>
+
+      <!-- incluimos codigo script personalizados previo final-->
+      </script>
+      <!--archivos js cargados en footer_html()-->
 <?php
-echo $html_final;
-
 for ($i = 1; $i < 5; $i++) {
     //construimos $js1, $js2
     $jscript = "js".$i;
@@ -122,18 +129,16 @@ for ($i = 1; $i < 5; $i++) {
 }
 ?>
 
-<script>
-<?php
-global $JS_CUSTOM_TXT;
-//incluimos codigo script personalizados
-    echo $JS_CUSTOM_TXT;
-?>
-</script>
+    <!--archivos js cargados final-->
+    <script>
+    <!-- incluimos codigo script personalizados-->
+    <?php  echo $JS_CUSTOM_TXT; ?>
 
-</body>
+    </script>
+  </body>
 </html>
 <?php
-}
+}//endfunction
 
 function oh_crear_tabla_ajax($array_input, $array_headers, $css_class) {
 $expandir = 'implode';
@@ -272,187 +277,22 @@ function oh_ctrl_vacio() {
   echo "\n";
 }//endfunction
 
-function oh_dashboard() {
+//funcion que carga scripts de chartjs e inicializa los canvas
+function oh_carga_scripts_chartjs() {
   ?>
+  <!--codigo para los chartjs-->
   <script src="js/moment.min.js"></script>
-<script src="js/chartjs/Chart.min.js"></script>
-<script src="js/chartjs/utils.js"></script>
-<style>
-canvas {
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-}
-</style>
-<div class="dasboard_row">
-  <div class="dashboard_box ancho_60p">
-    <div class="box_title_dashb">
-      <h4>Consumo llamadas</h4>
-    </div>
-      <div class="chart_inside">
-    		  <canvas id="canvas"></canvas>
-    	</div>
-  </div>
-</div>
-
-
-      <?php
-        $colores = array("red","orange","yellow","green","blue", "purple",  "grey");
-        $colores = array('rgba(255, 99, 132)',    //red
-                          'rgba(54, 162, 235)',   //blue
-                          'rgba(255, 206, 86)',   //yellow
-                          'rgba(75, 192, 192)',   //green
-                          'rgba(153, 102, 255)',  //purple
-                          'rgba(255, 159, 64)',  //orange
-                          'rgba(201, 203, 207)');//grey
-        //funcion para eliminar los null y
-        //convertir los segundos en minutos
-        function format_celda($valor) {
-            if ( $valor == null ) {
-                return $alor = 0;
-            }else {
-                return $valor = round($valor/60);
-            }//endif_else
-
-        }//endfuntion
-        $query = "
-          EXEC COBRANZA.SP_INDICADOR_MINUTOS_PROVEEDOR_MENSUAL";
-
-        $result_query = run_select_query_sqlser($query);
-        si_es_excepcion($result_query, $query);
-
-        $labels = $result_query['header'];
-        //eliminamos la primera columna de los headers. por que es PROVEEDOR
-        $cabecera_eliminada = array_shift($labels);
-        $datasets = array();
-        $resultado = $result_query['resultado'];
-        //fila por fila
-        foreach ($resultado as $key => $fila) :
-            //el primer elemento de la fila es el proveedor
-            //tomamos ese valor y lo eliminamos del array
-            //para solo quedarnos con los minutos
-            $label = array_shift($fila);
-            //aplicamos la funcion format_celda para eliminar los null y
-            //convertir los segundos en minutos
-            $dataset = array_map("format_celda", $fila);
-            //formamos el dataset qu requiere chartjs
-            $datasets[] = array('label' => $label, 'backgroundColor' => current($colores), "data"=>$dataset);
-            //cambiamos de color para el siguiente dataset, si es que hay
-            next($colores);
-        endforeach;
-        //agregamos todos los datasets generados por cada fila del resultado sql
-        $chart_data = array('labels' => $labels, 'datasets'=> $datasets);
-
-       ?>
-
-	<script>
-  //barChartData.labels= resultado['headers']
-  //barChartData.datasets[0].label = resultado['resultado'][0][0]='Fravatel'
-  //barChartData.datasets[0].backgroundColor: next(array de colores)
-  //barChartData.datasets[0].data = array(row)
-  var barChartData = JSON.parse('<?php echo json_encode($chart_data);?>');
-
-	/*	var barChartData2 = {
-			labels: ['Vie 1', 'Lun 04', 'Mar 05', 'Mie 06', 'Jue 07', 'Vie 08', 'Sab 09'],
-			datasets: [{
-				label: 'Fravatel',
-				backgroundColor: window.chartColors.red,
-				data: [
-					0,
-					430,
-					386,
-					459,
-					422,
-					0,
-					0
-				]
-			}, {
-				label: 'IPBusiness',
-				backgroundColor: window.chartColors.blue,
-				data: [
-					0,
-					0,
-					0,
-					0,
-					389,
-					738,
-					260
-				]
-			}, {
-				label: 'ThinkIP',
-				backgroundColor: window.chartColors.green,
-				data: [
-					0,
-					0,
-					0,
-					0,
-					1,
-					0,
-					0
-				]
-			}]
-
-		};*/
-		window.onload = function() {
-			var ctx = document.getElementById('canvas').getContext('2d');
-			window.myBar = new Chart(ctx, {
-				type: 'bar',
-				data: barChartData,
-				options: {
-					title: {
-						display: true,
-						text: 'Consumo minutos por proveedor/dia'
-					},
-					tooltips: {
-  						mode: 'index',
-  						intersect: false,
-              callbacks: {
-                  afterTitle: function() {
-                    window.total = 0;//inicializamos variable que mostrara el total
-                  },//afterTitle
-                  title: function (tooltipItem, data) {
-                    return "Día " + data.labels[tooltipItem[0].index];
-                  },//title
-                  afterLabel: function(tooltipItems, data) {
-                    /*return "Total: " + tooltipItems.value + ' €';*/
-                    /*convertimos a entero y procedemos a sumar todos los items*/
-                    window.total += parseInt(tooltipItems.value);
-                  },//afterLabel
-                  footer: function (tooltipItem, data) {
-                    /*console.log(tooltipItem);*/
-                    return "Total: "+ window.total; }
-              }//callbacks
-					},//tooltips
-					responsive: true,
-					scales: {
-						xAxes: [{
-							stacked: true,
-						}],
-						yAxes: [{
-							stacked: true,
-              ticks: {
-                callback: function(value, index, values) {
-                  return value + ' min';
-                }
-              }
-						}]
-					}
-				}
-			});
-		};
-
-/*		document.getElementById('randomizeData').addEventListener('click', function() {
-			barChartData.datasets.forEach(function(dataset) {
-				dataset.data = dataset.data.map(function() {
-					return randomScalingFactor();
-				});
-			});
-			window.myBar.update();
-		});*/
-	</script>
-<?php
-
+  <script src="js/chartjs/Chart.min.js"></script>
+  <script src="js/chartjs/utils.js"></script>
+  <style>
+    canvas {
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+    }
+  </style>
+  <!--fin chartjs-->
+  <?php
 }//endfunction
-
 
 ?>

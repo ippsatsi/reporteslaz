@@ -21,5 +21,9 @@ function insert_data(data){
    if(json.resultado){
      var tabla_llamada = document.getElementById('tabla_llamada');
      tabla_llamada.innerHTML = json.resultado;
+     //obtenemos la nueva altura del fieldset, modificada por la tabla
+     let fieldset_height = tabla_llamada.parentNode.parentNode.parentNode.offsetHeight;
+     // y le modificamos la altura del formulario para que sea mas grande que el fieldset
+     form_obj.style.height = (parseInt(fieldset_height) + 30) +"px";
    };
 }

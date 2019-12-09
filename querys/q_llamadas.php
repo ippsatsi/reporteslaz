@@ -17,6 +17,9 @@ if (isset($_GET['rpt'])) :
                 case '1':
                     $cuadro = reporte_cuadro_2_proveedores();
                     break;
+                case '2':
+                    $cuadro = reporte_cuadro_2_proveedores_carteras();
+                    break;
                 default:
                     $cuadro = reporte_cuadro_2();
                     break;
@@ -161,6 +164,40 @@ function reporte_cuadro_2_proveedores() {
 
 }//endfunction
 
+function reporte_cuadro_2_proveedores_carteras() {
+
+      $fecha_desde = $_GET['fecha_desde'];
+      $fecha_hasta = $_GET['fecha_hasta'];
+
+      $query = "
+      SELECT
+          CASE WHEN (GROUPING(LLE.LLE_PROVEEDOR)=1) THEN 'Total'
+              ELSE ISNULL(LLE.LLE_PROVEEDOR,'DESCONOCIDO') END AS 'PROVEEDDORES TELEFONIA'
+  		    ,  CASE WHEN (GROUPING(PRV.PRV_NOMBRES)=1) THEN 'Zub-Total'
+  		          ELSE ISNULL(PRV.PRV_NOMBRES,' NO UBICADO') END AS CARTERAS
+          --ISNULL(PRV.PRV_NOMBRES,'DESCONOCIDO') AS CARTERAS
+          , SUM(LLE.LLE_DURACION) AS 'CONSUMO EN seg'
+          , SUM(LLE.LLE_DURACION)/60 AS 'CONSUMO EN min'
+          , MAX(LLE.LLE_DURACION/60) AS 'MAX LLDA_min'
+          , AVG(LLE.LLE_DURACION) AS 'LLDA_PROM EN seg'
+          , COUNT(LLE.LLE_TELEFONO) AS 'NRO_LLAMADAS'
+          , SUM(CASE WHEN LLE.LLE_DURACION<61 THEN 1 ELSE 0 END) AS '# LLDA < 1min'
+          , SUM(CASE WHEN LLE.LLE_DURACION<121 AND LLE.LLE_DURACION>60 THEN 1 ELSE 0 END) AS '# LLDA 1m a 2min'
+          , SUM(CASE WHEN LLE.LLE_DURACION<181 AND LLE.LLE_DURACION>120 THEN 1 ELSE 0 END) AS '# LLDA 2m a 3min'
+          , SUM(CASE WHEN LLE.LLE_DURACION>180 THEN 1 ELSE 0 END) AS '# LLDA > 3min'
+          , CAST(SUM(((TPR.TPR_COSTO_MINUTO+TPR.TPR_AJUSTE)*LLE.LLE_DURACION)/60) AS DECIMAL(6,2)) AS COSTO_SOLES
+          FROM
+          COBRANZA.GCC_LLAMADAS_ELASTIX LLE
+          INNER JOIN COBRANZA.GCC_TARIFA_PROVEEDORES TPR ON TPR.TPR_PROVEEDOR=LLE.LLE_PROVEEDOR AND TPR.TPR_TIPO_TELEFONO=LLE.LLE_TIPO_TELEFONO
+  		    LEFT JOIN COBRANZA.GCC_CARTERAS CAR ON CAR.CAR_CODIGO=LLE.GES_CAR_CODIGO
+          LEFT JOIN COBRANZA.GCC_PROVEEDOR PRV ON PRV.PRV_CODIGO=CAR.PRV_CODIGO
+          WHERE LLE.LLE_FECHA_LLAMADA BETWEEN '".$fecha_desde."' AND '".$fecha_hasta."'
+          GROUP BY LLE.LLE_PROVEEDOR, PRV.PRV_NOMBRES WITH ROLLUP
+          ORDER BY LLE.LLE_PROVEEDOR DESC, 2 ASC;";
+
+      $array_query_result = run_select_query_sqlser($query);
+      return $array_query_result;
+}//endfunction
 
 function reporte_3() {
 
