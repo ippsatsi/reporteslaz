@@ -18,6 +18,7 @@ header_html();
 oh_carga_scripts_chartjs();
 
 $usuario_soporte = ($_SESSION['usuario_codigo']==3052 ? true : false);
+$rol_agente = ($_SESSION['rol']==4 || $_SESSION['rol']==5 ? true : false );
 if ( !$rol_agente ) :
     libs_d_dashboard_row1();
     libs_d_dashboard_row2();
