@@ -4,8 +4,10 @@
 //function mostrar_migracion_progresivo2($array, $error)
 //function mostrar_migracion_predictiva($mensaje)
 //function form_proceso($legend, $array, $mensaje , $tipo_form='')
+//function form_proceso_bloques($legend, $array, $mensaje , $tipo_form='')
 //function ctrl_boton_submit()
 //function ctrl_boton_carga()
+//function ctrl_boton_guardar_bq()
 //function ctrl_input_doc()
 //function ctrl_boton_examinar()
 //function ctrl_select_cuenta()
@@ -13,9 +15,10 @@
 //function ctrl_fecha_pago()
 //function carga_js_scripts()
 //function ctrl_boton_busqueda()
+//function ctrl_boton_busqueda_bloques()
 //function modal_form($funcion)
-//function ctrl_select_test($label, $array, $control, $js_function ='', $default_option_label='--seleccione--', $default_option_value=0)
 //function ctrl_select($label, $array, $control, $js_function ='', $default_option_label='--seleccione--', $default_option_value=0)
+//function ctrl_select_bloques($label, $array, $control, $js_function ='', $default_option_label='--seleccione--', $default_option_value=0)
 //function ctrl_select2($label, $array, $control,$selected_value, $js_function ='',  $default_option_label='--seleccione--', $default_option_value=0)
 //function ctrl_wide_select($label, $array, $control, $js_function ='', $default_option_label='--seleccione--', $default_option_value=0)
 //function form_modal($error, $archivo_action, $legend, $array)
@@ -272,6 +275,47 @@ echo <<<Final
 Final;
 }
 
+//########################################################################3
+
+function form_proceso_bloques($legend, $array, $mensaje , $tipo_form='') {
+
+$action = basename($_SERVER['PHP_SELF']);
+echo <<<Final
+    <form class="bloques" onsubmit="limpiar_mensaje(0)" action="$action" method="post" $tipo_form>
+      <fieldset>
+        <legend>$legend</legend>
+        <div class="div_form only_form">
+
+Final;
+foreach ($array as $key => $row_value) {
+  echo '          <div class="row_form"> <!-- foreach-->
+';
+  foreach ($row_value as $key => $field_value) {
+    $field_value();
+  }
+  echo '
+          </div> <!-- foreach-->
+';
+}
+?>
+            <div class="row_form">
+              <div class="field_row_form_bq" id="error"><?php if ( $mensaje )// variable $form_number
+{
+  echo $mensaje;
+}
+
+echo <<<Final
+            </div><!-- div_field_row_form_bq-->
+          </div><!-- div_row_form-->
+        </div><!-- div_form only_form-->
+      </fieldset>
+    </form>
+
+Final;
+}//endfunction
+
+//###########################################################################
+
 function ctrl_boton_submit() {
 ?>
             <div class="field_row_form">
@@ -288,6 +332,14 @@ function ctrl_boton_carga() {
 <?php
 }
 
+function ctrl_boton_guardar_bq() {
+?>
+            <div class="field_row_form_bq">
+              <label>&nbsp;</label>
+              <input class="downl" id="guardar" type="button" value="guardar" name="guardar" >
+            </div>
+<?php
+}
 
 function ctrl_input_doc() {
 ?>
@@ -359,6 +411,15 @@ function ctrl_boton_busqueda() {
 <?php
 }
 
+function ctrl_boton_busqueda_bloques() {
+?>
+            <div class="field_row_form_bq">
+              <label>&nbsp;</label>
+              <input class="downl" id="btn_busqueda" type="button" value="buscar" name="buscar">
+            </div>
+<?php
+}
+
 function modal_form($funcion) {
 ?>
 
@@ -377,7 +438,7 @@ $funcion();
 }
 
 //################################################################################
-
+/*
 function ctrl_select_test($label, $array, $control, $js_function ='', $default_option_label='--seleccione--', $default_option_value=0) {
   ?>
   <?php
@@ -400,7 +461,7 @@ foreach ($array as $row)
                 </div>
               </div>
 <?php
-}
+}*/
 
 //################################################################################
 
@@ -410,6 +471,35 @@ function ctrl_select($label, $array, $control, $js_function ='', $default_option
   echo <<<Final
 
               <div class="field_row_form">
+                <label>$label</label>
+                <div class="select_input">
+                  <select id="$control" name="$control" $js_function>
+Final;
+  if ($default_option_value<>'') {//si $default_option_value='' entonces solo usamos como opciones las asignadas por $array
+    echo '                    <option value="'.$default_option_value.'">'.$default_option_label.'</option>';
+  }
+
+foreach ($array as $row)
+  {
+    echo "\n";
+    echo '                    <option value="'.$row['ID'].'">'.$row['NOMBRE'].'</option>';
+  }
+?>
+
+                  </select>
+                </div>
+              </div>
+<?php
+}
+
+//################################################################################
+
+function ctrl_select_bloques($label, $array, $control, $js_function ='', $default_option_label='--seleccione--', $default_option_value=0) {
+  ?>
+  <?php
+  echo <<<Final
+
+              <div class="field_row_form_bq">
                 <label>$label</label>
                 <div class="select_input">
                   <select id="$control" name="$control" $js_function>
@@ -491,6 +581,7 @@ foreach ($array as $row)
               </div>
 <?php
 }
+
 //################################################################################
 
 function form_modal($error, $archivo_action, $legend, $array) {

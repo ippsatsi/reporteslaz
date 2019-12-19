@@ -479,3 +479,39 @@ td a.celda_link {
 .chart_inside {
   padding: 0 15px;
 }
+/* form bloques */
+form.bloques label {
+  display: block;
+  float:none;
+  text-transform: uppercase;
+  font-weight: normal;
+  font-size: smaller;
+}
+form.bloques textarea {
+  border: 1px solid black;
+  width: 100%;
+}
+form.bloques input {
+  width:13.1rem;
+}
+form.bloques input.downl {
+  width:100%;
+}
+form.bloques select {
+  width:16.5rem;
+}
+form.bloques .select_input {
+  width:14rem;
+}
+.field_row_form_bq {
+  /*margin: inherit;*/
+  margin: 0 1rem 0 1rem;
+  padding:0.5rem;
+  width: 15rem;
+  justify-content: space-between;
+  box-sizing: border-box;
+  line-height: 1.8rem;
+}
+.ctrl_bloques {
+  width: auto !important;
+}

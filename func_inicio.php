@@ -272,7 +272,7 @@ function run_select_query_param_sqlser($query, $array) {
   sqlsrv_free_stmt($result_query);
   sqlsrv_close($conn);
   return $array_query_result;
-}
+}//endfunction
 
 function run_upd_del_query_param_sqlserv($query,$array) {
   ini_set('memory_limit','2048M');

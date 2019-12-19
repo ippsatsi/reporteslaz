@@ -47,7 +47,7 @@ $usuario_soporte = ($_SESSION['usuario_codigo']==3052 ? true : false);
   <nav>
     <p><a href=inicio.php class="lnk_sin_decorar" ><?php echo TITULO_HTML; ?></a></p>
     <ul id="menu">
-      <li id="gestionm"><a href=#gestion>Reportes</a>
+      <li id="gestion"><a href=#gestion>Reportes</a>
         <ul id="drop">
 <?php echo ($rol_agente ? '' : '          <li><a href=general.php>General</a></li>' )?>
 <?php echo ($rol_agente ? '' : '          <li><a href=call.php>Call</a></li>' )?>
@@ -62,6 +62,7 @@ $usuario_soporte = ($_SESSION['usuario_codigo']==3052 ? true : false);
       <li><a href=#compromisos>Procesos</a>
         <ul id="drop">
           <li><a href=borrargestiones.php>Borrar Gestiones</a></li>
+          <?php echo ($rol_agente ? '' : '          <li><a href=valida_correos.php>Validar Correos</a></li>' )?>
           <li><a href=registro_pagos.php>Registro Pagos</a></li>
 <?php echo ($rol_agente ? '' : '          <li><a href=predictivo_web.php>Gestiones Predictivo WEB</a></li>' )?>
 <?php echo (!$usuario_soporte ? '' : '          <li><a href=carga_cuadros.php>Actualizar Cuadros</a></li>' )?>
@@ -263,8 +264,6 @@ Final;
   echo '            </table>';
 }
 
-
-
 function oh_inputs_ocultos() {
   ?>
         <input type="hidden" name="id_user" value="<?php echo $_SESSION['usuario_codigo'] ?>">
@@ -274,7 +273,7 @@ function oh_inputs_ocultos() {
 }
 
 function oh_ctrl_vacio() {
-  echo "\n";
+  echo "<!-- control vacio -->\n";
 }//endfunction
 
 //funcion que carga scripts de chartjs e inicializa los canvas
