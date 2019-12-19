@@ -63,6 +63,9 @@ if (isset($_FILES['archivo_subido'])) {
                     $array_tabla[] = $row;
                 }
                 $array_inserts[] = $row;
+                if ( strlen($row[0]) > 25 ) {
+                    $validacion_columnas = 'El registro ' . $row_number . " tiene la columna ".$array_header[0]." con mas de 25 caracteres.";
+                }
             }
             $row_number++;
         }//endforeach
