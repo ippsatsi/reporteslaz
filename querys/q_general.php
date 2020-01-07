@@ -250,5 +250,90 @@ function reporte_4() {
 
   $array_query_result = run_select_query_sqlser($query);
   return $array_query_result;
-}
+}//endfunction reporte4
+
+function reporte_5() {
+    //require_once "index2.php";
+    //require_once "ficha_pdf.php";
+    try {
+        if (isset($_POST['id']) && isset($_POST['dni_5']) && $_POST['dni_5'] == '' ) :
+            $id = $_POST['id'];
+
+            require_once "ficha_pdf.php";
+        endif;
+
+
+    if (isset($_POST['dni_5'])) :
+        $dni= $_POST['dni_5'];
+
+        $param_dni = array($dni);
+        $query = "
+        WITH CUENTAS_DNI AS
+(       SELECT
+           CLI.CLI_CODIGO
+           , CLI.CLI_DOCUMENTO_IDENTIDAD
+           , CLI.CLI_NOMBRE_COMPLETO
+           , CLI.CLI_DIRECCION_PARTICULAR + ' ' + CLI.CLI_DISTRITO + '-' + CLI.CLI_PROVINCIA + '-' + CLI.CLI_DEPARTAMENTO AS DIRECCION
+           , CLI.CLI_CORR_PARTICULAR
+     , CAR.CAR_DESCRIPCION
+           , PRV.PRV_NOMBRES
+     , ROW_NUMBER() OVER(PARTITION BY CLI.CLI_CODIGO ORDER BY PRV.PRV_CODIGO ASC) AS ORDEN
+           FROM
+           COBRANZA.GCC_CLIENTE CLI
+           INNER JOIN COBRANZA.GCC_CUENTAS CUE ON CUE.CLI_CODIGO=CLI.CLI_CODIGO AND CUE.CUE_ESTADO_REGISTRO='A'
+           INNER JOIN COBRANZA.GCC_BASEDET BDE ON BDE.CUE_CODIGO=CUE.CUE_CODIGO
+           INNER JOIN COBRANZA.GCC_BASE BAS ON BAS.BAS_CODIGO=BDE.BAS_CODIGO
+     INNER JOIN COBRANZA.GCC_CARTERAS CAR ON CAR.CAR_CODIGO=BAS.CAR_CODIGO AND CAR.CAR_ESTADO_REGISTRO='A'
+           INNER JOIN COBRANZA.GCC_PROVEEDOR PRV ON PRV.PRV_CODIGO=BAS.PRV_CODIGO AND PRV.PRV_ESTADO_REGISTRO='A'
+           WHERE
+           CLI.CLI_DOCUMENTO_IDENTIDAD=?
+           AND CLI.CLI_ESTADO_REGISTRO='A'
+)
+SELECT
+CDN.CLI_CODIGO
+, CDN.CLI_DOCUMENTO_IDENTIDAD
+, CDN.CLI_NOMBRE_COMPLETO
+, CDN.CAR_DESCRIPCION
+, CDN.PRV_NOMBRES
+FROM CUENTAS_DNI CDN
+WHERE
+CDN.ORDEN=1";
+
+            $result_query = run_select_query_param_sqlser($query, $param_dni);
+
+            if ( isset($result_query['resultado']) ) :
+                $resultado = $result_query['resultado'];
+                $html_row = '';
+                $checked = "checked";
+                foreach ($resultado as $row) :
+                    $html_row .= "
+                    <tr>
+                        <td><input type='radio' name='id' value='$row[0]' $checked></td><td>$row[1]</td><td>$row[2]</td><td>$row[3]</td><td>$row[4]</td>
+                    </tr>";
+                    $checked = '';
+                endforeach;
+                $tabla_dnis = "
+                <table id='datos_cliente' class='tabla_cuenta' style='display: inline-table;'>
+                    <thead>
+                        <tr>
+                            <th>ID</th><th>DOCUMENTO</th><th>NOMBRE</th><th>CARTERA</th><th>PROVEEDOR</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        $html_row
+                    </tbody>
+                </table>";
+            else:
+                throw new Exception("No existen resultados", 1);
+            endif;
+    endif;
+
+    return $tabla_dnis;
+}//endtry
+ catch (\Exception $e) {
+   $error_message = procesar_excepcion($e);
+   return $error_message;
+}//endcatch
+
+}//endfunction
 ?>

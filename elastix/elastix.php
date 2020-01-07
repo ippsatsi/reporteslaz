@@ -114,7 +114,7 @@ ORDER BY cdrt.calldate DESC";
 
 $fecha = date('Y-m-d');
 //para actualizar una fecha especidica
-//$fecha = '2019-11-01';
+//$fecha = '2020-01-06';
 $array_llamadas = listar_cdr($fecha);
 //css_estilos();
 $count_cdr = count($array_llamadas);

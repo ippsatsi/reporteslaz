@@ -1,4 +1,13 @@
 <?php
+//obtener_carteras()
+//form_plantilla4($error, $num_formulario="0", $label, $archivo_action, $legend, $array, $form_number, $altura_form='')
+//ctrl_lista_desplegable($label, $array, $control, $form_number, $js_function ='', $default_option_label='--seleccione--', $default_option_value=0)
+//ctrl_select_cartera($form_number)
+//ctrl_select_subcartera($form_number)
+//lib_js_reportes()
+//form_fecha($form_number)
+//form_rango_fecha($form_number)
+
 //####################################################################
 function obtener_carteras () {
   //conectarse al Sql Server
@@ -25,17 +34,17 @@ function obtener_carteras () {
 }
 
 //################################################################################
-
-function form_plantilla4($error, $num_formulario="0", $label, $archivo_action, $legend, $array, $form_number, $altura_form='') {
-// formulario basico (cartera, subcartera y boton de descarga, control de fecha opcional)
 // $error: mensaje de error
-// $num_formulario: es el numero de formulario al cual pertenece el error, y el que comparamos despues con $form_number para saber en que formulario
-// mostrar el error
+// $num_formulario: es el numero de formulario al cual pertenece el error, y el que comparamos despues con $form_number
+//                    para saber en que formulario mostrar el error
 // $label: es el nombre que aparecera en el acordeon
 // $archivo_action: es el nombre de la pagina al cual se dirigira el formulario
 // $legend: es el texto que aparecera en el fieldset
+// $array: es el array de controles, si usamos uno que se llame ctrl_submit, este reemplazara el boton de Descarga por defecto
 // $form_number: es el numero de formulario dentro de la pagina
-// establecemos las cabeceras de los acordeones y los numeramos para identificarlos
+// $altura_form: aqui podemos usar una clase css adicional
+function form_plantilla4($error, $num_formulario="0", $label, $archivo_action, $legend, $array, $form_number, $altura_form='') {
+
 $submit = false;
 if ($altura_form == '') {
     $class_form = '';

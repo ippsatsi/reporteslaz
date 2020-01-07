@@ -1,6 +1,7 @@
 <?php
 session_start();
 $error_message = "";
+$tabla_dnis = '';
 if (!isset($_SESSION['usuario_valido']))
 {
   header("Location:index.php");
@@ -18,7 +19,12 @@ if (isset($_POST['id_formulario'])) {
     require_once 'querys/q_general.php';
 
     $funcion_name = "reporte_".$num_formulario;
-    $data =$funcion_name();
+    $data = $funcion_name();
+
+    //$mensaje_form5 = substr($data, 1,3);
+
+    if (  $num_formulario <> 5 ) {
+
 
     /* CODIGO ESPECIFICO PARA QUE DETERMINADO REPORTE SEA EN CSV
     if ($num_formulario=="33") {
@@ -71,8 +77,10 @@ if (isset($_POST['id_formulario'])) {
     }//while
     $writer->outputToBrowser($nombre_archivo.$num_formulario);
     exit(0);
+  }else{
+    $tabla_dnis = $data;
   }
-
+}
   catch(Exception $e) {
     $error_message = procesar_excepcion($e);
   }
@@ -128,14 +136,44 @@ function ctrl_select_CUSTOM($form_number) {
 $array = array(array('ctrl_select_cartera', 'ctrl_select_subcartera'),array('ctrl_select_CUSTOM'));
 form_plantilla4($error_message, $num_formulario, "Reporte de Base de Cartera", "general.php", "Reportes de base de cartera ", $array, 4);
 
+// fORMULARIO 5
+function ctrl_input_dni($form_number) {
+?>
+            <div class="field_row_form_bq">
+              <label for="dni_<?php echo $form_number; ?>"> DOCUMENTO: </label>
+              <input id="dni_<?php echo $form_number; ?>"  type="text" name="dni_<?php echo $form_number; ?>" >            </div>
+<?php
+}//endfunction
+
+function ctrl_vacio($form_number) {
+  global $tabla_dnis;
+?>
+          <!--    <div class="field_row_form" id="vacio_5"> -->
+                <?php  echo $tabla_dnis; ?>
+            <!--  </div>  -->
+<?php
+}//endfunction
+
+function ctrl_submit($form_number) {
+?>
+              <div class="field_row_form">
+            <!--    <input class="downl" type="submit" <i class="far fa-file-pdf" aria-hidden="true"></i> value="mostrar"/> -->
+                <button class="downl" type="submit"><i class="fa fa-file-pdf-o fa-fw fa-lg" aria-hidden="true"></i>ver</button>
+              </div>
+<?php
+}//endfunction
+
+$array = array(array('ctrl_input_dni'),array('ctrl_vacio'),array('ctrl_submit'));
+form_plantilla4($error_message, $num_formulario, "Reporte de Informacion Cliente", "general.php", "Informacion del Cliente ", $array, 5, "bloques altura_maxima");
+
 $actualizar_label = <<<Final
 <script>
-var label_fecha_id = document.getElementById('label_hasta2');
-label_fecha_id.innerHTML = 'Fecha';
+var label_fecha_id = document.getElementById('label_hasta3');
+label_fecha_id.innerHTML = 'Fecha:';
 console.log(label_fecha_id.innerHTML);
 </script>
 Final;
-//echo $actualizar_label;
+echo $actualizar_label;
 
 lib_js_reportes();
 footer_html();

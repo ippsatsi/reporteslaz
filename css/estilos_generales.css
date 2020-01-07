@@ -515,3 +515,7 @@ form.bloques .select_input {
 .ctrl_bloques {
   width: auto !important;
 }
+
+tr.pago_borrado {
+  background-color: darkgray;
+}

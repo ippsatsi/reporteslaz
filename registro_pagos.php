@@ -38,7 +38,11 @@ if (isset($_POST['buscar'])){// comprueba si se envio formulario
         $array_tabla = $array_tabla['resultado'];
         $recaudo = 0; // para la funcion del mensaje de recaudo
         foreach ($array_tabla as $fila) {
-          $recaudo = $fila[6] + $recaudo; //sumamos todos los montos de la columna 7 'MONTO_PAGO'
+          //no contamos los que tienen la clase pago_borrado_99 en la columna id
+          if ( strpos($fila[0], 'pago_borrado_99')<>13 ) {
+            $recaudo = $fila[6] + $recaudo;
+          }
+          //$recaudo = $fila[6] + $recaudo; //sumamos todos los montos de la columna 7 'MONTO_PAGO'
         }
       } else {
         $array_tabla = array();//colocamos un array vacio para evitar warnings
@@ -140,6 +144,14 @@ function limpiar_modal() {
 function js_borrado() {
 ?>
 <script>
+//FUNCION QUE AÑADE LA CLASE DE PAGOS BORRADOS A tr SEGUN ENCUENTRE
+//LOS span (hijos) CON CLASE pago_borrado_99
+window.onload = function() {
+    var pagos_borrados = document.getElementsByClassName('pago_borrado_99');
+    for (var i = 0; i < pagos_borrados.length; i++) {
+        pagos_borrados[i].parentNode.parentNode.classList.add('pago_borrado');
+    }
+  }
 function borrar_id() {
 //  var delete = document.getElementsByName("id_pago");
   var dele1 = document.getElementsByName("id_pago");

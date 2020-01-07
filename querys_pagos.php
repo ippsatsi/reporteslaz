@@ -13,7 +13,9 @@ if ($rol == 4 || $rol == 5 ) {
 }
   $query = "
 SELECT
-CONCAT('<input type=\"radio\" name=\"id_pago\" value=\"',CPG.CPG_CODIGO,'\">',CPG.CPG_CODIGO) AS id
+  CASE CPG.CPG_ESTADO_REGISTRO
+      WHEN 'S' THEN CONCAT('<span class=\"pago_borrado_99\"></span>',CPG.CPG_CODIGO)
+	    ELSE CONCAT('<input type=\"radio\" name=\"id_pago\" value=\"',CPG.CPG_CODIGO,'\">',CPG.CPG_CODIGO) END AS id
 , CLI.CLI_DOCUMENTO_IDENTIDAD AS documento
 , CUE.CUE_NROCUENTA AS cuenta
 , CLI.CLI_NOMBRE_COMPLETO AS 'nombre completo'
@@ -24,7 +26,9 @@ CONCAT('<input type=\"radio\" name=\"id_pago\" value=\"',CPG.CPG_CODIGO,'\">',CP
 , ISNULL(UCAL.USU_LOGIN,'SIN ASIGNAR') AS 'usuario asignado'
 ".$columna_usuario_reg."
 , TRPG.TRPG_DESCRIPCION AS 'tipo acuerdo'
-, CPG.CPG_OBSERVACIONES AS 'observaciones'
+, CASE CPG.CPG_ESTADO_REGISTRO
+	  WHEN 'S' THEN CONCAT('ELIMINADO: ',SUP.USU_LOGIN,' ',CONVERT(VARCHAR,CPG.CPG_FECHA_DESACTIVADO,103))
+	  ELSE CPG.CPG_OBSERVACIONES END AS 'observaciones'
 , CPG.CPG_FECHA_REGISTRO AS 'fecha registro'
 FROM
 COBRANZA.GCC_CONTROL_PAGOS CPG
@@ -37,11 +41,12 @@ INNER JOIN COBRANZA.GCC_USUARIO USU ON USU.USU_CODIGO=CPG.USU_CODIGO
 INNER JOIN COBRANZA.GCC_TIPO_REGISTRO_PAGO TRPG ON TRPG.TRPG_CODIGO=CPG.TRPG_CODIGO
 LEFT JOIN COBRANZA.GCC_ASIGNACION ASI ON ASI.CUE_CODIGO=CUE.CUE_CODIGO AND ASI.ASI_ESTADO=1 AND ASI.ROL_CODIGO=4
 LEFT JOIN COBRANZA.GCC_USUARIO UCAL ON UCAL.USU_CODIGO=ASI.USU_CODIGO
+LEFT JOIN COBRANZA.GCC_USUARIO SUP ON SUP.USU_CODIGO=CPG.SUPERVISOR_CODIGO
 WHERE
 ".$condicion_supervisor."
 DATEPART(MM,CPG.CPG_FECHA_OPERACION)=DATEPART(MM,'".$mes_reporte."')
-AND DATEPART(YY,CPG.CPG_FECHA_OPERACION)=DATEPART(YY,'".$mes_reporte."') 
-AND CPG.CPG_ESTADO_REGISTRO = 'A' ORDER BY CPG.CPG_CODIGO DESC";
+AND DATEPART(YY,CPG.CPG_FECHA_OPERACION)=DATEPART(YY,'".$mes_reporte."')
+AND CPG.CPG_ESTADO_REGISTRO IN ('A','S') ORDER BY CPG.CPG_ESTADO_REGISTRO DESC, CPG.CPG_CODIGO DESC";
 
 //echo $query;
 //exit;
@@ -49,53 +54,16 @@ AND CPG.CPG_ESTADO_REGISTRO = 'A' ORDER BY CPG.CPG_CODIGO DESC";
 
   return $result_query;
   }
-/*
-function insertar_pagos($conn2, $cue_codigo, $importe, $fecha_pago, $movimiento, $tipo_pago, $observaciones, $cod_usuario, $remote_addr ) {
-// busca si haya campañas ya cargadas
-  $query = "
-INSERT INTO COBRANZA.GCC_CONTROL_PAGOS_TEMP
-(CUE_CUEDIGO
-, CPG_FECHA_OPERACION
-, CPG_IMPORTE
-, CPG_MOVIMIENTO
-, CPG_OBSERVACIONES
-, USU_CODIGO
-, IP_ADDRESS
-, CPG_ESTADO_REGISTRO
-, CPG_FECHA_REGISTRO
-, TRPG_CODIGO)
-SELECT
-CUE.CUE_CODIGO
-, '".$fecha_pago."'
-, ".$importe."
-, '".$movimiento."'
-, '".$observaciones."'
-, ".$cod_usuario."
-, '".$remote_addr."'
-, 'A'
-, GETDATE()
-, ".$tipo_pago."
-FROM
-COBRANZA.GCC_CUENTAS CUE
-WHERE
-CUE.CUE_CODIGO=".$cue_codigo;
 
-  $result_query = sqlsrv_query( $conn2, $query,array(), array( ));
-  //si_es_excepcion($result_query, $query);
-  $rows_affected = sqlsrv_rows_affected($result_query);
-  return $rows_affected;
-}
-*/
 
 function reporte_1() {
-
 
   $fecha_desde = $_POST['fecha_desde'];
   $fecha_hasta = $_POST['fecha_hasta'];
   $fecha_desde_ts = DateTime::createFromFormat('d/m/Y', $fecha_desde);
   $fecha_hasta_ts = DateTime::createFromFormat('d/m/Y', $fecha_hasta);
   $cartera = $_POST['cartera'];
-  
+
       if ( $fecha_desde_ts > $fecha_hasta_ts ) {
         throw new Exception('el rango de fechas no es valido',1);
       }
