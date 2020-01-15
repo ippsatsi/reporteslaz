@@ -49,6 +49,7 @@ $query = "
 $result_query = run_select_query_param_sqlser($query, $param_dni);
 
 $resultado = $result_query['resultado'][0];
+$documento_identidad = $resultado[1];
 //DATOS PERSONALES
 $html = '<div style="text-align:center;">
 <h2>'.ucwords(strtolower($resultado[2])).'</h2>
@@ -493,7 +494,6 @@ if ( isset($result_query['resultado']) ) :
         '.$html_row.'
         </tbody>
         </table>';
-
 
     $pdf->writeHTML($html, true, false, true, false, '');
 else:
@@ -1034,5 +1034,5 @@ else:
     $pdf->Ln();
 endif;
 
-$pdf->Output('five-min-pdf.pdf', 'D');
+$pdf->Output("reporte_cliente_$documento_identidad.pdf", 'D');
  ?>
