@@ -40,7 +40,7 @@ $logo_agente='<i class="fa fa-user fa-fw" aria-hidden="true"></i>';
 $rol_agente = ($_SESSION['rol']==4 || $_SESSION['rol']==5 ? true : false );
 $rol_logo = ($rol_agente ? $logo_agente : $logo_admin );
 $mostrar_usuario = $rol_logo.strtolower($_SESSION['usuario_valido']);
-$usuario_soporte = ($_SESSION['usuario_codigo']==3052 ? true : false);
+$usuario_soporte = ($_SESSION['usuario_codigo']==3052 || $_SESSION['usuario_codigo']==26 ? true : false);
 ?>
 <body>
         <!--#949DA8 #4F84C4 #578CA9 #AF9483 #91A8D0 #55B4B0 #7FCDCD #45B8AC-->
